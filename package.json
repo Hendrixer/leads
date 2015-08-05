@@ -1,0 +1,31 @@
+{
+  "name": "leads",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hendrixer/leads.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hendrixer/leads/issues"
+  },
+  "homepage": "https://github.com/Hendrixer/leads#readme",
+  "dependencies": {
+    "babel": "^5.8.19",
+    "bluebird": "^2.9.34",
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "mongoose": "^4.1.0",
+    "morgan": "^1.6.1",
+    "multer": "^1.0.1",
+    "winston": "^1.0.1",
+    "xlsx-to-json": "^0.2.3"
+  }
+}
