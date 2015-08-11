@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,20 @@
     "mongoose": "^4.1.0",
     "morgan": "^1.6.1",
     "multer": "^1.0.1",
+    "react": "^0.13.3",
     "winston": "^1.0.1",
     "xlsx-to-json": "^0.2.3"
+  },
+  "devDependencies": {
+    "babel-loader": "^5.3.2",
+    "browser-sync": "^2.8.2",
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-template": "^3.0.0",
+    "karma": "^0.13.8",
+    "run-sequence": "^1.1.2",
+    "webpack": "^1.11.0",
+    "webpack-stream": "^2.1.0"
   }
 }

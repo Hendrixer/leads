@@ -1,12 +1,12 @@
 import express from 'express';
-import {admin} from './admin';
-import {brokers} from './brokers';
-import {leads} from './leads';
-import {orders} from './orders';
+import admin from './admins/admins.routes';
+import brokers from './brokers/brokers.routes';
+import leads from './leads/leads.routes';
+import orders from './orders/orders.routes';
 
 const api = express.Router();
 
-api.use('/admin', admin);
+api.use('/admins', admin);
 api.use('/brokers', brokers);
 api.use('/leads', leads);
 api.use('/orders', orders);

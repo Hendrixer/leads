@@ -5,7 +5,7 @@ import multer from 'multer';
 import util from 'util';
 
 const setup = (app) => {
-  app.use(express.static(__dirname + '/../../client'));
+  app.use(express.static(__dirname + '/../../dist'));
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(multer({dest: 'uploads/'}).array('leads'));
