@@ -1,0 +1,25 @@
+@import '../../../../styles'
+
+.sideNav
+  height 100vh
+  width 0px
+  box-shadow 4px 0 7px -3px black;
+  display none
+  padding 15px 10px 15px 10px
+  overflow-y scroll
+  position absolute
+  z-index $top-z
+  top 0
+  left 0
+  .content
+    .item
+      col(1)
+      margin-bottom 15px
+      .item-icon
+        col(1/5 1, 0, 2)
+      .item-name
+        color $text-color
+        font-size 1.5rem
+        col(4/5 1, 0, 2)
+        text-transform capitalize
+        margin 0px

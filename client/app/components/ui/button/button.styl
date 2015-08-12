@@ -1,0 +1,47 @@
+@import '../../../styles'
+
+button
+.button
+.btn
+  outline none
+  border none
+  border-radius 2px
+  background-color $pri-color
+  color $text-color
+  text-transform uppercase
+  text-align center
+  min-width 88px
+  min-height 36px
+  overflow hidden
+  user-select none
+  vertical-align middle
+  position relative
+  padding 0px 6px
+  white-space nowrap
+  cursor pointer
+  font-weight 500
+  user-select none
+  font-size 14px
+  line-height 30px
+
+  &.fab
+    width 56px
+    min-width 0px
+    background-clip padding-box
+    height 56px
+    line-height 56px
+    z-index 20
+    border-radius 50%
+
+  &:active
+  &:focus
+    border none
+    outline none
+
+  &.raised
+  &.fab
+    makeShadow(1)
+    transition all .3s ease
+
+    &:active
+      makeShadow(3)

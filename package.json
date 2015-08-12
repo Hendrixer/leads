@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp"
+    "start": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -22,15 +22,17 @@
     "bluebird": "^2.9.34",
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
-    "flummox": "^3.5.2",
     "jeet": "^6.1.2",
     "lodash": "^3.10.1",
     "mongoose": "^4.1.0",
     "morgan": "^1.6.1",
     "multer": "^1.0.1",
+    "node-waves": "^0.7.2",
     "normalize.css": "^3.0.3",
     "react": "^0.13.3",
+    "react-redux": "^0.8.2",
     "react-router": "^0.13.3",
+    "redux": "^1.0.0-rc",
     "rupture": "^0.6.1",
     "winston": "^1.0.1",
     "xlsx-to-json": "^0.2.3"
@@ -38,12 +40,18 @@
   "devDependencies": {
     "babel-loader": "^5.3.2",
     "browser-sync": "^2.8.2",
+    "css-loader": "^0.15.6",
+    "file-loader": "^0.8.4",
     "gulp": "^3.9.0",
     "gulp-nodemon": "^2.0.3",
     "gulp-rename": "^1.2.2",
     "gulp-template": "^3.0.0",
     "karma": "^0.13.8",
+    "redux-devtools": "^0.2.0",
     "run-sequence": "^1.1.2",
+    "style-loader": "^0.12.3",
+    "stylus-loader": "^1.2.1",
+    "url-loader": "^0.5.6",
     "webpack": "^1.11.0",
     "webpack-stream": "^2.1.0"
   }

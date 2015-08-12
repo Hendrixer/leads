@@ -1,0 +1,76 @@
+.textBox
+  position relative
+  margin-bottom 45px
+  width 100%
+
+  input
+    font-size 18px
+    padding 10px 10px 10px 5px
+    display block
+    color $text-color
+    width 100%
+    background transparent
+    border none
+    border-bottom 1px solid $ac-color-dark
+    &:focus
+      outline none
+      & ~ .highlight
+        animation inputHighlight .3s ease
+      & ~ .bar:before
+      & ~ .bar:after
+        width 50%
+
+    &:focus ~ label
+    &:valid ~ label
+      top -20px
+      font-size 14px
+      color $ac-color-light
+
+  label
+    color $text-color-secondary
+    font-size 18px
+    font-weight normal
+    position absolute
+    pointer-events none
+    left 5px
+    top 10px
+    transition all 0.2s ease
+
+  .bar
+    position relative
+    display block
+    // width 120px
+    &:before
+    &:after
+      content ''
+      height 2px
+      width 0
+      bottom 1px
+      position absolute
+      background $ac-color
+      transition ease all .2s
+    &:before
+      left: 50%
+    &:after
+      right 50%
+
+  .highlight
+    position absolute
+    height 60%
+    width 100px
+    top 25%
+    left 0
+    pointer-events none
+    opacity 0.5
+
+
+@keyframes inputHighlight {
+  from {
+    background $ac-color
+  }
+
+  to {
+    background transparent
+    width 0
+  }
+}

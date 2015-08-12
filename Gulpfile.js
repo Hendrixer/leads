@@ -83,8 +83,11 @@ gulp.task('watch', function() {
 gulp.task('generate', function(){
   var type = yargs.type;
   var name = yargs.name;
-  var destPath = path.join(paths.templates[type], name);
-  var tempFiles = path.join(paths.templates.base, type, '/**/*.js');
+  var location = yargs.path || 'app';
+  var destPath = type === 'rest' ? path.join(paths.templates[type], name) :
+    path.join(paths.templates[type], location, name);
+
+  var tempFiles = path.join(paths.templates.base, type, '/**/*.**');
 
   return gulp.src(tempFiles)
     .pipe(template({
@@ -95,10 +98,8 @@ gulp.task('generate', function(){
       filePath.basename = filePath.basename.replace(type, name);
     }))
     .pipe(gulp.dest(destPath));
-
 });
 
 gulp.task('default', function(done) {
   sync('bundle', 'copy', 'server', 'serve', 'watch', done);
 });
-
