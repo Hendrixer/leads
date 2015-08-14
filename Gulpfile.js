@@ -23,7 +23,7 @@ var paths = {
   client: {
     entry: './client/app/app.js',
     js: './client/app/**/*.js',
-    app: './client/app/**/*{.js,.styl,.html}',
+    app: ['./client/app/**/*{.js,.styl,.html}'],
     output: './dist',
     toCopy: ['./client/index.html']
   },
@@ -77,7 +77,7 @@ gulp.task('watch', function() {
   );
 
   gulp.watch(watchedPaths, ['bundle', reload]);
-  gulp.watch(paths.toCopy, ['copy', reload]);
+  gulp.watch(paths.client.toCopy, ['copy', reload]);
 });
 
 gulp.task('generate', function(){
