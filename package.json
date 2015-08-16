@@ -1,0 +1,62 @@
+{
+  "name": "leads",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hendrixer/leads.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hendrixer/leads/issues"
+  },
+  "homepage": "https://github.com/Hendrixer/leads#readme",
+  "dependencies": {
+    "angular": "^1.4.4",
+    "angular-animate": "^1.4.4",
+    "angular-aria": "^1.4.4",
+    "angular-material": "^0.10.1",
+    "angular-ui-router": "^0.2.15",
+    "babel": "^5.8.19",
+    "babel-runtime": "^5.8.20",
+    "bluebird": "^2.9.34",
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "jeet": "^6.1.2",
+    "lodash": "^3.10.1",
+    "mongoose": "^4.1.0",
+    "morgan": "^1.6.1",
+    "multer": "^1.0.1",
+    "ng-file-upload": "^6.2.0",
+    "node-waves": "^0.7.2",
+    "normalize.css": "^3.0.3",
+    "raw-loader": "^0.5.1",
+    "rupture": "^0.6.1",
+    "winston": "^1.0.1",
+    "xlsx-to-json": "^0.2.3"
+  },
+  "devDependencies": {
+    "babel-loader": "^5.3.2",
+    "browser-sync": "^2.8.2",
+    "css-loader": "^0.15.6",
+    "file-loader": "^0.8.4",
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-template": "^3.0.0",
+    "karma": "^0.13.8",
+    "redux-devtools": "^0.2.0",
+    "run-sequence": "^1.1.2",
+    "style-loader": "^0.12.3",
+    "stylus-loader": "^1.2.1",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.11.0",
+    "webpack-stream": "^2.1.0"
+  }
+}
