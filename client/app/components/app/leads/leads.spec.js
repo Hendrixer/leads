@@ -1,17 +1,17 @@
-import {<%= upcaseName %>Module} from './<%= name %>'
-import {<%= upcaseName %>Controller} from './<%= name %>.controller';
-import {<%= upcaseName %>} from './<%= name %>.directive';
-import template from './<%= name %>.html';
+import {LeadsModule} from './leads'
+import {LeadsController} from './leads.controller';
+import {Leads} from './leads.directive';
+import template from './leads.html';
 
-describe('<%= upcaseName %>', ()=>{
+describe('Leads', ()=>{
   let $rootScope,
   makeController;
 
-  beforeEach(window.module(<%= upcaseName %>Module.name));
+  beforeEach(window.module(LeadsModule.name));
   beforeEach(inject((_$rootScope_)=>{
     $rootScope = _$rootScope_;
     makeController = ()=>{
-      return new <%= upcaseName %>Controller();
+      return new LeadsController();
     };
   }));
 
@@ -44,7 +44,7 @@ describe('<%= upcaseName %>', ()=>{
 
   describe('Component', ()=>{
       // test the component/directive itself
-      let component = <%= upcaseName %>();
+      let component = Leads();
 
       it('should use the right template',()=>{
         expect(component.template).to.equal(template);
@@ -55,7 +55,7 @@ describe('<%= upcaseName %>', ()=>{
       });
 
       it('should use the right controller', ()=>{
-        expect(component.controller).to.equal(<%= upcaseName %>Controller);
+        expect(component.controller).to.equal(LeadsController);
       });
   });
 });

@@ -1,17 +1,17 @@
-import {<%= upcaseName %>Module} from './<%= name %>'
-import {<%= upcaseName %>Controller} from './<%= name %>.controller';
-import {<%= upcaseName %>} from './<%= name %>.directive';
-import template from './<%= name %>.html';
+import {RootModule} from './root'
+import {RootController} from './root.controller';
+import {Root} from './root.directive';
+import template from './root.html';
 
-describe('<%= upcaseName %>', ()=>{
+describe('Root', ()=>{
   let $rootScope,
   makeController;
 
-  beforeEach(window.module(<%= upcaseName %>Module.name));
+  beforeEach(window.module(RootModule.name));
   beforeEach(inject((_$rootScope_)=>{
     $rootScope = _$rootScope_;
     makeController = ()=>{
-      return new <%= upcaseName %>Controller();
+      return new RootController();
     };
   }));
 
@@ -44,7 +44,7 @@ describe('<%= upcaseName %>', ()=>{
 
   describe('Component', ()=>{
       // test the component/directive itself
-      let component = <%= upcaseName %>();
+      let component = Root();
 
       it('should use the right template',()=>{
         expect(component.template).to.equal(template);
@@ -55,7 +55,7 @@ describe('<%= upcaseName %>', ()=>{
       });
 
       it('should use the right controller', ()=>{
-        expect(component.controller).to.equal(<%= upcaseName %>Controller);
+        expect(component.controller).to.equal(RootController);
       });
   });
 });

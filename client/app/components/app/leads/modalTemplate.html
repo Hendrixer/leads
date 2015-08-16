@@ -1,0 +1,26 @@
+<md-dialog class="upload-dialog">
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <span>Upload Leads</span>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="file-drop-box" layout="column" layout-align="center center"
+        ngf-drop
+        ngf-multiple="true" ngf-accept="'.xlsx,.csv'"
+        ngf-allow-dir
+        ngf-drag-over-class="{accept: 'accept'}"
+        ngf-select
+        ngf-change="vm.dropping($files, $file, $event, $rejected)">
+        <h1 class="cta">click or drag to upload new leads</h1>
+      </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <md-button class="md-warn md-raised"
+      ng-click="vm.cancel()">
+        nevermind
+      </md-button>
+    </div>
+  </form>
+</md-dialog>

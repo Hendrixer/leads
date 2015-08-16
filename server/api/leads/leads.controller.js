@@ -10,9 +10,9 @@ future.promisifyAll(Leads.prototype);
 const toJson = future.promisify(spreadToJSon);
 
 export const $get = (req, res, next)=> {
-  Leads.findAsync()
+  Leads.findAsync({})
     .then(leads => {
-      req.json(leads);
+      res.json(leads);
     })
     .catch(next.bind.next);
 };
