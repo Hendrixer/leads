@@ -1,40 +1,50 @@
-import winston from 'winston';
+// no var needed here, colors will attached colors
+// to String.prototype
+import 'colors';
+import _ from  'lodash';
 import config from '../config/env';
 
-const makeLogger = ()=> {
-  const customLevels = {
-    levels: {
-      print: 0,
-      err: 1
-    },
+// create a noop (no operation) function for when loggin is disabled
+const noop = function(){};
+// check if loggin is enabled in the config
+// if it is, then use console.log
+// if not then noop
+const consoleLog = config.logging ? console.log.bind(console) : noop;
 
-    colors: {
-      print: 'magenta',
-      err: 'red'
-    }
-  };
+const logger = {
+  log() {
+    const tag = '[ ✨ LOG ✨ ]'.green;
+    // arguments is an array like object with all the passed
+    // in arguments to this function
+    const args = _.toArray(arguments)
+      .map(function(arg) {
+        if(typeof arg === 'object') {
+          // turn the object to a string so we
+          // can log all the properties and color it
+          const string = JSON.stringify(arg, null, 2);
+          return tag + '  ' + string.cyan;
+        } else {
+          return tag + '  ' + arg.cyan;
+        }
+      });
 
-  const logger =  new(winston.Logger)({
-    transports: [new (winston.transports.Console)()],
-    levels: customLevels.levels
-  });
+    // call either console.log or noop here
+    // with the console object as the context
+    // and the new colored args :)
+    consoleLog.apply(console, args);
+  },
 
-  winston.addColors(customLevels.colors);
+  error() {
+    const args = _.toArray(arguments)
+      .map(function(arg) {
+        arg = arg.stack || arg;
+        const name = arg.name || '[ ❌ ERROR ❌ ]';
+        const log = name.yellow + '  ' + arg.red;
+        return log;
+      });
 
-  return logger;
+    consoleLog.apply(console, args);
+  }
 };
 
-
-
-const initLogger = ()=> {
-  return config.logging ? makeLogger() : {
-    print(){},
-    err(){}
-  };
-};
-
-const logger = initLogger();
-
-
-export default logger;
-
+export {logger};

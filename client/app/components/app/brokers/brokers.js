@@ -1,10 +1,18 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
-import Brokers from './brokers.directive';
+import {Brokers} from './brokers.directive';
 
-let brokersModule = angular.module('brokers', [
+const brokers = angular.module('brokers', [
   uiRouter
 ])
-.directive('brokers', Brokers);
+.config($stateProvider => {
+  $stateProvider
+    .state('brokers', {
+      url: '/brokers',
+      template: '<brokers></brokers>'
+    })
+})
+.directive('brokers', Brokers)
+.name;
 
-export {brokersModule};
+export default brokers;

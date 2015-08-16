@@ -6,8 +6,7 @@ class LeadsController {
   constructor(Leads, $mdDialog){
     this.Leads = Leads;
     this.modal = $mdDialog;
-    this.name = 'leads';
-
+    this.leads = [];
     this.getLeads();
   }
 

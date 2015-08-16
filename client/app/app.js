@@ -6,6 +6,7 @@ import uiRouter from 'angular-ui-router';
 import state from './state/state';
 import root from './components/app/root/root';
 import leads from './components/app/leads/leads';
+import brokers from './components/app/brokers/brokers';
 
 angular.module('app', [
   /* 3rd party */
@@ -16,7 +17,8 @@ angular.module('app', [
 
   /* components */
   root,
-  leads
+  leads,
+  brokers
 ])
 .config($mdThemingProvider => {
   $mdThemingProvider.theme('default')

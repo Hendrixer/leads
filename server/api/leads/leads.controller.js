@@ -4,9 +4,6 @@ import spreadToJSon from 'xlsx-to-json';
 import path from 'path';
 import future from 'bluebird';
 import logger from '../../util/logger';
-
-future.promisifyAll(Leads);
-future.promisifyAll(Leads.prototype);
 const toJson = future.promisify(spreadToJSon);
 
 export const $get = (req, res, next)=> {
@@ -29,15 +26,16 @@ export const $post = (req, res, next)=> {
   })
     .then(rawLeads => {
       const leads = rawLeads.map(lead => {
-        lead = Leads.format(lead);
-        return Leads.createAsync(lead)
-      });
+        return lead = Leads.format(lead);
 
-      return future.all(leads);
-    })
-    .then(leads => {
-      logger.print(leads);
+        // return Leads.createAsync(lead);
+      });
       res.json(leads);
+      // return future.all(leads);
+    // })
+    // .then(leads => {
+      // logger.print(leads);
+      // res.json(leads);
     })
     .catch(next.bind(next));
 };

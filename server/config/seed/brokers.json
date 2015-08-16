@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Trust Financing LLC",
+    "displayName": "Trust Financing",
+    "email": "trustus@money.com",
+    "phone": 5555555555,
+    "website": "trustmonies.com",
+    "address": {
+      "street": "101 trust us way",
+      "extra": "suite 1000",
+      "city": "New York",
+      "state": "NY",
+      "zip": 89898
+    },
+    "timezone": "EST"
+  },
+
+  {
+    "name": "Motion Monies corp",
+    "displayName": "Motion Monies",
+    "email": "givusmoney@motion.com",
+    "phone": 6781234567,
+    "website": "giveusmonies.com",
+    "address": {
+      "street": "2034 monies st",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": 99999
+    },
+    "timezone": "SST"
+  }
+]
