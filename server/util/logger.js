@@ -22,12 +22,13 @@ const logger = {
           // turn the object to a string so we
           // can log all the properties and color it
           const string = JSON.stringify(arg, null, 2);
-          return tag + '  ' + string.cyan;
+          return string.cyan;
         } else {
-          return tag + '  ' + arg.cyan;
+          return arg.cyan;
         }
       });
 
+    args.unshift(tag);
     // call either console.log or noop here
     // with the console object as the context
     // and the new colored args :)

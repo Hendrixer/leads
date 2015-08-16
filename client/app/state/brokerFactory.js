@@ -1,20 +1,20 @@
 import {api} from './const';
 
 const BrokerFactory = ($http) => {
-  let brokers = [];
+  let brokers = {};
 
   const getState = ()=> {
-    return brokers || [];
+    return brokers || {};
   };
 
-  async function getBrokers(query={}, params={}) {
+  async function getBrokers(params={}) {
     const resp = await $http({
       method: 'GET',
       url: `${api}/brokers`,
       params
     });
-    brokers = brokers.concat(resp.data);
-    console.log(brokers);
+
+    brokers[params.nameStartsWith] = resp.data;
   }
 
   return { getBrokers, getState };

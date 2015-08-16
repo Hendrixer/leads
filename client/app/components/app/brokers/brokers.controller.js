@@ -1,17 +1,10 @@
-class BrokersController {
-  constructor(Brokers){
-    this.name = 'brokers';
-    this.Brokers = Brokers;
-    this.brokers = [];
-    this.getBrokers();
-  }
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  getBrokers() {
-    this.Brokers.getBrokers()
-      .then(()=> {
-        this.brokers = this.Brokers.getstate();
-        console.log('done');
-      });
+class BrokersController {
+  constructor(Brokers, $stateParams){
+    this.Brokers = Brokers;
+
+    this.letters = letters;
   }
 }
 

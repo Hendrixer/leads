@@ -1,12 +1,22 @@
 import {Brokers} from './brokers.model';
 import _ from 'lodash';
+import logger from '../../util/logger';
+import {query} from '../query';
 
 export const $get = (req, res, next)=> {
-  Brokers.findAsync()
-    .then(brokers => {
-      res.json(brokers);
-    })
-    .catch(next.bind.next);
+  if (req.query.count) {
+    Brokers.count({})
+      .execAsync()
+      .then(count => {
+        res.status(200).send({count});
+      });
+  } else {
+    query(Brokers.find.bind(Brokers), req.query)
+      .then(brokers => {
+        res.json(brokers);
+      })
+      .catch(next.bind.next);
+  }
 };
 
 export const $getOne = (req, res, next)=> {

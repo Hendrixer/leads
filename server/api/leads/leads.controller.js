@@ -4,14 +4,24 @@ import spreadToJSon from 'xlsx-to-json';
 import path from 'path';
 import future from 'bluebird';
 import logger from '../../util/logger';
+import {query} from '../query';
+
 const toJson = future.promisify(spreadToJSon);
 
 export const $get = (req, res, next)=> {
-  Leads.findAsync({})
-    .then(leads => {
-      res.json(leads);
-    })
-    .catch(next.bind.next);
+  if (req.query.count) {
+    Leads.count({})
+      .execAsync()
+      .then(count => {
+        res.status(200).send({count});
+      });
+  } else {
+    query(Leads.find.bind(Leads), req.query)
+      .then(leads => {
+        res.json(leads);
+      })
+      .catch(next.bind.next);
+  }
 };
 
 export const $getOne = (req, res, next)=> {
@@ -28,14 +38,13 @@ export const $post = (req, res, next)=> {
       const leads = rawLeads.map(lead => {
         return lead = Leads.format(lead);
 
-        // return Leads.createAsync(lead);
+        return Leads.createAsync(lead);
       });
       res.json(leads);
-      // return future.all(leads);
-    // })
-    // .then(leads => {
-      // logger.print(leads);
-      // res.json(leads);
+      return future.all(leads);
+    })
+    .then(leads => {
+      res.json(leads);
     })
     .catch(next.bind(next));
 };

@@ -5,6 +5,18 @@
         account_circle
     </md-icon>
   </md-button>
-  <md-content>
+  <md-content class="main-content" layout="column">
+    <div class="alphabet" layout="row" layout-align="center center" layout-margin>
+      <span flex ng-repeat="letter in vm.letters track by $index"
+      class="letter" ui-sref-active="active">
+        <a ui-sref="brokers.group({letter: letter.toLowerCase()})">
+          {{ ::letter }}
+        </a>
+      </span>
+    </div>
+
+    <div>
+      <div ui-view class="md-whiteframe-z2 broker-list"></div>
+    </div>
   </md-content>
 </section>
