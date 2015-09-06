@@ -1,4 +1,4 @@
-import 'angular-material/angular-material.min.css';
+import 'ngMaterial.css';
 import './app.styl';
 import ngMaterial from 'angular-material';
 import angular from 'angular';
@@ -7,6 +7,7 @@ import state from './state/state';
 import root from './components/app/root/root';
 import leads from './components/app/leads/leads';
 import brokers from './components/app/brokers/brokers';
+import new_broker from './components/app/new_broker/new_broker';
 
 angular.module('app', [
   /* 3rd party */
@@ -18,7 +19,8 @@ angular.module('app', [
   /* components */
   root,
   leads,
-  brokers
+  brokers,
+  new_broker
 ])
 .config($mdThemingProvider => {
   $mdThemingProvider.theme('default')

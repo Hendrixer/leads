@@ -1,6 +1,7 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import {Brokers} from './brokers.directive';
+import brokerListTemplate from './brokerList.html';
 
 const brokers = angular.module('brokers', [
   uiRouter
@@ -8,20 +9,16 @@ const brokers = angular.module('brokers', [
 .config(($stateProvider, $urlRouterProvider) => {
   $stateProvider
     .state('brokers', {
-      abstract: true,
       url: '/brokers',
       template: '<brokers></brokers>'
     })
     .state('brokers.group', {
       url: '/:letter',
-      template: `
-        <div ng-repeat="broker in detail.brokers track by broker._id">
-          <h3>{{ broker.displayName }}</h3>
-        </div>
-      `,
+      template: brokerListTemplate,
       controllerAs: 'detail',
       controller: function(brokers) {
         this.brokers = brokers;
+        this.search = '';
       },
 
       resolve: {
@@ -31,17 +28,14 @@ const brokers = angular.module('brokers', [
             'nameStartsWith': letter,
             sort: 'name'
           };
+
           return Brokers.getBrokers(query)
           .then(()=> {
             return Brokers.getState()[letter];
           });
         }
       }
-    })
-
-  $urlRouterProvider.when('/brokers', ($state) => {
-    $state.go('brokers', { letter: 'a' });
-  });
+    });
 })
 .directive('brokers', Brokers)
 .name;

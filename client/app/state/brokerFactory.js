@@ -1,10 +1,10 @@
 import {api} from './const';
 
 const BrokerFactory = ($http) => {
-  let brokers = {};
+  let $brokers = {};
 
   const getState = ()=> {
-    return brokers || {};
+    return $brokers || {};
   };
 
   async function getBrokers(params={}) {
@@ -14,10 +14,25 @@ const BrokerFactory = ($http) => {
       params
     });
 
-    brokers[params.nameStartsWith] = resp.data;
+    $brokers[params.nameStartsWith] = resp.data;
   }
 
-  return { getBrokers, getState };
+  async function createBroker(broker) {
+    const resp = await $http({
+      method: 'POST',
+      url: `${api}/brokers`,
+      data: broker
+    });
+
+    const savedBroker = resp.data;
+    const firstLetter = savedBroker.name[0].toLowerCase();
+
+    $brokers[firstLetter] ?
+      $brokers[firstLetter].push(savedBroker) :
+      $brokers[firstLetter] = [savedBroker];
+  }
+
+  return { getBrokers, getState, createBroker };
 };
 
 export {BrokerFactory};

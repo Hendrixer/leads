@@ -1,0 +1,22 @@
+<section class="broker-list" layout="column" layout-margin>
+  <div layout="row" layout-align="center start">
+    <md-input-container flex="30">
+      <label>Search</label>
+      <input ng-model="search.displayName">
+    </md-input-container>
+  </div>
+  <div class="broker-items md-whiteframe-z2">
+    <md-list class="list-container">
+      <md-list-item class="md-2-line"
+        ng-repeat-start="broker in detail.brokers | filter:search track by broker._id">
+        <div class="md-list-item-text">
+          <h3>{{ ::broker.displayName}}</h3>
+        </div>
+      </md-list-item>
+      <md-divider ng-repeat-end></md-divider>
+      <div class="no-results" layout="column" layout-align="center center">
+        <h1>No Results</h1>
+      </div>
+    </md-list>
+  </div>
+</section>

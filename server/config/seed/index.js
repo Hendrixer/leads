@@ -9,7 +9,6 @@ import brokerData from './brokers.json';
 import {logger} from '../../util/logger';
 
 const mockPairs = [
-  {model: Leads, data: leadData},
   {model: Brokers, data: brokerData}
 ];
 
@@ -19,16 +18,28 @@ const clean = (...models) => {
 };
 
 const createDocuments = (pairs) => {
-  return Future.all(pairs.map(pair => pair.model.create(pair.data)));
+  return Future.all(pairs.map(pair => {
+    let data = pair.data;
+
+    if (pair.format) {
+      data = data.map(doc => {
+        if (!doc.type) {
+          doc.type = 'mortage';
+        }
+        return pair.format(doc);
+      });
+    }
+    return pair.model.createAsync(data);
+  }));
 };
 
-clean(Leads, Brokers)
+clean(Brokers)
 .then(()=> {
   logger.log('so clean');
 })
 .then(removed => createDocuments(mockPairs))
 .then(created => {
-  logger.log('seeded');
+  logger.log(`seeded ${created[0].length} documents`);
 });
 
 

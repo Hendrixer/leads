@@ -15,9 +15,8 @@ if (config.db.seed) {
 }
 
 const app = express();
+
 appMiddleware(app);
 app.use('/api', api);
+
 export default app;
-
-
-

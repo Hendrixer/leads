@@ -1,3 +1,4 @@
+import {logger} from '../../util/logger';
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
@@ -6,131 +7,168 @@ const LeadsSchema = new Schema({
 
   type: {
     type: String,
-    required: true
+    required: true,
   },
 
-  name: {
+  firstName: {
     type: String,
-    required: true
   },
-
-  email: {
+  lastName: {
     type: String,
-    unique: true,
-    sparse: true
   },
 
   address: {
     street: String,
-    extra: String,
     city: String,
     state: String,
-    zipcode: Number
+    zip: Number,
   },
 
   phone: {
-    home: {
-      type: Number
-    },
-    work: {
-      type: Number
-    }
+    home: String,
+    work: String,
   },
 
-  bestContact: String,
+  email: {
+    type: String,
+    index: true,
+    sparse: true,
+    trim: true
+  },
+
+  bestTimeToContact: String,
+
   homeOwner: {
-    required: true,
-    type: Boolean
+    type: String,
+    default: false,
   },
 
   creditRating: String,
 
-  ltv: Number,
-  cltv: Number,
+  LTV: Number,
+  CLTV: Number,
 
-  loan: {
-    requested: Number,
-    max: Number,
+  requestedLoan: {
+    amountMin: String,
+    amountMax: String,
     description: String,
-    purpose: String
+    purpose: String,
   },
 
   property: {
-    value: Number,
+    value: String,
     description: String,
     location: String,
-    price: Number,
-    year: Number
+    purchasePrice: String,
+    yearAcquired: String,
   },
 
   mortgage: {
-    totalBalance: Number,
-
-    firstBalance: Number,
-    firstRate: Number,
-    firstType: String,
-    firstPaymentAmount: Number,
-
-    secondBalance: Number,
-    secondRate: Number,
-    secondType: String,
-    secondPaymentAmount: Number
-  }
+    totalBalance: String,
+    first: {
+      balance: String,
+      rate: String,
+      payment: String,
+    },
+    second: {
+      balance: String,
+      rate: String,
+      payment: String,
+    },
+  },
 });
 
 LeadsSchema.statics.format = (lead) => {
+  let type = 'education';
+
+  if (lead.Mortgage1Balance || lead.Mortgage2Balance || lead.Mortgage2Payment) {
+    type = 'mortgage';
+  }
+
   const newLead = {
     age: lead.Age,
-    type: 'mortgage',
-    name: lead.ContactFullName,
-    email: lead.email,
+    type: lead.type || type,
+    firstName: lead.ContactFirstName,
+    lastName: lead.ContactLastName,
     address: {
       street: lead.ContactAddress1,
-      extra: lead.ContactAddress2,
       city: lead.ContactCity,
       state: lead.ContactStateOrProvince,
-      zipcode: lead.ContactPostalCode
+      zip: lead.ContactPostalCode
     },
-
     phone: {
       home: lead.ContactHomePhone,
       work: lead.ContactWorkPhone
     },
-    bestContact: lead.BestContactTimeDescription,
+    bestTimeToContact: lead.BestContactTimeDescription,
     homeOwner: lead.HomeOwnerYesNo,
     creditRating: lead.CreditRatingDescription,
-    ltv: lead.LTV,
-    cltv: lead.CLTV,
-    loan: {
-      requested: lead.RequestedLoanAmountMin,
-      max: lead.RequestedLoanAmountMax,
+    LTV: lead.LTV,
+    CLTV: lead.CLTV,
+    requestedLoan: {
+      amountMin: lead.RequestedLoanAmountMin,
+      amountMax: lead.RequestedLoanAmountMax,
       description: lead.RequestedLoanTypeDescription,
       purpose: lead.RequestedLoanPurposeAbbrv
     },
+
     property: {
       value: lead.PropertyValue,
       description: lead.PropertyTypeDescription,
       location: lead.PropertyLocation,
-      price: lead.PropertyPurchasePrice,
-      year: lead.PropertyYearAcquired
+      purchasePrice: lead.PropertyPurchasePrice,
+      yearAcquired: lead.PropertyYearAcquired
     },
 
     mortgage: {
       totalBalance: lead.MortgagesTotalBalance,
-
-      firstBalance: lead.Mortgage1Balance,
-      firstRate: lead.Mortgage1Rate,
-      firstType: lead.Mortgage1Type,
-      firstPaymentAmount: lead.Mortgage1Payment,
-
-      secondBalance: lead.Mortgage2Balance,
-      secondRate: lead.Mortgage2Rate,
-      secondType: lead.Mortgage2Type,
-      secondPaymentAmount: lead.Mortgage2Payment
+      first: {
+        balance: lead.Mortgage1Balance,
+        rate: lead.Mortgage1Rate,
+        payment: lead.Mortgage1Payment
+      },
+      second: {
+        balance: lead.Mortgage2Balance,
+        rate: lead.Mortgage2Rate,
+        payment: lead.Mortgage2Payment
+      }
     }
   };
 
+  if (lead.ContactEamil) {
+    newLead.email = lead.ContactEamil;
+  }
+
   return newLead;
+};
+
+LeadsSchema.statics.saveDupe = (leads)=> {
+  if (!Array.isArray(leads)) {
+    leads = [leads];
+  }
+
+  const Leads = mongoose.model('leads');
+
+  return Promise.all(leads.map(lead => {
+    lead = Leads.format(lead);
+
+    return new Promise((resolve, reject) => {
+      new Leads(lead).save((err, lead) => {
+        if (err && err.code === 1100) {
+          logger.error('dupe', lead.email);
+          // return Leads.findOne({ email: lead.email });
+        } else {
+          return lead;
+        }
+      })
+    })
+  }));
+};
+
+LeadsSchema.methods.saveDupe = () => {
+  const Leads = mongoose.model('leads');
+
+  return Leads.saveDupe([this]);
 };
 
 export const Leads = mongoose.model('leads', LeadsSchema);

@@ -4,5 +4,5 @@ var app = require('./app');
 var logger = require('./util/logger').logger;
 
 app.listen(config.port, function() {
-  logger.log('listening on post %d', config.port);
+  logger.log('listening on port ', config.port);
 });

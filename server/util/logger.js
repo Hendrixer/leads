@@ -1,6 +1,6 @@
 // no var needed here, colors will attached colors
 // to String.prototype
-import 'colors';
+import chalk from 'chalk';
 import _ from  'lodash';
 import config from '../config/env';
 
@@ -13,18 +13,33 @@ const consoleLog = config.logging ? console.log.bind(console) : noop;
 
 const logger = {
   log() {
-    const tag = '[ ✨ LOG ✨ ]'.green;
+    const tag = chalk.white.bold('✨✨ ');
     // arguments is an array like object with all the passed
     // in arguments to this function
     const args = _.toArray(arguments)
       .map(function(arg) {
         if(typeof arg === 'object') {
+
           // turn the object to a string so we
           // can log all the properties and color it
           const string = JSON.stringify(arg, null, 2);
-          return string.cyan;
+          return chalk.bold.cyan(string);
+
+        } else if (_.isNumber(arg)){
+
+          return chalk.magenta(arg)
+        } else if (_.isFunction(arg)){
+
+          let funcName;
+
+          if (arg.name) {
+            funcName = `: ${arg.name}`;
+          }
+
+          return chalk.yellow(`[Function${funcName}]`);
         } else {
-          return arg.cyan;
+
+          return chalk.green(arg);
         }
       });
 
@@ -39,8 +54,8 @@ const logger = {
     const args = _.toArray(arguments)
       .map(function(arg) {
         arg = arg.stack || arg;
-        const name = arg.name || '[ ❌ ERROR ❌ ]';
-        const log = name.yellow + '  ' + arg.red;
+        const name = arg.name || '❌❌';
+        const log = chalk.yellow(name) + '  ' + chalk.red(arg);
         return log;
       });
 

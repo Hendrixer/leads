@@ -6,6 +6,10 @@
         backup
     </md-icon>
   </md-button>
-  <md-content>
+  <md-content layout="row" layout-margin layout-wrap>
+    <dash-card ng-repeat="card in vm.cards"
+      type="card.type"
+      chart-data="card.data" flex="33">
+    </dash-card>
   </md-content>
 </section>

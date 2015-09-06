@@ -3,11 +3,18 @@
   .md-fab
     position fixed
     bottom 35px
-    right 45px
+    right 70px
   .main-content
     padding 20px
     .broker-list
-      background-color white
+      padding-top 20px !important
+      .broker-items
+        background-color white !important
+        .list-container
+          padding 0px
+          md-divider + .no-results
+            display none
+
     .alphabet
       .letter
         font-weight 300
@@ -20,6 +27,7 @@
       a
         color alpha(black, .87)
         text-decoration none
+        transition color .3s ease
         &:visited
           color alpha(black, .87)
           text-decoration none

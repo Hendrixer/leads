@@ -13,10 +13,22 @@ tColor = alpha(black, .38)
     .file-drop-box
       border dashed 3px tColor
       min-width 800px
-      min-height 400px
+      min-height 200px
       cursor pointer
+      margin-bottom 20px
+      transform border .3s ease
       .cta
         color tColor
         font-weight 300
-      .accept
-        border dashed 3px green
+      &.accept
+        border dashed 3px #18FFFF
+        .cta
+          color #00E5FF
+    .file-list
+      min-height 100px
+    .upload-percentage
+      text-align center
+      *
+        font-weight 300
+        margin 0px
+        font-size 2rem

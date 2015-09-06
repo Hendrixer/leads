@@ -7,14 +7,12 @@ const LeadFactory = ($http) => {
     return leads || [];
   };
 
-  async function getLeads(query={}, params={}) {
+  async function getLeads(params={}) {
     const resp = await $http({
       method: 'GET',
       url: `${api}/leads`,
       params
     });
-
-    console.log(resp.data);
     leads = leads.concat(resp.data);
   }
 
