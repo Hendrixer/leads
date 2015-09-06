@@ -1,5 +1,7 @@
 import {logger} from '../../util/logger';
 import mongoose from 'mongoose';
+import * as utils from '../constants';
+
 const {Schema} = mongoose;
 
 const LeadsSchema = new Schema({
@@ -12,9 +14,13 @@ const LeadsSchema = new Schema({
 
   firstName: {
     type: String,
+    required: true,
+    index: true
   },
   lastName: {
     type: String,
+    required: true,
+    index: true
   },
 
   address: {
@@ -25,25 +31,29 @@ const LeadsSchema = new Schema({
   },
 
   phone: {
-    home: String,
-    work: String,
+    home: Number,
+    work: Number,
   },
 
   email: {
     type: String,
     index: true,
     sparse: true,
-    trim: true
+    trim: true,
+    unique: true
   },
 
   bestTimeToContact: String,
 
   homeOwner: {
-    type: String,
+    type: Boolean,
     default: false,
   },
 
-  creditRating: String,
+  creditRating: {
+    type: String,
+    validate: utils.validator('creditRatings')
+  },
 
   LTV: Number,
   CLTV: Number,
@@ -52,31 +62,74 @@ const LeadsSchema = new Schema({
     amountMin: String,
     amountMax: String,
     description: String,
-    purpose: String,
+    purpose: {
+      type: String,
+      validate: utils.validator('loanPurposes')
+    },
   },
 
   property: {
-    value: String,
-    description: String,
+    value: Number,
+    description: {
+      type: String,
+      validate: utils.validator('propertyTypes')
+    },
     location: String,
-    purchasePrice: String,
-    yearAcquired: String,
+    purchasePrice: Number,
+    yearAcquired: Number,
   },
 
   mortgage: {
-    totalBalance: String,
+    totalBalance: Number,
     first: {
-      balance: String,
-      rate: String,
-      payment: String,
+      balance: Number,
+      rate: Number,
+      payment: Number,
     },
     second: {
-      balance: String,
-      rate: String,
-      payment: String,
+      balance: Number,
+      rate: Number,
+      payment: Number,
     },
   },
 });
+
+const checkForNull = (prop) => {
+  if (prop === 'NULL') {
+    return;
+  } else {
+    return prop;
+  }
+}
+
+const normal = (prop) => {
+  if(checkForNull(prop)) {
+    return prop.toLowerCase();
+  }
+}
+
+const replaceNum = (prop) => {
+  if (checkForNull(prop)) {
+    prop = prop.replace('1st', 'first');
+    prop = prop.replace('2nd', 'second');
+    prop = prop.replace(/refi\s/i, 'refinance ');
+    prop = prop.replace('2-4 ', 'multi');
+    prop = prop.replace(/residence/i, '');
+    return prop.toLowerCase().trim();
+  }
+};
+
+const parseNum = (prop) => {
+  if (checkForNull(prop)) {
+    let num;
+
+    try {
+      num = parseInt(prop);
+    } catch(e) {
+    }
+    return undefined;
+  }
+};
 
 LeadsSchema.statics.format = (lead) => {
   let type = 'education';
@@ -86,51 +139,51 @@ LeadsSchema.statics.format = (lead) => {
   }
 
   const newLead = {
-    age: lead.Age,
+    age: parseNum(lead.Age),
     type: lead.type || type,
-    firstName: lead.ContactFirstName,
-    lastName: lead.ContactLastName,
+    firstName: checkForNull(lead.ContactFirstName),
+    lastName: checkForNull(lead.ContactLastName),
     address: {
-      street: lead.ContactAddress1,
-      city: lead.ContactCity,
-      state: lead.ContactStateOrProvince,
-      zip: lead.ContactPostalCode
+      street: checkForNull(lead.ContactAddress1),
+      city: checkForNull(lead.ContactCity),
+      state: checkForNull(lead.ContactStateOrProvince),
+      zip: parseNum(lead.ContactPostalCode)
     },
     phone: {
-      home: lead.ContactHomePhone,
-      work: lead.ContactWorkPhone
+      home: checkForNull(lead.ContactHomePhone),
+      work: checkForNull(lead.ContactWorkPhone)
     },
-    bestTimeToContact: lead.BestContactTimeDescription,
-    homeOwner: lead.HomeOwnerYesNo,
-    creditRating: lead.CreditRatingDescription,
-    LTV: lead.LTV,
-    CLTV: lead.CLTV,
+    bestTimeToContact: checkForNull(lead.BestContactTimeDescription),
+    homeOwner: lead.HomeOwnerYesNo&&lead.HomeOwnerYesNo === 'Yes'? true: false,
+    creditRating: normal(lead.CreditRatingDescription),
+    LTV: checkForNull(lead.LTV),
+    CLTV: checkForNull(lead.CLTV),
     requestedLoan: {
-      amountMin: lead.RequestedLoanAmountMin,
-      amountMax: lead.RequestedLoanAmountMax,
-      description: lead.RequestedLoanTypeDescription,
-      purpose: lead.RequestedLoanPurposeAbbrv
+      amountMin: checkForNull(lead.RequestedLoanAmountMin),
+      amountMax: checkForNull(lead.RequestedLoanAmountMax),
+      description: normal(lead.RequestedLoanTypeDescription),
+      purpose: replaceNum(lead.RequestedLoanPurposeAbbrv)
     },
 
     property: {
-      value: lead.PropertyValue,
-      description: lead.PropertyTypeDescription,
-      location: lead.PropertyLocation,
-      purchasePrice: lead.PropertyPurchasePrice,
-      yearAcquired: lead.PropertyYearAcquired
+      value: parseNum(lead.PropertyValue),
+      description: replaceNum(lead.PropertyTypeDescription),
+      location: normal(lead.PropertyLocation),
+      purchasePrice: parseNum(lead.PropertyPurchasePrice),
+      yearAcquired: parseNum(lead.PropertyYearAcquired)
     },
 
     mortgage: {
-      totalBalance: lead.MortgagesTotalBalance,
+      totalBalance: parseNum(lead.MortgagesTotalBalance),
       first: {
-        balance: lead.Mortgage1Balance,
-        rate: lead.Mortgage1Rate,
-        payment: lead.Mortgage1Payment
+        balance: parseNum(lead.Mortgage1Balance),
+        rate: parseNum(lead.Mortgage1Rate),
+        payment: parseNum(lead.Mortgage1Payment)
       },
       second: {
-        balance: lead.Mortgage2Balance,
-        rate: lead.Mortgage2Rate,
-        payment: lead.Mortgage2Payment
+        balance: parseNum(lead.Mortgage2Balance),
+        rate: parseNum(lead.Mortgage2Rate),
+        payment: parseNum(lead.Mortgage2Payment)
       }
     }
   };
@@ -154,7 +207,8 @@ LeadsSchema.statics.saveDupe = (leads)=> {
 
     return new Promise((resolve, reject) => {
       new Leads(lead).save((err, lead) => {
-        if (err && err.code === 1100) {
+        if (err) logger.error(lead, err);
+        if (err.code === 1100) {
           logger.error('dupe', lead.email);
           // return Leads.findOne({ email: lead.email });
         } else {

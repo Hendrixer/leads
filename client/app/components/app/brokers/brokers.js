@@ -2,6 +2,7 @@ import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import {Brokers} from './brokers.directive';
 import brokerListTemplate from './brokerList.html';
+import brokerListController from './brokerListController';
 
 const brokers = angular.module('brokers', [
   uiRouter
@@ -16,17 +17,15 @@ const brokers = angular.module('brokers', [
       url: '/:letter',
       template: brokerListTemplate,
       controllerAs: 'detail',
-      controller: function(brokers) {
-        this.brokers = brokers;
-        this.search = '';
-      },
+      controller: brokerListController,
 
       resolve: {
         brokers: function(Brokers, $stateParams) {
           const letter = $stateParams.letter;
           const query = {
             'nameStartsWith': letter,
-            sort: 'name'
+            sort: 'name',
+            select: 'name displayName email'
           };
 
           return Brokers.getBrokers(query)

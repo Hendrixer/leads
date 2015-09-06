@@ -1,5 +1,7 @@
 import {Orders} from './orders.model';
 import _ from 'lodash';
+import {Leads} from '../leads/leads.model';
+import {Brokers} from '../brokers/brokers.model';
 import future from 'bluebird';
 
 future.promisifyAll(Orders);
@@ -22,18 +24,7 @@ export const $getOne = (req, res, next)=> {
 };
 
 export const $post = (req, res, next)=> {
-  const {body: order} = req;
 
-  const newOrder = new Orders();
-  newOrder.broker = order.broker;
-
-  const {leads} = order;
-
-  newOrder.leads.push(...leads);
-
-  newOrder.save((err, savedOrder) => {
-    return err ? next(err) : res.json(savedOrder);
-  });
 };
 
 export const $put = (req, res, next)=> {

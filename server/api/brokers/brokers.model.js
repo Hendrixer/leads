@@ -1,4 +1,7 @@
+import _ from 'lodash';
 import mongoose from 'mongoose';
+import * as util from '../constants';
+
 const {Schema} = mongoose;
 
 const BrokersSchema = new Schema({
@@ -53,37 +56,37 @@ const BrokersSchema = new Schema({
       loanPurpose: {
         refinanceFirst: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         refinanceCashOut: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         refinanceFirstFha: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         refinanceFirstVa: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         debtConsolidation: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         heloc: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         buyFirstHome: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         buySecondHome: {
@@ -95,44 +98,44 @@ const BrokersSchema = new Schema({
       creditRating: {
         excellent: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         good: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         fair: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         poor: {
           type: Boolean,
-          deafult: false
+          default: false
         }
       },
 
       propertyType: {
         singleFamily: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         condo: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         townHouse: {
           type: Boolean,
-          deafult: false
+          default: false
         },
 
         multiplex: {
           type: Boolean,
-          deafult: false
+          default: false
         }
       }
     },
