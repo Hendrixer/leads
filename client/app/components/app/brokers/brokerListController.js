@@ -1,17 +1,16 @@
 class BrokerListController {
   constructor(brokers, Brokers, Orders) {
-    this.brokers = brokers;
+    this.brokers = brokers.map(broker => {
+      broker.downloadFileMime = 'csv';
+      return broker;
+    });
     this.search = '';
     this.Brokers = Brokers;
     this.Orders = Orders;
   }
 
   orderLeads(broker) {
-    this.Orders.createOrder(order)
-      .then(() => {
-        console.log('done');
-      })
-      .catch(console.error.bind(console));
+    this.Orders.createOrder(broker);
   }
 }
 

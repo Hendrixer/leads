@@ -20,8 +20,8 @@ const brokers = angular.module('brokers', [
       controller: brokerListController,
 
       resolve: {
-        brokers: function(Brokers, $stateParams) {
-          const letter = $stateParams.letter;
+        brokers: ['Brokers', '$stateParams', function(Brokers, $stateParams) {
+          const {letter} = $stateParams;
           const query = {
             'nameStartsWith': letter,
             sort: 'name',
@@ -32,7 +32,7 @@ const brokers = angular.module('brokers', [
           .then(()=> {
             return Brokers.getState()[letter];
           });
-        }
+        }]
       }
     });
 })

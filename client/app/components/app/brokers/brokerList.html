@@ -19,6 +19,18 @@
                 <md-icon md-font-set="material-icons">shopping_cart</md-icon>
               </md-button>
             </div>
+            <div class="file-types" flex>
+              <md-radio-group ng-model="broker.downloadFileMime" layout="row">
+                <md-radio-button class="md-primary"value="csv">CSV</md-radio-button>
+                <md-radio-button class="md-primary"value="txt">Text</md-radio-button>
+                <md-radio-button class="md-primary"value="pdf">PDF</md-radio-button>
+              </md-radio-group>
+            </div>
+            <div class="broker-history">
+              <md-button class="md-accent md-hue-3" aria="new order" ui-sref="history({broker: broker._id, name: broker.name})">
+                <md-icon md-font-set="material-icons">history</md-icon>
+              </md-button>
+            </div>
           </div>
         </div>
       </md-list-item>

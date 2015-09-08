@@ -1,6 +1,6 @@
 import {api} from './const';
 
-const OrderFactory = ($http) => {
+const OrderFactory = ($http, $window) => {
   let $orders = {};
 
   const getState = ()=> {
@@ -10,26 +10,25 @@ const OrderFactory = ($http) => {
   async function getOrders(params={}) {
     const resp = await $http({
       method: 'GET',
-      url: `${api}/orders`,
+      url: `${api}/orders/broker`,
       params
     });
+
+    const orders = resp.data;
+    $orders[params.broker] = orders;
   }
 
-  async function createOrder(broker) {
-    const resp = await $http({
-      method: 'POST',
-      url: `${api}/order`,
-      data: broker
-    });
+  const downloadOrder = (order) => {
+    $window.open(`${api}/orders/redownload?order=${order._id}&filetype=${order.filetype}`, '_blank', '');
+  };
 
-    const order = resp.data;
+  const createOrder = (broker)=> {
+    $window.open(`${api}/orders/create?broker=${broker._id}&filetype=${broker.downloadFileMime}`, '_blank', '');
+  };
 
-    $orders[broker._id] ?
-      $orders[broker_.id].push(order) :
-      $order[broker_.id] = [order];
-  }
-
-  return { getOrders, getState, createOrder };
+  return { getOrders, getState, createOrder, downloadOrder };
 };
+
+OrderFactory.$inject = ['$http', '$window'];
 
 export {OrderFactory};
