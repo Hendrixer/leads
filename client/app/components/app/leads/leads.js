@@ -1,19 +1,25 @@
-import React, {Component} from 'react';
-import {Button} from '../../ui/ui';
+import angular from 'angular';
+import uiRouter from 'angular-ui-router';
+import ngUpload from 'ng-file-upload';
+import {Leads} from './leads.directive';
+import dashCard from '../../ui/dashCard/dashCard';
 
-class Leads extends Component {
+const leads = angular.module('leads', [
+  uiRouter,
+  ngUpload,
+  dashCard
+])
+.config(($stateProvider, $urlRouterProvider) => {
+  $urlRouterProvider
+    .otherwise('/leads');
 
-  constructor(props, context) {
-    super(props, context);
-  }
+  $stateProvider
+    .state('leads', {
+      url: '/leads',
+      template: `<leads></leads>`
+    });
+})
+.directive('leads', Leads)
+.name;
 
-  render() {
-    return (
-      <section className="leads">
-        <Button>leads</Button>
-      </section>
-    );
-  }
-}
-
-export {Leads};
+export default leads;

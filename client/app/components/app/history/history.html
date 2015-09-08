@@ -1,0 +1,30 @@
+<section class="history page" layout="column" layout-margin>
+  <div layout="row" layout-align="center start">
+    <h1 class="md-display-2">{{ ::vm.broker.name }} Order History</h1>
+  </div>
+  <div class="md-whiteframe-z1 card">
+    <md-list>
+      <md-list-item class="md-1-line"
+        ng-repeat="order in vm.orderList track by order.broker">
+          <div class="md-list-item-text" layout="row" layout-fill layout-align="start center" layout-padding>
+            <div flex="15">
+              <span class="history-text">Leads sent <span class="leads-sent">{{::order.leads}}</span></span>
+            </div>
+            <div flex="15">
+              <span class="history-text">Ordered on {{ ::order.createdAt| date:"MM/dd/yyyy" }}</span>
+            </div>
+            <div flex="70" layout="row" layout-fill layout-align="endcenter">
+              <md-button class="md-accent md-hue-3" aria="redownload" ng-click="vm.redownload(order)" flex="25">
+                <md-icon md-font-set="material-icons">file_download</md-icon>
+              </md-button>
+              <md-radio-group ng-model="order.filetype" layout="row" flex>
+                <md-radio-button class="md-primary"value="csv">CSV</md-radio-button>
+                <md-radio-button class="md-primary"value="txt">Text</md-radio-button>
+                <md-radio-button class="md-primary"value="pdf">PDF</md-radio-button>
+              </md-radio-group>
+            </div>
+          </div>
+      </md-list-item>
+    </md-list>
+  </div>
+</section>

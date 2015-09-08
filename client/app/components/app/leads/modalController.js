@@ -1,0 +1,73 @@
+const getFileSize = (bytes, decimals) => {
+  if (bytes === 0) {
+    return '0 Byte';
+  }
+
+  const k = 1000;
+  const dm = decimals + 1 || 3;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
+};
+
+export default class {
+  constructor($mdDialog, $scope, Upload) {
+    this.modal = $mdDialog;
+    this.files = [];
+    this.$upload = Upload;
+    this.progress = 0;
+    this.startingUpload = false;
+    this.uploadSize = 0;
+
+    $scope.$watch(()=> {
+      return this.files;
+    },
+
+    (fresh, old) => {
+      const totalSize = getFileSize(
+        fresh.reduce((size, file) => {
+          size += file.size;
+          return size;
+        }, 0)
+      );
+
+      this.uploadSize = totalSize;
+    });
+  }
+
+  cancel() {
+    this.startingUpload = false;
+    this.modal.hide();
+  }
+
+  upload() {
+    this.startingUpload = true;
+    this.progressType = 'determinate';
+    this.$upload.upload({
+      url: '/api/leads',
+      file: this.files,
+      fileFormDataName: 'leads',
+    })
+
+    .progress(evt => {
+      const progress = parseInt(100.0 * evt.loaded / evt.total);
+      this.progress = progress;
+      if (this.progress === 100) {
+        this.progressType = 'indeterminate';
+        this.progress = 0;
+      }
+
+      console.log((100.0 * evt.loaded), evt.total);
+    })
+
+    .success(() => {
+      this.cancel();
+    })
+
+    .error();
+  }
+
+  dropping($files) {
+    this.files = this.files.concat($files);
+  }
+}

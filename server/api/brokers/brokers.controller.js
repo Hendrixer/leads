@@ -1,24 +1,34 @@
 import {Brokers} from './brokers.model';
 import _ from 'lodash';
-import future from 'bluebird';
-
-future.promisifyAll(Brokers);
-future.promisifyAll(Brokers.prototype);
+import {logger} from '../../util/logger';
+import {query} from '../query';
 
 export const $get = (req, res, next)=> {
-  Brokers.findAsync()
-    .then(brokerss => {
-      req.json(brokerss);
-    })
-    .catch(next.bind.next);
+  if (req.query.count) {
+    Brokers.count({})
+      .execAsync()
+      .then(count => {
+        res.status(200).send({count});
+      });
+  } else {
+    query(Brokers.find.bind(Brokers), req.query)
+      .then(brokers => {
+        res.json(brokers);
+      })
+      .catch(next.bind.next);
+  }
 };
 
 export const $getOne = (req, res, next)=> {
-
+  res.json(req.broker);
 };
 
 export const $post = (req, res, next)=> {
-
+  Brokers.createAsync(req.body)
+    .then(broker => {
+      res.json(broker);
+    })
+    .catch(next.bind(next));
 };
 
 export const $put = (req, res, next)=> {

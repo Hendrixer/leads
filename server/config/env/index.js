@@ -5,8 +5,7 @@ let config = {
     dev: 'development',
     prod: 'production',
     test: 'testing'
-  },
-  port: process.env.PORT || 3500
+  }
 };
 
 process.env.NODE_ENV = process.env.NODE_ENV || config.envNames.dev;

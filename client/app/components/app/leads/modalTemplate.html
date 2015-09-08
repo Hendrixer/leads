@@ -1,0 +1,57 @@
+<md-dialog class="upload-dialog">
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <span>Upload Leads</span>
+      </div>
+    </md-toolbar>
+    <md-dialog-content layout="column">
+      <div class="file-drop-box"
+        flex="70"
+        layout="column"
+        layout-align="center center"
+        ngf-drop
+        ngf-multiple="true" ngf-accept="'.xlsx,.csv'"
+        ngf-allow-dir
+        ngf-drag-over-class="accept"
+        ngf-select
+        ngf-change="vm.dropping($files, $file, $event, $rejected)">
+        <h1 class="cta">click or drag to upload new leads</h1>
+      </div>
+      
+      <div layout="row">
+        <div flex="60" ng-if="vm.startingUpload" flex-order="2" layout="row">
+          <div flex="60">
+            <md-progress-linear
+              md-mode="{{vm.progressType}}" value="{{vm.progress}}">
+            </md-progress-linear>
+          </div>
+          <div flex="40" class="upload-percentage" ng-show="vm.progress > 0">
+            <h3>{{vm.progress}}%</h3>
+          </div>
+          <!-- <md-progress-circular md-mode="indeterminate"></md-progress-circular> -->
+        </div>
+        <div class="file-list" layout="row" flex="30"
+          flex-order="1" ng-if="vm.files.length">
+          <div flex="50">
+            <span>{{ vm.files.length }} file(s)</span>
+          </div>
+          <div flex="50">
+            <span>{{ vm.uploadSize }}</span>
+          </div>
+        </div>
+      </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <md-button ng-disabled="!vm.files.length"
+      class="md-accent md-hue-3 md-raised"
+      ng-click="vm.upload()">
+        upload
+      </md-button>
+      <md-button class="md-warn"
+      ng-click="vm.cancel()">
+        nevermind
+      </md-button>
+    </div>
+  </form>
+</md-dialog>

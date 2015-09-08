@@ -1,16 +1,42 @@
-import React, {Component} from 'react';
+import angular from 'angular';
+import uiRouter from 'angular-ui-router';
+import {Brokers} from './brokers.directive';
+import brokerListTemplate from './brokerList.html';
+import brokerListController from './brokerListController';
 
-class Brokers extends Component {
+const brokers = angular.module('brokers', [
+  uiRouter
+])
+.config(($stateProvider, $urlRouterProvider) => {
+  $stateProvider
+    .state('brokers', {
+      url: '/brokers',
+      template: '<brokers></brokers>'
+    })
+    .state('brokers.group', {
+      url: '/:letter',
+      template: brokerListTemplate,
+      controllerAs: 'detail',
+      controller: brokerListController,
 
-  constructor(props, context) {
-    super(props, context);
-  }
+      resolve: {
+        brokers: ['Brokers', '$stateParams', function(Brokers, $stateParams) {
+          const {letter} = $stateParams;
+          const query = {
+            'nameStartsWith': letter,
+            sort: 'name',
+            select: 'name displayName email'
+          };
 
-  render() {
-    return (
-      <h1>brokers</h1>
-    );
-  }
-}
+          return Brokers.getBrokers(query)
+          .then(()=> {
+            return Brokers.getState()[letter];
+          });
+        }]
+      }
+    });
+})
+.directive('brokers', Brokers)
+.name;
 
-export {Brokers};
+export default brokers;

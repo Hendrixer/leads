@@ -1,0 +1,43 @@
+<section class="broker-list" layout="column" layout-margin>
+  <div layout="row" layout-align="center start">
+    <md-input-container flex="30">
+      <label>Search</label>
+      <input ng-model="search.displayName">
+    </md-input-container>
+  </div>
+  <div class="broker-items md-whiteframe-z2">
+    <md-list class="list-container">
+      <md-list-item class="md-2-line"
+        ng-repeat-start="broker in detail.brokers | filter:search track by broker._id">
+        <div class="md-list-item-text" layout="row">
+          <div class="broker-name" flex="25">
+            <span>{{ ::broker.displayName }}</span>
+          </div>
+          <div class="broker-actions" flex layout="row" layout-align="start center">
+            <div class="new-order">
+              <md-button class="md-accent md-hue-3" aria="new order" ng-click="detail.orderLeads(broker)">
+                <md-icon md-font-set="material-icons">shopping_cart</md-icon>
+              </md-button>
+            </div>
+            <div class="file-types" flex>
+              <md-radio-group ng-model="broker.downloadFileMime" layout="row">
+                <md-radio-button class="md-primary"value="csv">CSV</md-radio-button>
+                <md-radio-button class="md-primary"value="txt">Text</md-radio-button>
+                <md-radio-button class="md-primary"value="pdf">PDF</md-radio-button>
+              </md-radio-group>
+            </div>
+            <div class="broker-history">
+              <md-button class="md-accent md-hue-3" aria="new order" ui-sref="history({broker: broker._id, name: broker.name})">
+                <md-icon md-font-set="material-icons">history</md-icon>
+              </md-button>
+            </div>
+          </div>
+        </div>
+      </md-list-item>
+      <md-divider ng-repeat-end></md-divider>
+      <div class="no-results" layout="column" layout-align="center center">
+        <h1>No Results</h1>
+      </div>
+    </md-list>
+  </div>
+</section>

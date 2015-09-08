@@ -1,14 +1,10 @@
-import React, {Component} from 'react';
+import angular from 'angular';
+import uiRouter from 'angular-ui-router';
+import <%= upcaseName %> from './<%= name %>.directive';
 
-class <%= upcaseName %> extends Component {
+let <%= name %>Module = angular.module('<%= name %>', [
+  uiRouter
+])
+.directive('<%= name %>', <%= upcaseName %>);
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
-  render() {
-
-  }
-}
-
-export {<%= upcaseName %>};
+export {<%= name %>Module};
