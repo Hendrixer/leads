@@ -1,0 +1,14 @@
+<div class="signin" layout="column">
+  <md-input-container flex>
+    <label>email</label>
+    <input type="email" required ng-model="vm.user.email">
+  </md-input-container>
+  <md-input-container flex>
+    <label>password</label>
+    <input type="password" required ng-model="vm.user.password">
+  </md-input-container>
+  <div class="action" layout="row" layout-align="end center">
+    <md-button ng-disabled="authForm.$invalid" ng-click="vm.signin()">signin</md-button>
+    <a ui-sref="auth.signup">Don't have an account?</a>
+  </div>
+</div>

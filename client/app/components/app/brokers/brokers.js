@@ -7,7 +7,7 @@ import brokerListController from './brokerListController';
 const brokers = angular.module('brokers', [
   uiRouter
 ])
-.config(($stateProvider, $urlRouterProvider) => {
+.config(['$stateProvider', '$urlRouterProvider',($stateProvider, $urlRouterProvider) => {
   $stateProvider
     .state('brokers', {
       url: '/brokers',
@@ -35,7 +35,7 @@ const brokers = angular.module('brokers', [
         }]
       }
     });
-})
+}])
 .directive('brokers', Brokers)
 .name;
 

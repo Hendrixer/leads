@@ -19,5 +19,5 @@ const LeadFactory = ($http) => {
   return { getLeads, getState };
 };
 
-
+LeadFactory.$inject = ['$http'];
 export {LeadFactory};

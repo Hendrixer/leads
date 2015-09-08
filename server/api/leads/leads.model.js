@@ -18,9 +18,7 @@ const LeadsSchema = new Schema({
     index: true
   },
   lastName: {
-    type: String,
-    required: true,
-    index: true
+    type: String
   },
 
   address: {
@@ -110,11 +108,13 @@ const normal = (prop) => {
 
 const replaceNum = (prop) => {
   if (checkForNull(prop)) {
+    prop = '' + prop;
     prop = prop.replace('1st', 'first');
     prop = prop.replace('2nd', 'second');
     prop = prop.replace(/refi\s/i, 'refinance ');
     prop = prop.replace('2-4 ', 'multi');
     prop = prop.replace(/residence/i, '');
+    prop = prop.replace(/-|\s/g, '');
     return prop.toLowerCase().trim();
   }
 };
@@ -150,8 +150,8 @@ LeadsSchema.statics.format = (lead) => {
       zip: parseNum(lead.ContactPostalCode)
     },
     phone: {
-      home: checkForNull(lead.ContactHomePhone),
-      work: checkForNull(lead.ContactWorkPhone)
+      home: replaceNum(lead.ContactHomePhone),
+      work: replaceNum(lead.ContactWorkPhone)
     },
     bestTimeToContact: checkForNull(lead.BestContactTimeDescription),
     homeOwner: lead.HomeOwnerYesNo&&lead.HomeOwnerYesNo === 'Yes'? true: false,
@@ -207,7 +207,7 @@ LeadsSchema.statics.saveDupe = (leads)=> {
 
     return new Promise((resolve, reject) => {
       new Leads(lead).save((err, lead) => {
-        if (err) logger.error(lead, err);
+        if (err) console.log(err);
         if (err.code === 1100) {
           logger.error('dupe', lead.email);
 

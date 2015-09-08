@@ -10,7 +10,7 @@ const getFileSize = (bytes, decimals) => {
   return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
 };
 
-export default class {
+class ModalController {
   constructor($mdDialog, $scope, Upload) {
     this.modal = $mdDialog;
     this.files = [];
@@ -71,3 +71,6 @@ export default class {
     this.files = this.files.concat($files);
   }
 }
+
+ModalController.$inject = ['$mdDialog', '$scope', 'Upload'];
+export default ModalController;

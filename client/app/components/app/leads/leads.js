@@ -9,7 +9,7 @@ const leads = angular.module('leads', [
   ngUpload,
   dashCard
 ])
-.config(($stateProvider, $urlRouterProvider) => {
+.config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) => {
   $urlRouterProvider
     .otherwise('/leads');
 
@@ -18,7 +18,7 @@ const leads = angular.module('leads', [
       url: '/leads',
       template: `<leads></leads>`
     });
-})
+}])
 .directive('leads', Leads)
 .name;
 

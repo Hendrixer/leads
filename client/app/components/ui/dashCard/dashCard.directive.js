@@ -2,7 +2,7 @@ import './dashCard.styl';
 import template from './dashCard.html';
 import _ from 'lodash';
 
-const DashCard = ($timeout)=> {
+const DashCard = ['$timeout', ($timeout)=> {
   return {
     template,
     restrict: 'E',
@@ -15,6 +15,6 @@ const DashCard = ($timeout)=> {
 
     }
   };
-};
+}];
 
 export {DashCard};

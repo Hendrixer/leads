@@ -71,6 +71,12 @@ gulp.task('bundle', function() {
     .pipe(gulp.dest(paths.client.output));
 });
 
+gulp.task('bundle:prod', function(){
+  return gulp.src(paths.client.entry)
+  .pipe(webpack(require('./webpack.config.prod')))
+  .pipe(gulp.dest(paths.client.output));
+});
+
 gulp.task('watch', function() {
   var watchedPaths = [].concat(
     paths.client.app
@@ -99,6 +105,10 @@ gulp.task('generate', function(){
     }))
     .pipe(gulp.dest(destPath));
 });
+
+gulp.task('prod', function(done){
+  sync('bundle:prod', 'copy', done);
+})
 
 gulp.task('default', function(done) {
   sync('bundle', 'copy', 'server', 'serve', 'watch', done);

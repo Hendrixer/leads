@@ -4,8 +4,13 @@ var pathToNg = path.resolve(node_modules, 'angular/angular.min.js');
 var pathToNgMaterial = path.resolve(node_modules, 'angular-material/angular-material.min.js');
 var pathToNgAnimate = path.resolve(node_modules, 'angular-animate/angular-animate.min.js');
 var pathToUiRouter = path.resolve(node_modules, 'angular-ui-router/release/angular-ui-router.min.js');
+var webpack = require('webpack');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').load();
+}
 
 module.exports = {
   resolve: {
@@ -27,6 +32,13 @@ module.exports = {
     ],
     noParse: [pathToNgAnimate, pathToNg, pathToUiRouter, pathToNgMaterial]
   },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      '$pusherKey': JSON.stringify(process.env.PUSHER_APP_KEY)
+    })
+  ],
 
   stylus: {
     use: [require('jeet')(), require('rupture')()]

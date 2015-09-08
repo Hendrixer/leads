@@ -6,6 +6,7 @@ import path from 'path';
 import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
+import pusher from '../../util/pusher';
 import {Converter} from 'csvtojson';
 
 const toJson = future.promisify(spreadToJSon);
@@ -35,18 +36,16 @@ export const $post = (req, res, next)=> {
   const pathToFile = path.join(__dirname, '/../../../', req.files[0].path);
   const stream = fs.createReadStream(pathToFile);
   const convertor = new Converter({ constructResult: true });
-  const leads = [];
-
+  let count = 0;
   convertor.on('end_parsed', () => {
-    // res.json({ok: true});
-    logger.log('done');
-    logger.log('leads ', leads.length);
+    logger.log(count);
+    pusher.trigger('upload-status', 'processing:finished', {count});
   });
 
   convertor.on('record_parsed', lead => {
     Leads.saveDupe(lead)
       .then(lead => {
-        leads.push(lead);
+        count++;
       })
       .catch(e => {
         logger.error(e);

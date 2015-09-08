@@ -3,14 +3,21 @@ import {logger} from '../util/logger';
 import es from 'event-stream';
 import jsonToCsv from 'json-csv';
 
+export const whiteListEmails = [
+  'willscottmoss@gmail.com',
+  'scott@unitedleadgroup.com'
+];
+
 export const constants = {
   propertyTypes: {
     singleFamily: 'single family',
     'single family': 'single family',
+    singlefamily: 'singlefamily',
     condo: 'condo',
     multiplex: 'multiplex',
     townHouse: 'town house',
-    'town house': 'town house'
+    'town house': 'town house',
+    'townhouse': 'townhouse'
   },
 
   creditRatings: {
@@ -23,19 +30,26 @@ export const constants = {
   loanPurposes: {
     refinanceFirst: 'refinance first',
     'refinance first': 'refinance first',
+    'refinancefirst': 'refinancefirst',
     refinanceCashOut: 'refinance cash out',
     'refinance cash out': 'refinance cash out',
+    'refinancecashout': 'refinancecashout',
     refinanceFirstFha: 'refinance first fha',
     'refinance first fha': 'refinance first fha',
+    'refinancefirstfha': 'refinancefirstfha',
     refinanceFirstVa: 'refinance first va',
     'refinance first va': 'refinance first va',
+    'refinancefirstva': 'refinancefirstva',
     debtConsolidation: 'debt consolidation',
     'debt consolidation': 'debt consolidation',
+    'debtconsolidation': 'debtconsolidation',
     heloc: 'heloc',
     buyFirstHome: 'buy first home',
     'buy first home': 'buy first home',
+    'buyfirsthome': 'buyfirsthome',
     buySecondHome: 'buy second home',
-    'buy second home': 'buy second home'
+    'buy second home': 'buy second home',
+    'buysecondhome': 'buysecondhome'
   }
 };
 

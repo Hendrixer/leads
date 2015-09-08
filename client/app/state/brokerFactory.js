@@ -35,4 +35,6 @@ const BrokerFactory = ($http) => {
   return { getBrokers, getState, createBroker };
 };
 
+BrokerFactory.$inject = ['$http'];
+
 export {BrokerFactory};
