@@ -39,7 +39,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      '$pusherKey': JSON.stringify(process.env.PUSHER_APP_KEY)
+      '$pusherKey': JSON.stringify(process.env.PUSHER_APP_KEY),
+      '$raygunApiKey': JSON.stringify(process.env.RAYGUN_APIKEY)
     })
   ],
 
