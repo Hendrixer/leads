@@ -9,6 +9,7 @@ var rename = require('gulp-rename');
 var template = require('gulp-template');
 var yargs = require('yargs').argv;
 var shell = require('gulp-shell');
+var shelljs = require('shelljs');
 
 var reload = function() {
   serve.reload();
@@ -96,6 +97,11 @@ gulp.task('watch', function() {
   gulp.watch(watchedPaths, ['bundle', reload]);
   gulp.watch(paths.client.toCopy, ['copy', reload]);
   gulp.watch(paths.server, ['server']);
+
+  process.on('beforeExit', function(){
+    console.log('stopping')
+    shelljs.exec('pm2 stop all');
+  });
 });
 
 gulp.task('generate', function(){
@@ -125,3 +131,4 @@ gulp.task('prod', function(done){
 gulp.task('default', function(done) {
   sync('bundle', 'copy', 'server', 'serve', 'watch', done);
 });
+
