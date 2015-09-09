@@ -8,6 +8,7 @@ var path = require('path');
 var rename = require('gulp-rename');
 var template = require('gulp-template');
 var yargs = require('yargs').argv;
+var shell = require('gulp-shell');
 
 var reload = function() {
   serve.reload();
@@ -38,18 +39,23 @@ var paths = {
 /**
  * start the server with nodemon
  */
-gulp.task('server', function(done) {
-  return nodemon({
-    script: 'server/index.js',
-    ignore: ['node_modules/**/*.**', 'client/**/*.**', 'dist/**/*.**']
-  })
-  .on('start', function() {
-    if (!serverStarted) {
-      done();
-      serverStarted = true;
-    }
-  });
-});
+// gulp.task('server', function(done) {
+//   return nodemon({
+//     script: 'server/index.js',
+//     ignore: ['node_modules/**/*.**', 'client/**/*.**', 'dist/**/*.**']
+//   })
+//   .on('start', function() {
+//     if (!serverStarted) {
+//       done();
+//       serverStarted = true;
+//     }
+//   });
+
+// });
+
+gulp.task('server', shell.task([
+  'pm2 start server/index.js -i 0'
+]));
 
 gulp.task('serve', function() {
   var port = process.env.PORT || 3500;
