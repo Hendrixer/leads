@@ -35,7 +35,7 @@ angular.module('app', [
       $mdToast.simple()
         .content('Files done processing')
         .position('bottom right')
-        .hideDelay(30000)
+        .hideDelay(7000)
     );
   });
 

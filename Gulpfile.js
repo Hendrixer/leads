@@ -28,7 +28,7 @@ var paths = {
     output: './dist',
     toCopy: ['./client/index.html']
   },
-  server: {},
+  server: './server/**/*.js',
   templates: {
     base: './build/templates',
     rest: './server/api',
@@ -54,6 +54,7 @@ var paths = {
 // });
 
 gulp.task('server', shell.task([
+  'pm2 stop all',
   'pm2 start server/index.js -i 0'
 ]));
 
@@ -83,6 +84,10 @@ gulp.task('bundle:prod', function(){
   .pipe(gulp.dest(paths.client.output));
 });
 
+gulp.task('restartServer', shell.task([
+  'pm2 restart all'
+]));
+
 gulp.task('watch', function() {
   var watchedPaths = [].concat(
     paths.client.app
@@ -90,6 +95,7 @@ gulp.task('watch', function() {
 
   gulp.watch(watchedPaths, ['bundle', reload]);
   gulp.watch(paths.client.toCopy, ['copy', reload]);
+  gulp.watch(paths.server, ['server']);
 });
 
 gulp.task('generate', function(){

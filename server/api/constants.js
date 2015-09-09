@@ -28,27 +28,27 @@ export const constants = {
   },
 
   loanPurposes: {
-    refinanceFirst: 'refinance first',
-    'refinance first': 'refinance first',
+    refinanceFirst: 'refinancefirst',
+    'refinance first': 'refinancefirst',
     'refinancefirst': 'refinancefirst',
-    refinanceCashOut: 'refinance cash out',
-    'refinance cash out': 'refinance cash out',
+    refinanceCashOut: 'refinancecashout',
+    'refinance cash out': 'refinancecashout',
     'refinancecashout': 'refinancecashout',
-    refinanceFirstFha: 'refinance first fha',
-    'refinance first fha': 'refinance first fha',
+    refinanceFirstFha: 'refinancefirstfha',
+    'refinance first fha': 'refinancefirstfha',
     'refinancefirstfha': 'refinancefirstfha',
-    refinanceFirstVa: 'refinance first va',
-    'refinance first va': 'refinance first va',
+    refinanceFirstVa: 'refinancefirstva',
+    'refinance first va': 'refinancefirstva',
     'refinancefirstva': 'refinancefirstva',
-    debtConsolidation: 'debt consolidation',
-    'debt consolidation': 'debt consolidation',
+    debtConsolidation: 'debtconsolidation',
+    'debt consolidation': 'debtconsolidation',
     'debtconsolidation': 'debtconsolidation',
     heloc: 'heloc',
-    buyFirstHome: 'buy first home',
-    'buy first home': 'buy first home',
+    buyFirstHome: 'buyfirsthome',
+    'buy first home': 'buyfirsthome',
     'buyfirsthome': 'buyfirsthome',
-    buySecondHome: 'buy second home',
-    'buy second home': 'buy second home',
+    buySecondHome: 'buysecondhome',
+    'buy second home': 'buysecondhome',
     'buysecondhome': 'buysecondhome'
   }
 };
@@ -77,6 +77,8 @@ export const makeOptionRegex = (opts, type) => {
     }
     return _pattern;
   }, '^(') + ')';
+
+  logger.log(pattern);
   return new RegExp(pattern, 'gi');
 };
 

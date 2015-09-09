@@ -1,9 +1,10 @@
 class AuthController {
-  constructor(Auth, $state){
+  constructor(Auth, $state, $mdToast){
     this.name = 'auth';
     this.Auth = Auth;
     this.user = {};
     this.$state = $state;
+    this.$mdToast = $mdToast;
   }
 
   signin(){
@@ -12,8 +13,14 @@ class AuthController {
         this.$state.go('leads');
       })
       .catch(e => {
-
-      })
+        this.user = {};
+        this.$mdToast.show(
+          $mdToast.simple()
+          .content('Incorrect email and or password')
+          .position('bottom right')
+          .hideDelay(5000)
+        );
+      });
   }
 
   signup() {
@@ -22,11 +29,17 @@ class AuthController {
         this.$state.go('leads');
       })
       .catch(e => {
-
+        this.user = {};
+        this.$mdToast.show(
+          $mdToast.simple()
+          .content('Email already taken')
+          .position('bottom right')
+          .hideDelay(5000)
+        );
       });
   }
 }
 
-AuthController.$inject = ['Auth', '$state'];
+AuthController.$inject = ['Auth', '$state', '$mdToast'];
 
 export {AuthController};

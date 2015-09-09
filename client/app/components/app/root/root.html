@@ -1,7 +1,7 @@
 <div id="app" layout="column">
   <md-toolbar class="md-whiteframe-z2">
     <div class="md-toolbar-tools">
-      <span ui-sref="leads">LeadOn</span>
+      <span ui-sref="leads" class="logo">LeadOn</span>
       <span flex></span>
 
       <md-button ui-sref-active="md-raised md-accent" ui-sref="leads">leads</md-button>
@@ -11,6 +11,8 @@
       <md-button ui-sref-active="md-raised md-accent" ui-sref="history">history</md-button>
 
       <md-button ui-sref-active="md-raised md-accent" ui-sref="admin">admin</md-button>
+
+      <md-button ng-if="vm.isAuth" ng-click="vm.signout()">sign out</md-button>
 
     </div>
   </md-toolbar>

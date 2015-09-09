@@ -19,11 +19,13 @@ const OrderFactory = ($http, $window) => {
   }
 
   const downloadOrder = (order) => {
-    $window.open(`${api}/orders/redownload?order=${order._id}&filetype=${order.filetype}`, '_blank', '');
+    const token = window.localStorage.getItem('leads.token');
+    $window.open(`${api}/orders/redownload?access_token=${token}&order=${order._id}&filetype=${order.filetype}`, '_blank', '');
   };
 
   const createOrder = (broker)=> {
-    $window.open(`${api}/orders/create?broker=${broker._id}&filetype=${broker.downloadFileMime}`, '_blank', '');
+    const token = window.localStorage.getItem('leads.token');
+    $window.open(`${api}/orders/create?access_token=${token}&broker=${broker._id}&filetype=${broker.downloadFileMime}`, '_blank', '');
   };
 
   return { getOrders, getState, createOrder, downloadOrder };

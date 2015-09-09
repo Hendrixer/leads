@@ -1,7 +1,7 @@
 import {api} from './const';
 const tag = 'leads.token';
 
-const Auth = ['$http', $http => {
+const Auth = ['$http', '$state', ($http, $state) => {
   async function signin(credits) {
     const resp = await $http({
       url: `${api}/admins/signin`,
@@ -24,6 +24,11 @@ const Auth = ['$http', $http => {
 
   const isAuth = ()=> {
     return !!window.localStorage.getItem(tag);
+  };
+
+  const signout = ()=> {
+    window.localStorage.removeItem(tag);
+    $state.go('auth.signin');
   };
 
   return {signup, signin, isAuth};

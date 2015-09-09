@@ -34,6 +34,7 @@
     "bluebird": "^2.9.34",
     "body-parser": "^1.13.3",
     "chalk": "^1.1.1",
+    "combined-stream": "^1.0.5",
     "composable-middleware": "^0.3.0",
     "csvtojson": "^0.4.2",
     "dotenv": "^1.2.0",

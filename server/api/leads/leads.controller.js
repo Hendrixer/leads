@@ -8,6 +8,7 @@ import {logger} from '../../util/logger';
 import {query} from '../query';
 import pusher from '../../util/pusher';
 import {Converter} from 'csvtojson';
+import CombineStream from 'combined-stream';
 
 const toJson = future.promisify(spreadToJSon);
 
@@ -33,26 +34,30 @@ export const $getOne = (req, res, next)=> {
 };
 
 export const $post = (req, res, next)=> {
-  const pathToFile = path.join(__dirname, '/../../../', req.files[0].path);
-  const stream = fs.createReadStream(pathToFile);
+  const mergedStream = CombineStream.create();
+
+  _.map(req.files, file => {
+    const pathToFile = path.join(__dirname, '/../../../', file.path);
+    return fs.createReadStream(pathToFile);
+  })
+  .forEach(stream => {
+    mergedStream.append(stream);
+  });
+
   const convertor = new Converter({ constructResult: true });
-  let count = 0;
+
   convertor.on('end_parsed', () => {
-    logger.log(count);
     pusher.trigger('upload-status', 'processing:finished', {count});
   });
 
   convertor.on('record_parsed', lead => {
     Leads.saveDupe(lead)
-      .then(lead => {
-        count++;
-      })
       .catch(e => {
         logger.error(e);
       });
   });
 
-  stream.pipe(convertor);
+  mergedStream.pipe(convertor);
 
   res.send({ok: true});
 
