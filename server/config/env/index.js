@@ -15,7 +15,8 @@ let config = {
       key: process.env.PUSHER_APP_KEY,
       secret: process.env.PUSHER_APP_SECRET
     },
-    jwt: process.env.JWT || 'cookiemonster'
+    jwt: process.env.JWT || 'cookiemonster',
+    raygunKey: process.env.RAYGUN_APIKEY
   }
 };
 

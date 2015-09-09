@@ -10,7 +10,9 @@ import brokers from './components/app/brokers/brokers';
 import new_broker from './components/app/new_broker/new_broker';
 import history from './components/app/history/history';
 import auth from './components/app/auth/auth';
+import 'raygun4js';
 
+Raygun.init($raygunApiKey).attach();
 
 angular.module('app', [
   /* 3rd party */
@@ -38,14 +40,23 @@ angular.module('app', [
   });
 
   $rootScope.$on('$stateChangeStart', (e, toState) => {
-    console.log('hey', Auth.isAuth())
     if (!toState.free && !Auth.isAuth()) {
       e.preventDefault();
       $state.go('auth.signin');
     }
   });
 }])
-.config(['$mdThemingProvider', '$httpProvider', ($mdThemingProvider, $httpProvider) => {
+.config(['$mdThemingProvider', '$httpProvider', '$provide', ($mdThemingProvider, $httpProvider, $provide) => {
+  $provide.decorator('$exceptionHandler', ['$delegate', '$log', ($delegate, $log) => {
+    return (exception, cause) => {
+      if (process.env.NODE_ENV === 'production') {
+        $log.debug('Sending error to Raygun');
+        Raygun.send(exception);
+      }
+      $delegate(exception, cause);
+    };
+  }])
+
   $httpProvider.interceptors.push(()=> {
     return {
       request(config){

@@ -49,6 +49,8 @@
     "multer": "^1.0.1",
     "ng-file-upload": "^6.2.0",
     "pusher": "^1.0.6",
+    "raygun": "^0.7.1",
+    "raygun4js": "^1.18.3",
     "rupture": "^0.6.1",
     "timezones.json": "^1.0.1",
     "xlsx-to-json": "^0.2.3",
