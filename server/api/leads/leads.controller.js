@@ -79,27 +79,27 @@ export const $post = (req, res, next)=> {
   //   .catch(next.bind(next));
 };
 
-export const $put = (req, res, next)=> {
-  if (req.body.multiple) {
-    const queue = Promise.all(_.map(req.body.leads, lead => {
-      return Leads.findOneAndUpdateAsync({
-        $or: [{email: lead.email}, {dupeKey: lead.dupeKey}]
-      }, {new: true});
-    }));
+export const $putMany = (req, res, next) => {
+  const queue = Promise.all(_.map(req.body.leads, lead => {
+    return Leads.findOneAndUpdateAsync({
+      $or: [{email: lead.email}, {dupeKey: lead.dupeKey}]
+    }, {new: true});
+  }));
 
-    queue.then(leads => {
-      res.json(leads);
-    })
-  } else {
-    _.merge(req.lead, req.body);
-    req.lead.save((err, saved) => {
-      if (err) {
-        next(err);
-      } else {
-        res.json(saved);
-      }
-    })
-  }
+  queue.then(leads => {
+    res.json(leads);
+  })
+};
+
+export const $put = (req, res, next)=> {
+  _.merge(req.lead, req.body);
+  req.lead.save((err, saved) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json(saved);
+    }
+  })
 };
 
 export const $destroy = (req, res, next)=> {

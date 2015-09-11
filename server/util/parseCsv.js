@@ -12,7 +12,13 @@ let leadsCount = 0;
 let $leads = [];
 let $dupes = [];
 let leadsSaved = 0
-const limit = 10000;
+let limit;
+
+if (process.env.MEM_LIMIT) {
+  limit = process.env.MEM_LIMIT;
+} else {
+  limit = 500;
+}
 
 const sendUploadEmail = (resolveId, stats) => {
   logger.log('bout to send', stats, resolveId);
