@@ -49,7 +49,7 @@ class LeadsController {
     .then(()=> {
       this.$mdToast.show(
         this.$mdToast.simple()
-          .content('You\'ll be notified when files are done')
+          .content('You\'ll be emailed when files are done')
           .position('bottom right')
           .hideDelay(5000)
       );

@@ -31,12 +31,17 @@
                 <md-icon md-font-set="material-icons">history</md-icon>
               </md-button>
             </div>
+            <div class="broker-edit">
+              <md-button class="md-primary" aria="edit" ui-sref="edit-broker({broker: broker._id, name: broker.name})">
+                <md-icon md-font-set="material-icons">settings</md-icon>
+              </md-button>
+            </div>
           </div>
         </div>
       </md-list-item>
       <md-divider ng-repeat-end></md-divider>
       <div class="no-results" layout="column" layout-align="center center">
-        <h1>No Results</h1>
+        <h1>No Brokers</h1>
       </div>
     </md-list>
   </div>

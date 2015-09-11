@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "leads-dev",
+      "script": "server/index.js",
+      "exec_mode": "cluster_mode",
+      "instances": 0,
+      "ignore_watch": ["node_modules", "client", "dist" ,"uploads"],
+      "watch": true
+    }
+  ]
+}

@@ -8,8 +8,10 @@ import root from './components/app/root/root';
 import leads from './components/app/leads/leads';
 import brokers from './components/app/brokers/brokers';
 import new_broker from './components/app/new_broker/new_broker';
+import edit_broker from './components/app/edit_broker/edit_broker';
 import history from './components/app/history/history';
 import auth from './components/app/auth/auth';
+import resolve from './components/app/resolve/resolve';
 import 'raygun4js';
 
 Raygun.init($raygunApiKey).attach();
@@ -27,7 +29,9 @@ angular.module('app', [
   brokers,
   new_broker,
   history,
-  auth
+  auth,
+  edit_broker,
+  resolve
 ])
 .run(['Pusher', '$mdToast', '$state', 'Auth', '$rootScope', (Pusher, $mdToast, $state, Auth, $rootScope) => {
   Pusher.uploadOn('processing:finished', data => {

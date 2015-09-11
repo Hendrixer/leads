@@ -1,6 +1,8 @@
 import {logger} from '../../util/logger';
 import mongoose from 'mongoose';
 import * as utils from '../constants';
+import _ from 'lodash';
+import {stateMap as states} from './states';
 
 const {Schema} = mongoose;
 
@@ -8,8 +10,7 @@ const LeadsSchema = new Schema({
   age: Number,
 
   type: {
-    type: String,
-    required: true,
+    type: String
   },
 
   firstName: {
@@ -19,6 +20,13 @@ const LeadsSchema = new Schema({
   },
   lastName: {
     type: String
+  },
+
+  dupeKey: {
+    type: String,
+    required: true,
+    index: true,
+    unique: true
   },
 
   address: {
@@ -37,7 +45,6 @@ const LeadsSchema = new Schema({
     type: String,
     index: true,
     sparse: true,
-    trim: true,
     unique: true
   },
 
@@ -89,7 +96,7 @@ const LeadsSchema = new Schema({
       rate: Number,
       payment: Number,
     },
-  },
+  }
 });
 
 const checkForNull = (prop) => {
@@ -98,15 +105,28 @@ const checkForNull = (prop) => {
   } else {
     return prop;
   }
-}
+};
+
+const getState = (prop) => {
+  if (checkForNull(prop)) {
+    if (prop.length > 2) {
+      prop = prop.toLowerCase();
+      prop = prop.replace(/\s/g, '');
+    } else {
+      prop = prop.toUpperCase();
+    }
+
+    return states[prop];
+  }
+};
 
 const normal = (prop) => {
   if(checkForNull(prop)) {
     return prop.toLowerCase();
   }
-}
+};
 
-const replaceNum = (prop) => {
+const replaceNum = (prop)=> {
   if (checkForNull(prop)) {
     prop = '' + prop;
     prop = prop.replace('1st', 'first');
@@ -131,7 +151,21 @@ const parseNum = (prop) => {
   }
 };
 
-LeadsSchema.statics.format = (lead) => {
+const getDupeKey = (lead) => {
+  if (lead.email) {
+    lead.email = lead.email.toLowerCase();
+  }
+
+  if (lead.lastName) {
+    lead.lastName = lead.lastName.toLowerCase();
+  }
+
+  lead.firstName = lead.firstName.toLowerCase();
+
+  return `${lead.firstName}${lead.lastName}${lead.email}`;
+};
+
+LeadsSchema.statics.format = (lead)=> {
   let type = 'education';
 
   if (lead.Mortgage1Balance || lead.Mortgage2Balance || lead.Mortgage2Payment) {
@@ -143,10 +177,11 @@ LeadsSchema.statics.format = (lead) => {
     type: lead.type || type,
     firstName: checkForNull(lead.ContactFirstName),
     lastName: checkForNull(lead.ContactLastName),
+    email: checkForNull(lead.ContactEmail),
     address: {
       street: checkForNull(lead.ContactAddress1),
       city: checkForNull(lead.ContactCity),
-      state: checkForNull(lead.ContactStateOrProvince),
+      state: getState(lead.ContactStateOrProvince),
       zip: parseNum(lead.ContactPostalCode)
     },
     phone: {
@@ -188,35 +223,43 @@ LeadsSchema.statics.format = (lead) => {
     }
   };
 
-  if (lead.ContactEamil) {
-    newLead.email = lead.ContactEamil;
-  }
-
+  newLead.dupeKey = getDupeKey(newLead);
   return newLead;
 };
 
-LeadsSchema.statics.saveDupe = (leads)=> {
-  if (!Array.isArray(leads)) {
-    leads = [leads];
-  }
+const dupeErr = (err) =>{
+  return !!(
+    (err.code && (err.code === 11000 || err.code === '11000'))||
+    (err.errmsg && /E11000/gi.test(err.errmsg))
+  );
+}
 
+LeadsSchema.statics.saveDupe = (lead)=> {
   const Leads = mongoose.model('leads');
+  lead = Leads.format(lead);
 
-  return Promise.all(leads.map(lead => {
-    lead = Leads.format(lead);
-
-    return new Promise((resolve, reject) => {
-      new Leads(lead).save((err, lead) => {
-        if (err) console.log(err);
-        if (err.code === 1100) {
-          logger.error('dupe', lead.email);
-
+  return new Promise((resolve, reject) => {
+    new Leads(lead).save((err, savedLead) => {
+      if (err) {
+        if (dupeErr(err)) {
+          logger.log('dupe');
+          const dupe = {
+            type: 'dupe',
+            lead: lead
+          };
+          resolve(dupe);
         } else {
-          return lead;
+          logger.error('nooops', err);
+          reject(err);
         }
-      })
+      } else {
+        if (!savedLead) {
+          logger.log('blank');
+        }
+        resolve(savedLead);
+      }
     })
-  }));
+  });
 };
 
 LeadsSchema.methods.saveDupe = () => {

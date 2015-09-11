@@ -3,6 +3,19 @@ import _ from 'lodash';
 import {logger} from '../../util/logger';
 import {query} from '../query';
 
+export const $param = (req, res, next, broker) => {
+  Brokers.findByIdAsync(broker)
+    .then(foundBroker => {
+      if (foundBroker) {
+        req.broker = foundBroker || {};
+        next();
+      }
+    })
+    .catch(e => {
+      next(e);
+    });
+}
+
 export const $get = (req, res, next)=> {
   if (req.query.count) {
     Brokers.count({})
@@ -32,7 +45,17 @@ export const $post = (req, res, next)=> {
 };
 
 export const $put = (req, res, next)=> {
+  const broker = req.broker;
+  _.merge(broker, req.body);
 
+  logger.log(broker);
+  broker.save((err, saved) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.json(saved);
+  });
 };
 
 export const $destroy = (req, res, next)=> {

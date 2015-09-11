@@ -10,8 +10,8 @@ const BrokerInfoCard = ()=> {
     controllerAs: 'vm',
     scope: {
       broker: '=',
-      leadFilters: '=',
-      whenDone: '&'
+      whenDone: '&',
+      name: '@'
     },
     bindToController: true,
     replace: true

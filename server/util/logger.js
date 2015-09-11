@@ -3,7 +3,8 @@
 import chalk from 'chalk';
 import _ from  'lodash';
 import config from '../config/env';
-
+import Raygun from 'raygun';
+const raygun = new Raygun.Client().init({ apiKey: config.secrets.raygunKey });
 // create a noop (no operation) function for when loggin is disabled
 const noop = function(){};
 // check if loggin is enabled in the config
@@ -51,15 +52,31 @@ const logger = {
   },
 
   error() {
-    const args = _.toArray(arguments)
-      .map(function(arg) {
-        arg = arg.stack || arg;
-        const name = arg.name || '❌❌';
-        const log = chalk.yellow(name) + '  ' + chalk.red(arg);
-        return log;
-      });
+    const args = _.toArray(arguments);
+    const error = _.find(args, arg => {
+      return arg instanceof Error;
+    });
 
-    consoleLog.apply(console, args);
+
+    const logArgs = args.filter(arg => {
+      return !(arg instanceof Error);
+    })
+    .map(function(arg) {
+      arg = arg.stack || arg.message || arg;
+      const name = arg.name || '❌❌';
+      const log = chalk.yellow(name) + '  ' + chalk.red(arg);
+      return log;
+    });
+
+    if (process.env.NODE_ENV === 'production' && error) {
+      raygun.send(error);
+    }
+
+    if (error) {
+      logArgs.push(error);
+    }
+
+    consoleLog.apply(console, logArgs);
   }
 };
 

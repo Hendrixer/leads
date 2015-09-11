@@ -52,9 +52,9 @@
                 </md-input-container>
 
                 <md-input-container>
-                  <label>State</label>
+                  <label>{{ vm.broker.address.state }}</label>
                   <md-select ng-model="vm.broker.address.state">
-                    <md-option ng-repeat="state in vm.states" value="{{::state.name.toLowerCase()}}">{{::state.abbrev}}</md-option>
+                    <md-option ng-repeat="state in vm.states" value="{{::state.abbrev}}">{{::state.abbrev}}</md-option>
                   </md-select>
                 </md-input-container>
 
@@ -76,64 +76,73 @@
             <md-content layout="row">
               <div flex="30">
                 <h3>Loan Purpose</h3>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.refinanceFirst" aria-label="refinance1st">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.refinanceFirst" aria-label="refinance1st">
                   Refinance 1st
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.refinanceCashOut" aria-label="refinanceCashOut">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.refinanceCashOut" aria-label="refinanceCashOut">
                   Refinance Cash Out
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.refinanceFirstFha" aria-label="refinance1stFha">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.refinanceFirstFha" aria-label="refinance1stFha">
                   Refinance 1st FHA
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.refinanceFirstVa" aria-label="refinance1stVa">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.refinanceFirstVa" aria-label="refinance1stVa">
                   Refinance 1st VA
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.debtConsolidation" aria-label="debtConsolidation">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.debtConsolidation" aria-label="debtConsolidation">
                   Debt Consolidation
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.heloc" aria-label="heloc">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.heloc" aria-label="heloc">
                   HELOC
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.buyFirstHome" aria-label="buyFirstHome">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.buyFirstHome" aria-label="buyFirstHome">
                   Buy First Home
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.loanPurpose.buySecondHome" aria-label="buySecondHome">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.loanPurpose.buySecondHome" aria-label="buySecondHome">
                   Buy Second Home
                 </md-checkbox>
               </div>
               <div flex="30" offset="5">
                 <h3>Credit Rating</h3>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.creditRating.excellent" aria-label="excellent">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.creditRating.excellent" aria-label="excellent">
                   Excellent
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.creditRating.good" aria-label="good">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.creditRating.good" aria-label="good">
                   Good
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.creditRating.fair" aria-label="fair">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.creditRating.fair" aria-label="fair">
                   Fair
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.creditRating.poor" aria-label="poor">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.creditRating.poor" aria-label="poor">
                   Poor
                 </md-checkbox>
               </div>
               <div flex="30" offset="5">
                 <h3>Property Type</h3>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.propertyType.singleFamily" aria-label="single family">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.propertyType.singleFamily" aria-label="single family">
                   Single Family
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.propertyType.condo" aria-label="condo">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.propertyType.condo" aria-label="condo">
                   Condo
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.propertyType.townHouse" aria-label="town house">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.propertyType.townHouse" aria-label="town house">
                   Town House
                 </md-checkbox>
-                <md-checkbox class="md-accent md-hue-3"ng-model="vm.leadFilters.basic.propertyType.multiplex" aria-label="multiples">
+                <md-checkbox class="md-accent md-hue-3"ng-model="vm.broker.leadFilters.basic.propertyType.multiplex" aria-label="multiples">
                   Multiplex
                 </md-checkbox>
               </div>
             </md-content>
           </md-tab>
+          <md-tab label="State Filters">
+            <md-content layout="row" layout-wrap>
+              <div flex="25" ng-repeat="state in vm.states">
+                <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.states[state.abbrev]" aria-label="{{state.name}}">{{ ::state.name }}
+                </md-checkbox>
+              </div>
+            </md-content>
+          </md-tab>
         </md-tabs>
-        <md-button class="md-raised md-accent md-hue-3" ng-disabled="newBrokerForm.$invalid">create</md-button>
+        <md-button class="md-raised md-accent md-hue-3" ng-disabled="newBrokerForm.$invalid">
+        {{ vm.name }}</md-button>
       </form>
     </div>

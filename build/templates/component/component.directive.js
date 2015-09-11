@@ -1,8 +1,8 @@
 import './<%= name %>.styl';
 import template from './<%= name %>.html';
-import {<%= upcaseName %>Controller as controller} from './<%= name %>.controller';
+import controller from './<%= name %>.controller';
 
-const <%= upcaseName %> = ()=> {
+const <%= name %> = ()=> {
   return {
     template,
     controller,
@@ -14,4 +14,4 @@ const <%= upcaseName %> = ()=> {
   };
 };
 
-export {<%= upcaseName %>};
+export default <%= name %>;

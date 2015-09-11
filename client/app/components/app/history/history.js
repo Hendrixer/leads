@@ -19,7 +19,10 @@ const historyModule = angular.module('history', [
         broker: ['$stateParams', 'Brokers', function($stateParams, Brokers) {
           const {broker, name} = $stateParams;
 
-          return _.find(Brokers.getState()[name[0].toLowerCase()], {_id: broker});
+          return Brokers.getOne({name, _id: broker})
+            .then(broker => {
+              return broker;
+            });
 
         }],
         orders: ['$stateParams', 'Orders', function($stateParams, Orders) {

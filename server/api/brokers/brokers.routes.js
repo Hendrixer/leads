@@ -3,6 +3,8 @@ import express from 'express';
 
 const router = express.Router();
 
+router.param('id', controller.$param);
+
 router.route('/')
   .get(controller.$get)
   .post(controller.$post)

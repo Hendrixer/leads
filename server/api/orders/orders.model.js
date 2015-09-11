@@ -49,15 +49,18 @@ const getBrokerOrderHistory = (broker)=> {
 };
 
 const getLeads = ({broker, blacklist})=> {
-  const basic = broker.toJSON().leadFilters.basic;
+  broker = broker.toJSON();
+  const basic = broker.leadFilters.basic;
   const query = {
     creditRating: utils.makeOptionRegex(basic.creditRating, 'creditRatings'),
     'requestedLoan.purpose': utils.makeOptionRegex(basic.loanPurpose, 'loanPurposes'),
     'property.description': utils.makeOptionRegex(basic.propertyType, 'propertyTypes'),
+    'address.state': utils.makeRegexFromStates(broker.leadFilters.states),
     _id: {$nin: blacklist}
   };
   return Leads.find(query)
-    .select('-type')
+    .select('-type -dupeKey')
+    .execAsync()
     .then(leads => {
       return {leads, broker};
     });

@@ -1,10 +1,18 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
-import <%= upcaseName %> from './<%= name %>.directive';
+import <%= name %> from './<%= name %>.directive';
 
-let <%= name %>Module = angular.module('<%= name %>', [
+const <%= name %>Module = angular.module('<%= name %>', [
   uiRouter
 ])
-.directive('<%= name %>', <%= upcaseName %>);
+.config(['$stateProvider', $stateProvider => {
+  $stateProvider
+    .state('<%= name %>', {
+      url: '/<%= name %>',
+      template: '<></>'
+    })
+}])
+.directive('<%= name %>', <%= name %>)
+.name;
 
-export {<%= name %>Module};
+export default <%= name %>Module;

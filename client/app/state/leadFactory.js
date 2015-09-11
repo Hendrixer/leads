@@ -1,10 +1,10 @@
 import {api} from './const';
 
 const LeadFactory = ($http) => {
-  let leads = [];
+  let $leads = [];
 
   const getState = ()=> {
-    return leads || [];
+    return $leads || [];
   };
 
   async function getLeads(params={}) {
@@ -13,10 +13,21 @@ const LeadFactory = ($http) => {
       url: `${api}/leads`,
       params
     });
-    leads = leads.concat(resp.data);
+
+    $leads = $leads.concat(resp.data);
   }
 
-  return { getLeads, getState };
+  async function updateMany(leads) {
+    const resp = await $http({
+      url: `${api}/leads`,
+      method: 'PUT',
+      data: {multiple: true, leads}
+    });
+
+    return resp.data;
+  }
+
+  return { getLeads, getState, updateMany };
 };
 
 LeadFactory.$inject = ['$http'];

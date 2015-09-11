@@ -34,4 +34,6 @@ const Auth = ['$http', '$state', ($http, $state) => {
   return {signup, signin, isAuth};
 }];
 
+
+
 export default Auth;

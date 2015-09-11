@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import mongoose from 'mongoose';
 import * as util from '../constants';
+import {states} from '../leads/states';
 
 const {Schema} = mongoose;
-
-const BrokersSchema = new Schema({
+const bluePrint = {
   name: {
     type: String,
     required: true
@@ -52,6 +52,11 @@ const BrokersSchema = new Schema({
   timezone: String,
 
   leadFilters: {
+    states: _.reduce(states, (schema, state) => {
+      schema[state.abbrev] = Boolean
+      return schema;
+    }, {}),
+
     basic: {
       loanPurpose: {
         refinanceFirst: {
@@ -144,6 +149,8 @@ const BrokersSchema = new Schema({
 
     }
   }
-});
+};
+
+const BrokersSchema = new Schema(bluePrint);
 
 export const Brokers = mongoose.model('brokers', BrokersSchema);

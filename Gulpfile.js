@@ -40,23 +40,23 @@ var paths = {
 /**
  * start the server with nodemon
  */
-// gulp.task('server', function(done) {
-//   return nodemon({
-//     script: 'server/index.js',
-//     ignore: ['node_modules/**/*.**', 'client/**/*.**', 'dist/**/*.**']
-//   })
-//   .on('start', function() {
-//     if (!serverStarted) {
-//       done();
-//       serverStarted = true;
-//     }
-//   });
+gulp.task('devServer', function(done) {
+  return nodemon({
+    script: 'server/index.js',
+    ignore: ['node_modules/**/*.**', 'client/**/*.**', 'dist/**/*.**']
+  })
+  .on('start', function() {
+    if (!serverStarted) {
+      done();
+      serverStarted = true;
+    }
+  });
 
-// });
+});
 
 gulp.task('server', shell.task([
-  'pm2 stop all',
-  'pm2 start server/index.js -i 0'
+  'pm2 stop process.json',
+  'pm2 start process.json'
 ]));
 
 gulp.task('serve', function() {
@@ -96,13 +96,14 @@ gulp.task('watch', function() {
 
   gulp.watch(watchedPaths, ['bundle', reload]);
   gulp.watch(paths.client.toCopy, ['copy', reload]);
-  gulp.watch(paths.server, ['server']);
+  // gulp.watch(paths.server, ['server']);
 
   process.on('beforeExit', function(){
     console.log('stopping')
     shelljs.exec('pm2 stop all');
   });
 });
+
 
 gulp.task('generate', function(){
   var type = yargs.type;
@@ -131,4 +132,8 @@ gulp.task('prod', function(done){
 gulp.task('default', function(done) {
   sync('bundle', 'copy', 'server', 'serve', 'watch', done);
 });
+
+gulp.task('dev', function(done){
+  sync('bundle', 'copy', 'devServer', 'serve', 'watch', done);
+})
 

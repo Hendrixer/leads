@@ -7,10 +7,21 @@ import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
 import pusher from '../../util/pusher';
-import {Converter} from 'csvtojson';
+// import {Converter} from 'csvtojson';
 import CombineStream from 'combined-stream';
-
+import parseCsv from '../../util/parseCsv';
 const toJson = future.promisify(spreadToJSon);
+
+export const $param = (req, res, next, id) => {
+  Leads.findByIdAsync(id)
+  .then(lead => {
+    req.lead = lead || {};
+    next();
+  })
+  .catch(e => {
+    next(e);
+  });
+};
 
 export const $get = (req, res, next)=> {
   if (req.query.count) {
@@ -35,7 +46,7 @@ export const $getOne = (req, res, next)=> {
 
 export const $post = (req, res, next)=> {
   const mergedStream = CombineStream.create();
-
+  logger.log(req.files[0]);
   _.map(req.files, file => {
     const pathToFile = path.join(__dirname, '/../../../', file.path);
     return fs.createReadStream(pathToFile);
@@ -44,21 +55,7 @@ export const $post = (req, res, next)=> {
     mergedStream.append(stream);
   });
 
-  const convertor = new Converter({ constructResult: true });
-
-  convertor.on('end_parsed', () => {
-    pusher.trigger('upload-status', 'processing:finished', {count});
-  });
-
-  convertor.on('record_parsed', lead => {
-    Leads.saveDupe(lead)
-      .catch(e => {
-        logger.error(e);
-      });
-  });
-
-  mergedStream.pipe(convertor);
-
+  parseCsv(mergedStream);
   res.send({ok: true});
 
   // toJson({
@@ -83,7 +80,26 @@ export const $post = (req, res, next)=> {
 };
 
 export const $put = (req, res, next)=> {
+  if (req.body.multiple) {
+    const queue = Promise.all(_.map(req.body.leads, lead => {
+      return Leads.findOneAndUpdateAsync({
+        $or: [{email: lead.email}, {dupeKey: lead.dupeKey}]
+      }, {new: true});
+    }));
 
+    queue.then(leads => {
+      res.json(leads);
+    })
+  } else {
+    _.merge(req.lead, req.body);
+    req.lead.save((err, saved) => {
+      if (err) {
+        next(err);
+      } else {
+        res.json(saved);
+      }
+    })
+  }
 };
 
 export const $destroy = (req, res, next)=> {

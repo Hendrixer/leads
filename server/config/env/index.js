@@ -16,7 +16,10 @@ let config = {
       secret: process.env.PUSHER_APP_SECRET
     },
     jwt: process.env.JWT || 'cookiemonster',
-    raygunKey: process.env.RAYGUN_APIKEY
+    raygunKey: process.env.RAYGUN_APIKEY,
+    emailTo: process.env.EMAIL_TO,
+    gmailUser: process.env.GMAIL_USER,
+    gmailPass: process.env.GMAIL_PASS
   }
 };
 

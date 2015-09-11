@@ -3,8 +3,9 @@ import Future from 'bluebird';
 import _ from 'lodash';
 import {Leads} from '../../api/leads/leads.model';
 import {Brokers} from '../../api/brokers/brokers.model';
-
-import leadData from './leads.json';
+import {Orders} from '../../api/orders/orders.model';
+import {Resolves} from '../../api/resolves/resolves.model';
+// import leadData from './leads.json';
 import brokerData from './brokers.json';
 import {logger} from '../../util/logger';
 
@@ -33,7 +34,7 @@ const createDocuments = (pairs) => {
   }));
 };
 
-clean(Brokers)
+clean(Brokers, Orders, Resolves)
 .then(()=> {
   logger.log('so clean');
 })

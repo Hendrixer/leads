@@ -7,7 +7,6 @@ import * as utils from '../constants';
 
 
 export const $param = (req, res, next, orderId) => {
-
 };
 
 export const $getForBroker = (req, res, next)=> {
@@ -45,7 +44,8 @@ export const $create = (req, res, next)=> {
       }
     })
     .catch(e => {
-      logger.error(e);
+      // logger.error('error', e);
+      console.error(e)
       res.send(e);
     });
 };

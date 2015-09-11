@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {logger} from '../util/logger';
 import es from 'event-stream';
 import jsonToCsv from 'json-csv';
+import {stateMap} from './leads/states';
 
 export const whiteListEmails = [
   'willscottmoss@gmail.com',
@@ -80,6 +81,27 @@ export const makeOptionRegex = (opts, type) => {
 
   logger.log(pattern);
   return new RegExp(pattern, 'gi');
+};
+
+export const makeRegexFromStates = (opts) => {
+  let size = _.size(opts);
+
+  const str = _.reduce(opts, (_str, val, state) =>{
+    size--;
+
+    if (val) {
+      _str += `${state}`;
+    }
+
+    if(size) {
+      _str += '|';
+    }
+    return _str;
+
+  }, '^(') + ')';
+
+  logger.log(str);
+  return new RegExp(str, 'gi');
 };
 
 export const validator = (type)=> {

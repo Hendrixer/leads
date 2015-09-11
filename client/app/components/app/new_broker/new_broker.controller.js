@@ -1,12 +1,16 @@
+import merge from 'lodash/object/merge';
+
 class New_brokerController {
   constructor(Brokers, $mdToast, $state){
     this.broker = {
-      address: {}
-    };
-    this.leadFilters = {
-      basic: {
-        creditRating: {},
-        loanPurpose: {}
+      address: {},
+      leadFilters: {
+        states: {},
+        basic: {
+          creditRating: {},
+          loanPurpose: {},
+          propertyType: {}
+        }
       }
     };
 
@@ -16,9 +20,9 @@ class New_brokerController {
   }
 
   createBroker() {
-    const broker = merge(this.broker, {leadFilters: this.leadFilters});
+    // const broker = merge(this.broker, {leadFilters: this.leadFilters});
 
-    this.Brokers.createBroker(broker)
+    this.Brokers.createBroker(this.broker)
       .then(()=> {
         this.$mdToast.show(
           this.$mdToast.simple()
