@@ -12,6 +12,7 @@ import edit_broker from './components/app/edit_broker/edit_broker';
 import history from './components/app/history/history';
 import auth from './components/app/auth/auth';
 import resolve from './components/app/resolve/resolve';
+import preorder from './components/app/preorder/preorder';
 import 'raygun4js';
 
 Raygun.init($raygunApiKey).attach();
@@ -31,7 +32,8 @@ angular.module('app', [
   history,
   auth,
   edit_broker,
-  resolve
+  resolve,
+  preorder
 ])
 .run(['Pusher', '$mdToast', '$state', 'Auth', '$rootScope', (Pusher, $mdToast, $state, Auth, $rootScope) => {
   Pusher.uploadOn('processing:finished', data => {
@@ -57,18 +59,19 @@ angular.module('app', [
         $log.debug('Sending error to Raygun');
         Raygun.send(exception);
       }
+
       $delegate(exception, cause);
     };
-  }])
+  }]);
 
   $httpProvider.interceptors.push(()=> {
     return {
-      request(config){
+      request(config) {
         const token = window.localStorage.getItem('leads.token');
-        config.headers['Authorization'] = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
         return config;
       }
-    }
+    };
   });
 
   $mdThemingProvider.theme('default')

@@ -51,7 +51,6 @@ gulp.task('devServer', function(done) {
       serverStarted = true;
     }
   });
-
 });
 
 gulp.task('server', shell.task([
@@ -79,7 +78,7 @@ gulp.task('bundle', function() {
     .pipe(gulp.dest(paths.client.output));
 });
 
-gulp.task('bundle:prod', function(){
+gulp.task('bundle:prod', function() {
   return gulp.src(paths.client.entry)
   .pipe(webpack(require('./webpack.config.prod')))
   .pipe(gulp.dest(paths.client.output));
@@ -96,16 +95,11 @@ gulp.task('watch', function() {
 
   gulp.watch(watchedPaths, ['bundle', reload]);
   gulp.watch(paths.client.toCopy, ['copy', reload]);
-  // gulp.watch(paths.server, ['server']);
 
-  process.on('beforeExit', function(){
-    console.log('stopping')
-    shelljs.exec('pm2 stop all');
-  });
+  // gulp.watch(paths.server, ['server']);
 });
 
-
-gulp.task('generate', function(){
+gulp.task('generate', function() {
   var type = yargs.type;
   var name = yargs.name;
   var location = yargs.path || 'app';
@@ -119,21 +113,20 @@ gulp.task('generate', function(){
       name: name,
       upcaseName: capString(name)
     }))
-    .pipe(rename(function(filePath){
+    .pipe(rename(function(filePath) {
       filePath.basename = filePath.basename.replace(type, name);
     }))
     .pipe(gulp.dest(destPath));
 });
 
-gulp.task('prod', function(done){
+gulp.task('prod', function(done) {
   sync('bundle:prod', 'copy', done);
-})
+});
 
 gulp.task('default', function(done) {
   sync('bundle', 'copy', 'server', 'serve', 'watch', done);
 });
 
-gulp.task('dev', function(done){
+gulp.task('dev', function(done) {
   sync('bundle', 'copy', 'devServer', 'serve', 'watch', done);
-})
-
+});

@@ -7,7 +7,6 @@ import _ from 'lodash';
 
 const {Schema} = mongoose;
 
-
 const OrdersSchema = new Schema({
   leads: [
     {type: Schema.Types.ObjectId, ref: 'leads'}
@@ -24,14 +23,14 @@ const OrdersSchema = new Schema({
   }
 });
 
-OrdersSchema.pre('save', function(next){
+OrdersSchema.pre('save', function(next) {
   const now = new Date();
-  if ( !this.createdAt ) {
+  if (!this.createdAt) {
     this.createdAt = now;
   }
+
   next();
 });
-
 
 const getBrokerOrderHistory = (broker)=> {
   const Orders = mongoose.model('orders');
@@ -44,7 +43,7 @@ const getBrokerOrderHistory = (broker)=> {
           leads = leads.concat(order.leads);
           return leads;
         }, [])
-      }
+      };
     });
 };
 
@@ -60,10 +59,8 @@ const getLeads = ({broker, blacklist})=> {
   };
   return Leads.find(query)
     .select('-type -dupeKey')
-    .execAsync()
-    .then(leads => {
-      return {leads, broker};
-    });
+    .lean()
+    .stream();
 };
 
 const createOrder = ({leads, broker}) => {
@@ -83,6 +80,12 @@ OrdersSchema.statics.createOrder = (broker)=> {
   .then(getBrokerOrderHistory)
   .then(getLeads)
   .then(createOrder);
+};
+
+OrdersSchema.statics.preorder = (broker) => {
+  return Brokers.findById(broker._id)
+  .then(getBrokerOrderHistory)
+  .then(getLeads);
 };
 
 OrdersSchema.statics.saveOrder = (order)=> {

@@ -7,6 +7,7 @@ import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
 import pusher from '../../util/pusher';
+
 // import {Converter} from 'csvtojson';
 import CombineStream from 'combined-stream';
 import parseCsv from '../../util/parseCsv';
@@ -55,8 +56,9 @@ export const $post = (req, res, next)=> {
     mergedStream.append(stream);
   });
 
-  parseCsv(mergedStream);
-  res.send({ok: true});
+  parseCsv(mergedStream, res);
+
+  // res.send({ok: true});
 
   // toJson({
   //   input:  req.files[0].path,
@@ -88,7 +90,7 @@ export const $putMany = (req, res, next) => {
 
   queue.then(leads => {
     res.json(leads);
-  })
+  });
 };
 
 export const $put = (req, res, next)=> {
@@ -99,7 +101,7 @@ export const $put = (req, res, next)=> {
     } else {
       res.json(saved);
     }
-  })
+  });
 };
 
 export const $destroy = (req, res, next)=> {

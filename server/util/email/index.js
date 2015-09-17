@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import config from '../../config/env';
 import {logger} from '../logger';
+import Bluebird from 'bluebird';
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -26,7 +27,7 @@ const makeDupeEmail = (stats) => {
 
     Use this link to resolve possible duplicates
     ${stats.dupeLink}
-    `
+    `;
   }
 
   const options = {
@@ -40,14 +41,14 @@ const makeDupeEmail = (stats) => {
 };
 
 const sendMail = (type, stats) => {
-  return new Promise((yes, no) => {
+  return new Bluebird((yes, no) => {
     let ops;
     if (type === 'upload') {
       ops = makeDupeEmail(stats);
     }
-    logger.log('sending email', ops, stats)
+
     transporter.sendMail(ops, (err, info) => {
-      err ? no(err): yes(info);
+      err ? no(err) : yes(info);
     });
   });
 };

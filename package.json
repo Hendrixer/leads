@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Hendrixer/leads#readme",
   "dependencies": {
+    "JSONStream": "^1.0.4",
     "angular": "^1.4.4",
     "angular-animate": "^1.4.4",
     "angular-aria": "^1.4.4",
@@ -48,6 +49,7 @@
     "json-csv": "^1.0.5",
     "jsonwebtoken": "^5.0.5",
     "lodash": "^3.10.1",
+    "memwatch-next": "^0.2.9",
     "mongoose": "^4.1.0",
     "morgan": "^1.6.1",
     "multer": "^1.0.1",
@@ -72,6 +74,7 @@
     "gulp-nodemon": "^2.0.3",
     "gulp-rename": "^1.2.2",
     "gulp-template": "^3.0.0",
+    "heapdump": "^0.3.7",
     "karma": "^0.13.8",
     "raw-loader": "^0.5.1",
     "run-sequence": "^1.1.2",

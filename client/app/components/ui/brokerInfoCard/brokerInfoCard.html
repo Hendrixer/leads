@@ -1,5 +1,5 @@
 <div class="brokers-box md-whiteframe-z2" layout="column" layout-padding>
-      <form name="newBrokerForm" novalidate ng-submit="vm.whenDone()">
+      <form name="newBrokerForm" novalidate>
         <md-tabs md-dynamic-height>
           <md-tab label="General">
             <md-content layout="row">
@@ -134,6 +134,8 @@
             </md-content>
           </md-tab>
           <md-tab label="State Filters">
+            <md-button class="md-primary md-hue-3" ng-click="vm.checkAllStates()"
+            >select all</md-button>
             <md-content layout="row" layout-wrap>
               <div flex="25" ng-repeat="state in vm.states">
                 <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.states[state.abbrev]" aria-label="{{state.name}}">{{ ::state.name }}
@@ -142,7 +144,10 @@
             </md-content>
           </md-tab>
         </md-tabs>
-        <md-button class="md-raised md-accent md-hue-3" ng-disabled="newBrokerForm.$invalid">
+        <md-button class="md-raised md-accent md-hue-3"
+        ng-disabled="newBrokerForm.$invalid"
+        ng-click="vm.whenDone()"
+        type="submit">
         {{ vm.name }}</md-button>
       </form>
     </div>

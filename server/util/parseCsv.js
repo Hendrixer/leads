@@ -7,46 +7,45 @@ import config from '../config/env';
 import {Resolves} from '../api/resolves/resolves.model';
 import _ from 'lodash';
 
-let leadsCount = 0;
-
-let $leads = [];
 let $dupes = [];
-let leadsSaved = 0
-let limit;
+let $parsedLeadsCount = 0;
+let $leadsSaved = 0;
+let $leadsTried = 0;
+let $doneParsing = false;
+let $inProgress = false;
 
-if (process.env.MEM_LIMIT) {
-  limit = process.env.MEM_LIMIT;
-} else {
-  limit = 500;
-}
+const resetClosure = ()=> {
+  $dupes = [];
+  $parsedLeadsCount = 0;
+  $leadsSaved = 0;
+  $leadsTried = 0;
+  $doneParsing = false;
+  $inProgress = false;
+};
 
 const sendUploadEmail = (resolveId, stats) => {
-  logger.log('bout to send', stats, resolveId);
+  let duration = (Date.now() - stats.start) / 1000 + ' seconds';
   const opts = {
-    uploaded: leadsCount,
-    duration: (Date.now() - stats.start)/1000 + ' seconds',
-    saved: leadsSaved,
+    duration,
+    uploaded: $parsedLeadsCount,
+    saved: $leadsSaved,
     dupes: $dupes.length
   };
 
   if (resolveId) {
     opts.dupeLink = `${config.appUrl}/#/resolve/${resolveId}`;
   }
+
   return sendMail('upload', opts)
   .then(i => {
-    $leads = [];
-    $dupes = [];
-    leadsCount = 0;
-    leadsSaved = 0;
-    logger.log('email sent', i)
+    logger.log('email sent', i);
   })
   .catch(e => {
     logger.error('mail error', e);
-    $leads = [];
-    $dupes = [];
-    leadsCount = 0;
-    leadsSaved = 0;
   })
+  .finally(()=> {
+    resetClosure();
+  });
 };
 
 const getDupeKey = (lead) => {
@@ -64,10 +63,10 @@ const getDupeKey = (lead) => {
 };
 
 const afterMath = (stats)=> {
-  logger.log('$dupes', $dupes.length)
-  logger.log('$leads', $leads.length);
-  logger.log('leads count', leadsCount);
-  logger.log('leads saved', leadsSaved);
+  logger.log('$dupes', $dupes.length);
+  logger.log('leads count', $parsedLeadsCount);
+  logger.log('leads saved', $leadsSaved);
+  logger.log('leads tried', $leadsTried);
 
   if ($dupes.length) {
     const resolve = new Resolves({});
@@ -79,11 +78,11 @@ const afterMath = (stats)=> {
       .then(lead => {
         lead = lead || {};
         return lead;
-      })
+      });
     }))
     .then(matchingLeads => {
       const dupePairs = _.map(matchingLeads, (lead, i) => {
-        return {dupe: $dupes[i], alike: lead}
+        return {dupe: $dupes[i], alike: lead};
       });
       return new Promise((yes, no) => {
         resolve.dupes = dupePairs;
@@ -94,52 +93,62 @@ const afterMath = (stats)=> {
             yes(savedResolved._id);
           }
         });
-      })
+      });
     })
     .then(id => {
       return sendUploadEmail(id, stats);
     })
     .catch(e => {
       logger.error('matchingLeads', e);
-    })
+    });
   } else {
     sendUploadEmail(null, stats);
   }
 };
 
-const parseCsv = (stream) => {
-  const startDate = Date.now();
+const parseCsv = (stream, res) => {
+  if ($inProgress) {
+    return res.send({message: 'In progress'});
+  }
+
+  res.send({ok: true});
+  const startTime = Date.now();
 
   stream.pipe(csvParser())
   .on('data', row => {
-    leadsCount++;
-    const prom = Leads.saveDupe(row)
+    $inProgress = true;
+    $parsedLeadsCount++;
+    Leads.saveDupe(row)
     .then(data => {
+      $leadsTried++;
       if (data.type === 'dupe') {
         $dupes.push(data.lead);
       } else {
-        leadsSaved++;
-       return data;
+        $leadsSaved++;
+      }
+
+      if ($leadsTried === $parsedLeadsCount && $doneParsing) {
+        afterMath({
+          start: startTime
+        });
+
+        $doneParsing = false;
+      }
+    })
+    .catch(error => {
+      $leadsTried++;
+
+      if ($leadsTried === $parsedLeadsCount && $doneParsing) {
+        afterMath({
+          start: startTime
+        });
+        $doneParsing = false;
       }
     });
-
-    if (leadsSaved > limit) {
-      const lastProm = $leads.pop();
-      $leads = [lastProm];
-    }
-    $leads.push(prom);
   })
   .on('end', ()=> {
-    logger.log(`Parsed ${leadsCount} leads`, $leads.length);
-      Promise.all($leads)
-      .then(() => {
-        afterMath({
-          start: startDate
-        });
-      })
-      .catch(e => {
-        logger.error('noops', e);
-      })
+    logger.log(`Parsed ${$parsedLeadsCount} leads`);
+    $doneParsing = true;
   });
 };
 

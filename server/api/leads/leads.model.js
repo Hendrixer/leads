@@ -121,7 +121,7 @@ const getState = (prop) => {
 };
 
 const normal = (prop) => {
-  if(checkForNull(prop)) {
+  if (checkForNull(prop)) {
     return prop.toLowerCase();
   }
 };
@@ -145,8 +145,8 @@ const parseNum = (prop) => {
 
     try {
       num = parseInt(prop);
-    } catch(e) {
-    }
+    } catch (e) {}
+
     return undefined;
   }
 };
@@ -189,7 +189,7 @@ LeadsSchema.statics.format = (lead)=> {
       work: replaceNum(lead.ContactWorkPhone)
     },
     bestTimeToContact: checkForNull(lead.BestContactTimeDescription),
-    homeOwner: lead.HomeOwnerYesNo&&lead.HomeOwnerYesNo === 'Yes'? true: false,
+    homeOwner: lead.HomeOwnerYesNo && lead.HomeOwnerYesNo === 'Yes' ? true : false,
     creditRating: normal(lead.CreditRatingDescription),
     LTV: checkForNull(lead.LTV),
     CLTV: checkForNull(lead.CLTV),
@@ -227,12 +227,12 @@ LeadsSchema.statics.format = (lead)=> {
   return newLead;
 };
 
-const dupeErr = (err) =>{
+const dupeErr = (err) => {
   return !!(
-    (err.code && (err.code === 11000 || err.code === '11000'))||
+    (err.code && (err.code === 11000 || err.code === '11000')) ||
     (err.errmsg && /E11000/gi.test(err.errmsg))
   );
-}
+};
 
 LeadsSchema.statics.saveDupe = (lead)=> {
   const Leads = mongoose.model('leads');
@@ -256,9 +256,10 @@ LeadsSchema.statics.saveDupe = (lead)=> {
         if (!savedLead) {
           logger.log('blank');
         }
+
         resolve(savedLead);
       }
-    })
+    });
   });
 };
 
