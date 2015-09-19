@@ -11,7 +11,7 @@
               <span class="history-text">Leads sent <span class="leads-sent">{{::order.leads}}</span></span>
             </div>
             <div flex="15">
-              <span class="history-text">Ordered on {{ ::order.createdAt| date:"MM/dd/yyyy" }}</span>
+              <span class="history-text">Ordered on {{ ::order.createdAt | date:"MM/dd/yyyy" }}</span>
             </div>
             <div flex="70" layout="row" layout-fill layout-align="endcenter">
               <md-button class="md-accent md-hue-3" aria="redownload" ng-click="vm.redownload(order)" flex="25">

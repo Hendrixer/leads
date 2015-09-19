@@ -4,10 +4,12 @@ import express from 'express';
 const router = express.Router();
 
 router.get('/broker', controller.$getForBroker);
+router.post('/', controller.$create);
 
 // .post(controller.$post)
 router.get('/redownload', controller.$redownload);
-router.get('/create', controller.$create);
+
+// router.get('/create', controller.$create);
 router.get('/preorder', controller.$preorder);
 
 router.route('/:id')

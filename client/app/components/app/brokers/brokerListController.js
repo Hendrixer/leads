@@ -9,9 +9,9 @@ class BrokerListController {
     this.Orders = Orders;
   }
 
-  orderLeads(broker) {
-    this.Orders.createOrder(broker);
-  }
+  // orderLeads(broker) {
+  //   this.Orders.createOrder(broker);
+  // }
 }
 
 BrokerListController.$inject = ['brokers', 'Brokers', 'Orders'];

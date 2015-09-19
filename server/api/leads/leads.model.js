@@ -9,6 +9,10 @@ const {Schema} = mongoose;
 const LeadsSchema = new Schema({
   age: Number,
 
+  createdAt: {
+    type: Date
+  },
+
   type: {
     type: String
   },
@@ -268,5 +272,14 @@ LeadsSchema.methods.saveDupe = () => {
 
   return Leads.saveDupe([this]);
 };
+
+LeadsSchema.pre('save', function(next) {
+  const now = new Date();
+  if (!this.createdAt) {
+    this.createdAt = now;
+  }
+
+  next();
+});
 
 export const Leads = mongoose.model('leads', LeadsSchema);

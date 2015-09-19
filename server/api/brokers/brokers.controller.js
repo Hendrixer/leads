@@ -14,7 +14,7 @@ export const $param = (req, res, next, broker) => {
     .catch(e => {
       next(e);
     });
-}
+};
 
 export const $get = (req, res, next)=> {
   if (req.query.count) {
@@ -61,6 +61,3 @@ export const $put = (req, res, next)=> {
 export const $destroy = (req, res, next)=> {
 
 };
-
-
-

@@ -43,26 +43,33 @@ export const $preorder = (req, res, next) => {
 };
 
 export const $create = (req, res, next)=> {
-  const mimeType = req.query.filetype;
-
+  // const mimeType = req.query.filetype;
   // oly support csvs for now
-  if (/text|txt|pdf/g.test(mimeType)) {
-    return res.send({message: `${mimeType} files not supoorted yet!`});
-  }
+  // if (/text|txt|pdf/g.test(mimeType)) {
+  //   return res.send({message: `${mimeType} files not supoorted yet!`});
+  // }
 
-  Orders.createOrder({_id: req.query.broker})
-    .then(data => {
-      if (data.message) {
-        res.json(data.message);
-      } else {
-        utils.downloadFile(res, req.query.filetype, data);
-      }
-    })
-    .catch(e => {
-      // logger.error('error', e);
-      console.error(e);
-      res.send(e);
-    });
+  Orders.createOrder(req.body)
+  .then(order => {
+    res.json(order);
+  })
+  .catch(e => {
+    next(e);
+  });
+
+  // Orders.createOrder({_id: req.query.broker})
+  //   .then(data => {
+  //     if (data.message) {
+  //       res.json(data.message);
+  //     } else {
+  //       utils.downloadFile(res, req.query.filetype, data);
+  //     }
+  //   })
+  //   .catch(e => {
+  //     // logger.error('error', e);
+  //     console.error(e);
+  //     res.send(e);
+  //   });
 };
 
 export const $put = (req, res, next)=> {

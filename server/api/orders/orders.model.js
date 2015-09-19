@@ -64,22 +64,12 @@ const getLeads = ({broker, blacklist})=> {
 };
 
 const createOrder = ({leads, broker}) => {
-  if (_.size(leads) === 0) {
-    return {message: `No new Leads for ${broker.name}`};
-  }
-
   const Order = mongoose.model('orders');
-  return Order.saveOrder({broker, leads: _.pluck(leads, '_id')})
-    .then(()=> {
-      return {leads, broker};
-    });
+  return Order.saveOrder({broker, leads});
 };
 
-OrdersSchema.statics.createOrder = (broker)=> {
-  return Brokers.findByIdAsync(broker._id)
-  .then(getBrokerOrderHistory)
-  .then(getLeads)
-  .then(createOrder);
+OrdersSchema.statics.createOrder = ({broker, leads})=> {
+  return createOrder({leads, broker});
 };
 
 OrdersSchema.statics.preorder = (broker) => {
@@ -97,9 +87,8 @@ OrdersSchema.statics.saveOrder = (order)=> {
     Order.createAsync({broker: broker._id})
       .then(order => {
         order.leads = order.leads.concat(leads);
-
         order.save((err, order) => {
-          err ? no(err): yes(order);
+          err ? no(err) : yes(order);
         });
       });
   });
