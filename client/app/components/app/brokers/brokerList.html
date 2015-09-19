@@ -15,7 +15,7 @@
           </div>
           <div class="broker-actions" flex layout="row" layout-align="start center">
             <div class="new-order">
-              <md-button class="md-accent md-hue-3" aria="new order" ng-click="detail.orderLeads(broker)">
+              <md-button class="md-accent md-hue-3" aria="new order" ui-sref="preorder({broker: broker._id, name: broker.name})">
                 <md-icon md-font-set="material-icons">shopping_cart</md-icon>
               </md-button>
             </div>

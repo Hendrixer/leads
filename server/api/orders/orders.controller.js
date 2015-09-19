@@ -36,6 +36,9 @@ export const $preorder = (req, res, next) => {
     stream
     .pipe(JsonStream.stringify())
     .pipe(res);
+  })
+  .catch(e => {
+    next(e);
   });
 };
 

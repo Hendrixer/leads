@@ -8,7 +8,10 @@ const preorder = ()=> {
     controller,
     restrict: 'E',
     controllerAs: 'vm',
-    scope: {},
+    scope: {
+      leads: '=',
+      broker: '='
+    },
     bindToController: true,
     replace: true
   };

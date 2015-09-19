@@ -28,7 +28,16 @@ const OrderFactory = ($http, $window) => {
     $window.open(`${api}/orders/create?access_token=${token}&broker=${broker._id}&filetype=${broker.downloadFileMime}`, '_blank', '');
   };
 
-  return { getOrders, getState, createOrder, downloadOrder };
+  async function preorder(broker) {
+    const resp = await $http({
+      method: 'GET',
+      url: `${api}/orders/preorder?broker=${broker}`
+    });
+
+    return resp.data;
+  };
+
+  return { getOrders, getState, createOrder, downloadOrder, preorder };
 };
 
 OrderFactory.$inject = ['$http', '$window'];

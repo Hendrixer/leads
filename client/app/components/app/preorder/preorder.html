@@ -1,3 +1,49 @@
-<div>
-  <h1>{{ vm.name }}</h1>
-</div>
+<section class="page preorder">
+  <md-content layout="column" layout-padding>
+    <div class="preorder-table" flex>
+      <md-card>
+        <md-data-table-toolbar>
+          <h3>Preorder for {{ ::vm.broker.name }}</h3>
+          <h5>Leads count: {{ ::vm.leads.length }} </h5>
+        </md-data-table-toolbar>
+        
+        <md-data-table-container>
+          <table md-data-table md-row-select="vm.selected">
+            <thead md-order="vm.filters.orderBy">
+              <tr>
+                <th name="First Name" order-by="firstName"></th>
+                <th name="Last Name" order-by="LastName"></th>
+                <th name="State" order-by="address.state"></th>
+                <th name="Home Owner" order-by="homeOwner"></th>
+                <th name="Credit Rating" order-by="creditRating"></th>
+                <th name="LTV" order-by="LTV"></th>
+                <th name="CLTV" order-by="CLTV"></th>
+                <th name="Loan Purpose" order-by="requestedLoan.purpose"></th>
+                <th name="Loan Description" order-by="requestedLoan.description"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr md-auto-select
+                ng-repeat="lead in vm.leads | orderBy: vm.filters.orderBy | limitTo: vm.filters.limit: (vm.filters.page - 1) * vm.filters.limit"
+                class="md-primary">
+                <td>{{ ::lead.firstName }}</td>
+                <td>{{ ::lead.lastName }}</td>
+                <td>{{ ::lead.address.state }}</td>
+                <td>{{ ::lead.homeOwner }}</td>
+                <td>{{ ::lead.creditRating }}</td>
+                <td>{{ ::lead.LTV }}</td>
+                <td>{{ ::lead.CLTV }}</td>
+                <td>{{ ::lead.requestedLoan.purpose }}</td>
+                <td>{{ ::lead.requestedLoan.description }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </md-data-table-container>
+        <md-data-table-pagination md-limit="vm.filters.limit"
+        md-page="vm.filters.page"
+        md-total="{{ ::vm.leads.length }}">
+        </md-data-table-pagination>
+      </md-card>
+    </div>
+  </md-content>
+</section>
