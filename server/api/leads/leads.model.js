@@ -99,8 +99,14 @@ const LeadsSchema = new Schema({
       balance: Number,
       rate: Number,
       payment: Number,
-    },
+    }
   }
+});
+
+LeadsSchema.index({
+  email: 'text',
+  firstName: 'text',
+  lastName: 'text'
 });
 
 const checkForNull = (prop) => {

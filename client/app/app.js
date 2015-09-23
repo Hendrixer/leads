@@ -1,5 +1,6 @@
 import 'ngMaterial.css';
 import './app.styl';
+import 'ngTableCss';
 import ngMaterial from 'angular-material';
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';

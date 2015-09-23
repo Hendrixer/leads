@@ -3,24 +3,45 @@ import modalController from './modalController';
 import modalTemplate from './modalTemplate.html';
 
 class LeadsController {
-  constructor(Leads, $mdDialog, $scope, $mdToast) {
+  constructor(Leads, $mdDialog, $mdToast, $scope) {
     this.Leads = Leads;
     this.modal = $mdDialog;
     this.leads = [];
+    this.page = 1;
+    this.limit = 10;
+    this.orderBy = 'firstName';
+    this.selected = [];
     this.$mdToast = $mdToast;
     this.$scope = $scope;
-    this.getLeads({count: true});
-    this.cards = [];
-  }
+    this.$scope.search = '';
+    this.showLoader = false;
+    this.$promise = null;
 
-  makeCards(data=[], title, type) {
-    data = data.map(_data => {
-      _data.title = title;
-      return {type, data: _data};
+    $scope.$watch('search', (fresh, stale) => {
+      if (fresh && (fresh !== stale)) {
+        this.$promise = this.searchLeads(fresh);
+      }
     });
 
-    this.cards = this.cards.concat(data);
-    this.$scope.$apply();
+  }
+
+  trigger() {
+    console.log(arguments);
+  }
+
+  searchLeads(text) {
+    this.showLoader = true;
+    return this.Leads.search(text)
+    .then(leads => {
+      this.leads = leads;
+      this.$scope.search = '';
+      this.showLoader = false;
+      this.$scope.$apply();
+      return true;
+    })
+    .catch(e => {
+      console.error(e);
+    });
   }
 
   getLeads(query) {
@@ -30,13 +51,6 @@ class LeadsController {
       })
       .catch(e => {
 
-      });
-  }
-
-  getBrokers(query) {
-    this.Brokers.getBrokers(query)
-      .then(()=> {
-        // this.makeCards(this.Brokers.)
       });
   }
 
@@ -62,5 +76,5 @@ class LeadsController {
   }
 }
 
-LeadsController.$inject = ['Leads', '$mdDialog', '$scope', '$mdToast'];
+LeadsController.$inject = ['Leads', '$mdDialog', '$mdToast', '$scope'];
 export {LeadsController};

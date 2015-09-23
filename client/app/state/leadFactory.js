@@ -1,6 +1,6 @@
 import {api} from './const';
 
-const LeadFactory = ($http) => {
+const LeadFactory = ($http, $q) => {
   let $leads = [];
 
   const getState = ()=> {
@@ -27,8 +27,17 @@ const LeadFactory = ($http) => {
     return resp.data;
   }
 
-  return { getLeads, getState, updateMany };
+  async function search(text) {
+    if (!text) {
+      return await $q.when(false);
+    }
+
+    const resp = await $http.get(`${api}/leads/search?text=${text}`);
+    return resp.data;
+  }
+
+  return { getLeads, getState, updateMany, search };
 };
 
-LeadFactory.$inject = ['$http'];
+LeadFactory.$inject = ['$http', '$q'];
 export {LeadFactory};

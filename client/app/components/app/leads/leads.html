@@ -1,4 +1,10 @@
 <section class="leads page">
+  <!-- <md-progress-circular
+  class="md-accent md-hue-2"
+  md-mode="indeterminate"
+  md-diameter="100px"
+  ng-show="vm.showLoader">
+  </md-progress-circular> -->
   <md-button class="md-fab md-accent md-hue-3"
     ng-click="vm.showUploadModal()">
     <md-icon md-font-set="material-icons"
@@ -6,10 +12,54 @@
         backup
     </md-icon>
   </md-button>
-  <md-content layout="row" layout-margin layout-wrap>
-    <dash-card ng-repeat="card in vm.cards"
-      type="card.type"
-      chart-data="card.data" flex="33">
-    </dash-card>
+  <md-content>
+    <md-card>
+      <md-data-table-toolbar layout="row">
+        <div flex="10">
+          <h3>Leads</h3>
+        </div>
+        <md-input-container flex=50 class="md-accent">
+          <label>search for leads</label>
+          <input type="text" ng-model="search" ng-model-options="{debounce: 1000}">
+        </md-input-container>
+        <div class="actions">
+          <md-button ng-click="vm.deleteLeads()"
+          class="md-icon-button md-warn"
+          ng-disabled="!vm.selected.length">
+            <md-tooltip>
+              delete lead(s)
+            </md-tooltip>
+            <md-icon md-font-set="material-icons">clear</md-icon>
+          </md-button>
+        </div>
+      </md-data-table-toolbar>
+      <md-data-table-container>
+        <table md-data-table md-row-select="vm.selected"
+        md-progress="vm.$promise">
+          <thead md-order="vm.orderBy">
+            <tr>
+              <th name="First Name" order-by="firstName"></th>
+              <th name="Last Name" order-by="lastName"></th>
+              <th name="Email" order-by="email"></th>
+              <th name="State" order-by="address.state"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr md-auto-select
+            ng-repeat="lead in vm.leads | orderBy: vm.orderBy | limitTo: vm.limit: (vm.page - 1) * vm.limit">
+              <td>{{ ::lead.firstName }}</td>
+              <td>{{ ::lead.lastName }}</td>
+              <td>{{ ::lead.email }}</td>
+              <td>{{ ::lead.address.state }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </md-data-table-container>
+      <md-data-table-pagination md-limit="vm.limit"
+      md-page="vm.page"
+      md-total="{{ vm.leads.length }}"
+      md-trigger="vm.trigger">
+      </md-data-table-pagination>
+    </md-card>
   </md-content>
 </section>
