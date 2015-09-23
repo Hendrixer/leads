@@ -1,71 +1,50 @@
 <section class="page resolve">
-  <md-fab-speed-dial md-open="vm.isOpen" md-direction="up"
-  ng-mouse-enter="vm.isOpen=true" ng-mouse-leave="vm.isOpen=false" class="md-scale">
-    <md-fab-trigger>
-      <md-button aria-label="menu" class="md-fab md-warn">
-        <md-tooltip md-direction="left">Action</md-tooltip>
-        <md-icon md-font-set="material-icons" aria-label="menu">menu</md-icon>
-      </md-button>
-    </md-fab-trigger>
-    <md-fab-actions>
-      <md-button aria-label="override" class="md-fab md-raised md-mini" ng-click="vm.override()">
-        <md-tooltip md-direction="left">override</md-tooltip>
-        <md-icon md-font-set="material-icons">thumb_up</md-icon>
-      </md-button>
-      <md-button class="md-fab md-raised md-mini" ng-click="vm.ignore()">
-        <md-tooltip md-direction="left">ignore</md-tooltip>
-        <md-icon md-font-set="material-icons">thumb_down</md-icon>
-      </md-button>
-    </md-fab-actions>
-  </md-fab-speed-dial>
-  <div layout="column">
-    <div style="text-align: center;">
-      <h2 class="md-display-2">Resolve Possible Duplicates ({{ ::vm.resolution.dupes.length }})</h2>
-    </div>
-    <md-content class="md-whiteframe-z2">
-      <md-list>
-        <md-list-item
-          class="md-2-line"
-          ng-repeat-start="pair in vm.resolution.dupes">
-
-          <div class="md-list-item-text" layout="row">
-            <div flex="10">
-            <div ng-repeat="v in [0]">
-              <md-checkbox class="md-primary" ng-model="pair.checked" aria-label="pair.dupe.dupeKey">
-              </md-checkbox>
-            </div>
-
-            </div>
-            <div class="dupe square" flex="45" layout="column">
-              <div class="title">
-                <span>Possible Dupe</span>
-              </div>
-              <div class="dupe-uinq" layout="row" layout-padding layout-padding layout-align="center center">
-                <div class="name">
-                  <span>{{ ::pair.dupe.firstName }}  {{ ::pair.dupe.lastName }}</span>
-                </div>
-                <div class="email">
-                  <span>{{ ::pair.dupe.email }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="looks-like square" flex="45" layout="column">
-              <div class="title">
-                <span>Looks Like</span>
-              </div>
-              <div class="dupe-uinq" layout="row" layout-padding layout-padding layout-align="center center">
-                <div class="name">
-                  <span>{{ ::pair.alike.firstName }}  {{ ::pair.alike.lastName }}</span>
-                </div>
-                <div class="email">
-                  <span>{{ ::pair.alike.email }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </md-list-item>
-        <md-divider ng-repeat-end></md-divider>
-      </md-list>
-    </md-content>
-  </div>
+  <md-card>
+    <md-data-table-toolbar>
+      <div layout="row" layout-fill>
+        <div flex="20">
+          <h3>Resolve {{ ::vm.resolution.dupes.length }} duplicate(s)</h3>
+        </div>
+        <div flex="30"></div>
+        <div flex layout="row">
+          <md-button ng-click="vm.showConfirmation()" class="md-icon-button md-accent">
+            <md-tooltip>
+              update
+            </md-tooltip>
+            <md-icon md-font-set="material-icons">publish</md-icon>
+          </md-button>
+        </div>
+      </div>
+    </md-data-table-toolbar>
+    <md-data-table-container>
+      <table md-data-table md-row-select="vm.selected">
+        <thead md-order="'dupe.dupeKey'">
+          <tr>
+            <th name="Dupe First Name" order-by="dupe.firstName"></th>
+            <th name="Dupe Last Name" order-by="dupe.lastName"></th>
+            <th name="Dupe Email" order-by="dupe.email"></th>
+            
+            <th name="Lead First Name" order-by="alike.firstName"></th>
+            <th name="Lead Last Name" order-by="alike.lastName"></th>
+            <th name="Lead Email" order-by="alike.email"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr md-auto-select
+            ng-repeat="pair in vm.resolution.dupes | orderBy: 'dupe.firstName' | limitTo: vm.limit: (vm.page - 1) * vm.limit track by pair.dupe.dupeKey">
+            <td>{{ ::pair.dupe.firstName}}</td>
+            <td>{{ ::pair.dupe.lastName}}</td>
+            <td>{{ ::pair.dupe.email}}</td>
+            <td>{{ ::pair.alike.firstName}}</td>
+            <td>{{ ::pair.alike.lastName}}</td>
+            <td>{{ ::pair.alike.email}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </md-data-table-container>
+    <md-data-table-pagination md-limit="vm.limit"
+    md-page="vm.page"
+    md-total="{{ ::vm.resolution.dupes.length }}">
+    </md-data-table-pagination>
+  </md-card>
 </section>

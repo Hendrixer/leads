@@ -15,6 +15,7 @@ const leads = angular.module('leads', [
 
   $stateProvider
     .state('leads', {
+      auth: true,
       url: '/leads',
       template: `<leads></leads>`
     });

@@ -1,57 +1,54 @@
+import {element} from 'angular';
 class ResolveController {
-  constructor(Leads, Resolves, $state, $mdToast){
+  constructor(Leads, Resolves, $state, $mdToast, $mdDialog) {
     this.Leads = Leads;
     this.Resolves = Resolves;
     this.$state = $state;
+    this.modal = $mdDialog;
     this.$mdToast = $mdToast;
+    this.selected = [];
+    this.limit = 10;
+    this.page = 1;
   }
 
-  override(){
-    const leadsToSave = this.resolution.dupes.filter(pair => {
-      return pair.checked;
-    })
-    .map(pair => {
+  showConfirmation(ev) {
+    const confirm = this.modal.confirm()
+      .title('Are you finished here?')
+      .content(
+        `Selected leads will be overwritten by their respective duplicates.\n
+        Leads not selected will be uneffected and the dupes will not be saved.`
+      )
+      .ariaLabel('Finished')
+      .targetEvent(ev)
+      .ok('Yes, I\'m done')
+      .cancel('Not done yet');
+
+    this.modal.show(confirm)
+    .then(this.resolveDupes.bind(this), e => {
+      console.debug('nooo');
+    });
+  }
+
+  resolveDupes() {
+    if (!this.selected.length) {
+      this.cleanUp();
+    }
+
+    this.Leads.updateMany(this.selected.map(pair => {
       return pair.dupe;
-    });
-
-    if (!leadsToSave.length) return;
-
-    this.Leads.updateMany(leadsToSave)
-    .then(leads => {
-      const ids = _.pluck(leads, '_id');
-
-      const filtered = this.resolution.dupes.filter(pair => {
-        let match = false;
-
-        ids.forEach(id => {
-          if (pair.alike._id === id) {
-            match = true;
-          }
-        });
-        return !match;
-      });
-
-      this.resolution.dupes = filtered;
-
-      this.$mdToast.show(
-        this.$mdToast.simple()
-          .content(`${leads.length} dupes resolved`)
-          .position('bottom right')
-          .hideDelay(3000)
-      );
-
-      if (!_.size(this.resolution.dupes)) {
-        this.ignore();
-      }
+    }))
+    .then(this.cleanUp.bind(this))
+    .catch(e => {
+      console.error(e);
     });
   }
 
-  ignore(){
+  cleanUp() {
     this.removeResolve()
-    .then(this.allDone);
+    .then(this.allDone.bind(this));
   }
 
-  allDone(){
+  allDone() {
     this.$mdToast.show(
       this.$mdToast.simple()
         .content(`Resolution complete`)
@@ -62,11 +59,11 @@ class ResolveController {
     this.$state.go('leads');
   }
 
-  removeResolve(){
+  removeResolve() {
     return this.Resolves.remove(this.resolution);
   }
 }
 
-ResolveController.$inject = ['Leads', 'Resolves', '$state', '$mdToast'];
+ResolveController.$inject = ['Leads', 'Resolves', '$state', '$mdToast', '$mdDialog'];
 
 export default ResolveController;

@@ -169,7 +169,8 @@ const getDupeKey = (lead) => {
   return `${lead.firstName}${lead.lastName}${lead.email}`;
 };
 
-LeadsSchema.statics.format = (lead)=> {
+LeadsSchema.statics.format = (lead) => {
+
   let type = 'education';
 
   if (lead.Mortgage1Balance || lead.Mortgage2Balance || lead.Mortgage2Payment) {
@@ -246,7 +247,6 @@ LeadsSchema.statics.saveDupe = (lead)=> {
     new Leads(lead).save((err, savedLead) => {
       if (err) {
         if (dupeErr(err)) {
-          logger.log('dupe');
           const dupe = {
             type: 'dupe',
             lead: lead
@@ -269,7 +269,6 @@ LeadsSchema.statics.saveDupe = (lead)=> {
 
 LeadsSchema.methods.saveDupe = () => {
   const Leads = mongoose.model('leads');
-
   return Leads.saveDupe([this]);
 };
 

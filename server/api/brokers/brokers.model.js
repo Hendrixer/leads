@@ -53,10 +53,27 @@ const bluePrint = {
 
   leadFilters: {
     states: _.reduce(states, (schema, state) => {
-      schema[state.abbrev] = Boolean
+      schema[state.abbrev] = Boolean;
       return schema;
     }, {}),
 
+    detail: {
+      cltv: {
+        use: Boolean,
+        minimum: Number,
+        maximum: Number
+      },
+      ltv: {
+        use: Boolean,
+        minimum: Number,
+        maximum: Number
+      },
+      requestedLoanAmount: {
+        use: Boolean,
+        minimum: Number,
+        maximum: Number
+      }
+    },
     basic: {
       loanPurpose: {
         refinanceFirst: {
@@ -143,10 +160,6 @@ const bluePrint = {
           default: false
         }
       }
-    },
-
-    detail: {
-
     }
   }
 };

@@ -27,6 +27,9 @@ class LeadsController {
     this.Leads.getLeads(query)
       .then(()=> {
         this.makeCards(this.Leads.getState(), 'total leads', 'count');
+      })
+      .catch(e => {
+
       });
   }
 

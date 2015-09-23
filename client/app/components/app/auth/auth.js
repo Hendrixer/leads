@@ -11,20 +11,17 @@ const authModule = angular.module('auth', [
   $stateProvider
     .state('auth', {
       url: '/auth',
-      free: true,
       abstract: true,
       template: '<auth></auth>'
     })
     .state('auth.signin', {
       url: '/signin',
-      free: true,
       template: signinTemplate
     })
     .state('auth.signup', {
       url: '/signup',
-      free: true,
       template: signupTemplate
-    })
+    });
 }])
 .directive('auth', Auth).name;
 

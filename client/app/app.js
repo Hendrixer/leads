@@ -35,18 +35,9 @@ angular.module('app', [
   resolve,
   preorder
 ])
-.run(['Pusher', '$mdToast', '$state', 'Auth', '$rootScope', (Pusher, $mdToast, $state, Auth, $rootScope) => {
-  Pusher.uploadOn('processing:finished', data => {
-    $mdToast.show(
-      $mdToast.simple()
-        .content('Files done processing')
-        .position('bottom right')
-        .hideDelay(7000)
-    );
-  });
-
+.run(['$mdToast', '$state', 'Auth', '$rootScope', ($mdToast, $state, Auth, $rootScope) => {
   $rootScope.$on('$stateChangeStart', (e, toState) => {
-    if (!toState.free && !Auth.isAuth()) {
+    if (toState.auth && !Auth.isAuth()) {
       e.preventDefault();
       $state.go('auth.signin');
     }
@@ -64,17 +55,30 @@ angular.module('app', [
     };
   }]);
 
-  $httpProvider.interceptors.push(()=> {
+  $httpProvider.interceptors.push(['$q', '$injector', ($q, $injector)=> {
     return {
       request(config) {
         const token = window.localStorage.getItem('leads.token');
         config.headers.Authorization = `Bearer ${token}`;
         return config;
+      },
+
+      responseError(reason) {
+        if (reason.status === 401) {
+          const state = $injector.get('$state');
+          const stateToGoTo = state.$current.name === 'auth.signup' ?
+          'auth.signup' : 'auth.signin';
+
+          state.go(stateToGoTo);
+          window.localStorage.removeItem('leads.token');
+        }
+
+        return $q.reject(reason);
       }
     };
-  });
+  }]);
 
   $mdThemingProvider.theme('default')
-    .primaryPalette('red')
-    .accentPalette('cyan');
+    .primaryPalette('blue-grey')
+    .accentPalette('purple');
 }]);

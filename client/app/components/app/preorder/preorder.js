@@ -11,6 +11,7 @@ const preorderModule = angular.module('preorder', [
 .config(['$stateProvider', $stateProvider => {
   $stateProvider
     .state('preorder', {
+      auth: true,
       url: '/preorder/:broker/:name',
       template: '<preorder leads="preorder" broker="broker"></preorder>',
       resolve: {

@@ -9,6 +9,7 @@ let new_brokerModule = angular.module('new_broker', [
 .config(['$stateProvider', $stateProvider => {
   $stateProvider
     .state('new-broker', {
+      auth: true,
       url: '/new/broker',
       template: '<new-broker></new-broker>'
     });
