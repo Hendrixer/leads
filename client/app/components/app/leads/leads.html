@@ -12,11 +12,14 @@
         backup
     </md-icon>
   </md-button>
-  <md-content>
-    <md-card>
+  <md-content class="column">
+    <div flex>
+      <h1 class="total-leads">Total Leads: {{ vm.leadsCount }}</h1>
+    </div>
+    <md-card flex>
       <md-data-table-toolbar layout="row">
         <div flex="10">
-          <h3>Leads</h3>
+          <h3>Remove Leads</h3>
         </div>
         <md-input-container flex=50 class="md-accent">
           <label>search for leads</label>

@@ -16,7 +16,7 @@ class LeadsController {
     this.$scope.search = '';
     this.showLoader = false;
     this.$promise = null;
-
+    this.getLeadsCount();
     $scope.$watch('search', (fresh, stale) => {
       if (fresh && (fresh !== stale)) {
         this.$promise = this.searchLeads(fresh);
@@ -44,10 +44,11 @@ class LeadsController {
     });
   }
 
-  getLeads(query) {
-    this.Leads.getLeads(query)
-      .then(()=> {
-        this.makeCards(this.Leads.getState(), 'total leads', 'count');
+  getLeadsCount() {
+    this.Leads.getLeadsCount()
+      .then(count => {
+        this.leadsCount = count;
+        this.$scope.$apply();
       })
       .catch(e => {
 

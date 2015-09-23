@@ -15,6 +15,16 @@ const LeadFactory = ($http, $q) => {
     });
 
     $leads = $leads.concat(resp.data);
+  };
+  
+  async function getLeadsCount() {
+    const resp = await $http({
+      url: `${api}/leads`,
+      method: 'GET',
+      params: {count: true}
+    });
+
+    return resp.data.count;
   }
 
   async function updateMany(leads) {
@@ -36,7 +46,13 @@ const LeadFactory = ($http, $q) => {
     return resp.data;
   }
 
-  return { getLeads, getState, updateMany, search };
+  return {
+    getLeads,
+    getState,
+    updateMany,
+    search,
+    getLeadsCount
+  };
 };
 
 LeadFactory.$inject = ['$http', '$q'];
