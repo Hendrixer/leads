@@ -47,8 +47,6 @@ export const $post = (req, res, next)=> {
 export const $put = (req, res, next)=> {
   const broker = req.broker;
   _.merge(broker, req.body);
-
-  logger.log(broker);
   broker.save((err, saved) => {
     if (err) {
       return next(err);
