@@ -16,7 +16,7 @@ const LeadFactory = ($http, $q) => {
 
     $leads = $leads.concat(resp.data);
   };
-  
+
   async function getLeadsCount() {
     const resp = await $http({
       url: `${api}/leads`,
@@ -25,7 +25,7 @@ const LeadFactory = ($http, $q) => {
     });
 
     return resp.data.count;
-  }
+  };
 
   async function updateMany(leads) {
     const resp = await $http({
@@ -35,7 +35,7 @@ const LeadFactory = ($http, $q) => {
     });
 
     return resp.data;
-  }
+  };
 
   async function search(text) {
     if (!text) {
@@ -44,14 +44,24 @@ const LeadFactory = ($http, $q) => {
 
     const resp = await $http.get(`${api}/leads/search?text=${text}`);
     return resp.data;
-  }
+  };
+
+  async function remove(leads) {
+    if (!Array.isArray(leads)) {
+      leads = [leads];
+    }
+
+    const resp = await $http.delete(`${api}/leads?leads=${leads}`);
+    return resp.data;
+  };
 
   return {
     getLeads,
     getState,
     updateMany,
     search,
-    getLeadsCount
+    getLeadsCount,
+    remove
   };
 };
 

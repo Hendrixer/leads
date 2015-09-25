@@ -1,6 +1,7 @@
 import {element} from 'angular';
 import modalController from './modalController';
 import modalTemplate from './modalTemplate.html';
+import pluck from 'lodash/collection/pluck';
 
 class LeadsController {
   constructor(Leads, $mdDialog, $mdToast, $scope) {
@@ -25,8 +26,39 @@ class LeadsController {
 
   }
 
-  trigger() {
-    console.log(arguments);
+  checkBeforeDelete(ev) {
+    const {length} = this.selected;
+    if (!length) {
+      return;
+    }
+
+    let word = length > 1 ? 'leads' : 'lead';
+
+    const confirm = this.modal.confirm()
+      .title(`Delete ${this.selected.length} ${word}?`)
+      .content(
+        `Selected leads will be deleted forever.`
+      )
+      .ariaLabel('deleted leads')
+      .targetEvent(ev)
+      .ok('Yes, I\'m sure')
+      .cancel('nevermind');
+
+    this.modal.show(confirm)
+    .then(this.remove.bind(this), e => {
+      console.debug('nooo');
+    });
+  }
+
+  remove() {
+    this.$promise = this.Leads.remove(pluck(this.selected, '_id'))
+    .then(() => {
+      const ids = pluck(this.selected, '_id');
+      this.leads = this.leads.filter(lead => {
+        return ids.indexOf(lead._id) === -1;
+      });
+    })
+    .then(this.getLeadsCount.bind(this));
   }
 
   searchLeads(text) {

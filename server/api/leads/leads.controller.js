@@ -126,6 +126,15 @@ export const $put = (req, res, next)=> {
   });
 };
 
-export const $destroy = (req, res, next)=> {
+export const $destroyMany = (req, res, next)=> {
+  const leads = req.query.leads.split(',');
 
+  Leads.removeAsync({_id: {$in: leads}})
+  .then(leads => {
+    logger.log(leads);
+    res.json(leads);
+  })
+  .catch(e => {
+    next(e);
+  });
 };

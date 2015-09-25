@@ -9,10 +9,10 @@ router.route('/')
   .get(controller.$get)
   .post(controller.$post)
   .put(controller.$putMany)
+  .delete(controller.$destroyMany);
 
 router.route('/:id')
   .get(controller.$getOne)
-  .put(controller.$put)
-  .delete(controller.$destroy);
+  .put(controller.$put);
 
 export default router;

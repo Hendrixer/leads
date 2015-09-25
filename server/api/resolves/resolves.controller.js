@@ -45,6 +45,3 @@ export const $destroy = (req, res, next)=> {
     next(e);
   });
 };
-
-
-

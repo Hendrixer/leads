@@ -1,10 +1,4 @@
 <section class="leads page">
-  <!-- <md-progress-circular
-  class="md-accent md-hue-2"
-  md-mode="indeterminate"
-  md-diameter="100px"
-  ng-show="vm.showLoader">
-  </md-progress-circular> -->
   <md-button class="md-fab md-accent md-hue-3"
     ng-click="vm.showUploadModal()">
     <md-icon md-font-set="material-icons"
@@ -18,16 +12,16 @@
     </div>
     <md-card flex>
       <md-data-table-toolbar layout="row">
-        <div flex="10">
+        <div flex="25" class="leads-title">
           <h3>Remove Leads</h3>
         </div>
         <md-input-container flex=50 class="md-accent">
-          <label>search for leads</label>
+          <label>search for leads by (F.name, L.name, email)</label>
           <input type="text" ng-model="search" ng-model-options="{debounce: 1000}">
         </md-input-container>
         <div class="actions">
-          <md-button ng-click="vm.deleteLeads()"
-          class="md-icon-button md-warn"
+          <md-button ng-click="vm.checkBeforeDelete()"
+          class="md-icon-button md-warn md-button-large"
           ng-disabled="!vm.selected.length">
             <md-tooltip>
               delete lead(s)
@@ -60,8 +54,7 @@
       </md-data-table-container>
       <md-data-table-pagination md-limit="vm.limit"
       md-page="vm.page"
-      md-total="{{ vm.leads.length }}"
-      md-trigger="vm.trigger">
+      md-total="{{ vm.leads.length }}">
       </md-data-table-pagination>
     </md-card>
   </md-content>
