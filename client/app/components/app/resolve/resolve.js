@@ -9,13 +9,13 @@ const resolveModule = angular.module('resolve', [
   $stateProvider
     .state('resolve', {
       url: '/resolve/:id',
+      auth: true,
       template: '<resolve resolution="resolution"></resolve>',
       resolve: {
         resolution: ['$stateParams', 'Resolves', ($stateParams, Resolves) => {
           const {id} = $stateParams;
           return Resolves.getOne(id)
           .then(()=> {
-            console.log('hey')
             return Resolves.getState()[id];
           });
         }]
@@ -23,7 +23,7 @@ const resolveModule = angular.module('resolve', [
       controller: ['$scope', 'resolution', ($scope, resolution) => {
         $scope.resolution = resolution;
       }]
-    })
+    });
 }])
 .directive('resolve', resolve)
 .name;

@@ -24,6 +24,28 @@ export const $param = (req, res, next, id) => {
   });
 };
 
+export const $search = (req, res, next) => {
+  const {text} = req.query;
+  Leads.find(
+    {$text: { $search: text }},
+    {score: { $meta: 'textScore'}}
+  )
+  .sort({
+    score: {
+      $meta: 'textScore'
+    }
+  })
+  .select('firstName lastName email address')
+  .lean()
+  .execAsync()
+  .then(leads => {
+    res.json(leads);
+  })
+  .catch(e => {
+    next(e);
+  });
+};
+
 export const $get = (req, res, next)=> {
   if (req.query.count) {
     Leads.count({})
@@ -104,6 +126,15 @@ export const $put = (req, res, next)=> {
   });
 };
 
-export const $destroy = (req, res, next)=> {
+export const $destroyMany = (req, res, next)=> {
+  const leads = req.query.leads.split(',');
 
+  Leads.removeAsync({_id: {$in: leads}})
+  .then(leads => {
+    logger.log(leads);
+    res.json(leads);
+  })
+  .catch(e => {
+    next(e);
+  });
 };

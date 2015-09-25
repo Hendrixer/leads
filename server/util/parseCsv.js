@@ -131,7 +131,6 @@ const parseCsv = (stream, res) => {
         afterMath({
           start: startTime
         });
-
         $doneParsing = false;
       }
     })

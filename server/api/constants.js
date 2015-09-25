@@ -11,14 +11,14 @@ export const whiteListEmails = [
 
 export const constants = {
   propertyTypes: {
-    singleFamily: 'single family',
-    'single family': 'single family',
+    'single family': 'singlefamily',
+    singleFamily: 'singlefamily',
     singlefamily: 'singlefamily',
     condo: 'condo',
     multiplex: 'multiplex',
-    townHouse: 'town house',
-    'town house': 'town house',
-    'townhouse': 'townhouse'
+    townHouse: 'townhouse',
+    'town house': 'townhouse',
+    townhouse: 'townhouse'
   },
 
   creditRatings: {
@@ -31,29 +31,28 @@ export const constants = {
   loanPurposes: {
     refinanceFirst: 'refinancefirst',
     'refinance first': 'refinancefirst',
-    'refinancefirst': 'refinancefirst',
+    refinancefirst: 'refinancefirst',
     refinanceCashOut: 'refinancecashout',
     'refinance cash out': 'refinancecashout',
-    'refinancecashout': 'refinancecashout',
+    refinancecashout: 'refinancecashout',
     refinanceFirstFha: 'refinancefirstfha',
     'refinance first fha': 'refinancefirstfha',
-    'refinancefirstfha': 'refinancefirstfha',
+    refinancefirstfha: 'refinancefirstfha',
     refinanceFirstVa: 'refinancefirstva',
     'refinance first va': 'refinancefirstva',
-    'refinancefirstva': 'refinancefirstva',
+    refinancefirstva: 'refinancefirstva',
     debtConsolidation: 'debtconsolidation',
     'debt consolidation': 'debtconsolidation',
-    'debtconsolidation': 'debtconsolidation',
+    debtconsolidation: 'debtconsolidation',
     heloc: 'heloc',
     buyFirstHome: 'buyfirsthome',
     'buy first home': 'buyfirsthome',
-    'buyfirsthome': 'buyfirsthome',
+    buyfirsthome: 'buyfirsthome',
     buySecondHome: 'buysecondhome',
     'buy second home': 'buysecondhome',
-    'buysecondhome': 'buysecondhome'
+    buysecondhome: 'buysecondhome'
   }
 };
-
 
 export const getMaps = ()=> {
   const loanPurposes = constants.loanPurposes;
@@ -67,40 +66,41 @@ export const makeOptionRegex = (opts, type) => {
     if (val) {
       list.push(constants[type][prop]);
     }
+
     return list;
   }, []));
 
   let pattern = _.reduce(props, (_pattern, prop, i) => {
     _pattern += `${prop}`;
 
-    if (props[i+1]){
+    if (props[i + 1]) {
       _pattern += '|';
     }
+
     return _pattern;
   }, '^(') + ')';
 
-  logger.log(pattern);
   return new RegExp(pattern, 'gi');
 };
 
 export const makeRegexFromStates = (opts) => {
   let size = _.size(opts);
 
-  const str = _.reduce(opts, (_str, val, state) =>{
+  const str = _.reduce(opts, (_str, val, state) => {
     size--;
 
     if (val) {
       _str += `${state}`;
     }
 
-    if(size) {
+    if (size) {
       _str += '|';
     }
+
     return _str;
 
   }, '^(') + ')';
 
-  logger.log(str);
   return new RegExp(str, 'gi');
 };
 
@@ -109,11 +109,12 @@ export const validator = (type)=> {
 
   const whiteListMap = _.reduce(whiteList, (list, val) => {
     list[val] = true;
-    return list
+    return list;
+
   }, {});
 
   return function(val) {
-    return !!(val in whiteListMap)
+    return !!(val in whiteListMap);
   };
 };
 
@@ -259,22 +260,22 @@ const makeCsv = (res, data)=> {
   source
     .pipe(jsonToCsv.csv(options))
     .pipe(res);
-}
+};
 
 const makePdf = (res, data) => {
   res.send({message: 'PDFs not supoorted yet'});
-}
+};
 
 const makeText = (res, data) => {
   res.send({message: 'Text files not supoorted yet'});
-}
+};
 
 export const downloadFile = (res, filetype, data) => {
   if (/csv/g.test(filetype)) {
     makeCsv(res, data);
   } else if (/text|txt/g.test(filetype)) {
     makeText(res, data);
-  } else if(/pdf/g.test(filetype)) {
+  } else if (/pdf/g.test(filetype)) {
     makePdf(res, data);
   } else {
     res.send({message: 'Email Scott'});

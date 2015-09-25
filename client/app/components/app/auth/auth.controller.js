@@ -1,5 +1,5 @@
 class AuthController {
-  constructor(Auth, $state, $mdToast){
+  constructor(Auth, $state, $mdToast) {
     this.name = 'auth';
     this.Auth = Auth;
     this.user = {};
@@ -7,7 +7,7 @@ class AuthController {
     this.$mdToast = $mdToast;
   }
 
-  signin(){
+  signin() {
     this.Auth.signin(this.user)
       .then(()=> {
         this.$state.go('leads');
@@ -15,7 +15,7 @@ class AuthController {
       .catch(e => {
         this.user = {};
         this.$mdToast.show(
-          $mdToast.simple()
+          this.$mdToast.simple()
           .content('Incorrect email and or password')
           .position('bottom right')
           .hideDelay(5000)
@@ -31,8 +31,8 @@ class AuthController {
       .catch(e => {
         this.user = {};
         this.$mdToast.show(
-          $mdToast.simple()
-          .content('Email already taken')
+          this.$mdToast.simple()
+          .content('Email taken or Secret is wrong')
           .position('bottom right')
           .hideDelay(5000)
         );

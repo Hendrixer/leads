@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/')
   .get(controller.$get)
-  .post(createAdmin(), controller.$post)
+  .post(createAdmin(), controller.$post);
 
 router.post('/signin', signInAdmin(), controller.$signin);
 

@@ -10,6 +10,7 @@ let edit_brokerModule = angular.module('edit_broker', [
   $stateProvider
     .state('edit-broker', {
       url: '/edit/broker/:broker/:name',
+      auth: true,
       template: '<edit-broker broker="broker"></edit-broker>',
       resolve: {
         broker: ['$stateParams', 'Brokers', ($stateParams, Brokers) => {

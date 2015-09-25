@@ -31,10 +31,7 @@ const Auth = ['$http', '$state', ($http, $state) => {
     $state.go('auth.signin');
   };
 
-
   return {signup, signin, isAuth, signout};
 }];
-
-
 
 export default Auth;

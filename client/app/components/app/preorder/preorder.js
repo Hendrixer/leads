@@ -1,4 +1,3 @@
-import 'ngTableCss';
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import preorder from './preorder.directive';
@@ -11,6 +10,7 @@ const preorderModule = angular.module('preorder', [
 .config(['$stateProvider', $stateProvider => {
   $stateProvider
     .state('preorder', {
+      auth: true,
       url: '/preorder/:broker/:name',
       template: '<preorder leads="preorder" broker="broker"></preorder>',
       resolve: {

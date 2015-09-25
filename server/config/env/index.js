@@ -1,6 +1,9 @@
 import _ from 'lodash';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').load();
+}
 
 let config = {
   envNames: {
@@ -15,7 +18,8 @@ let config = {
       key: process.env.PUSHER_APP_KEY,
       secret: process.env.PUSHER_APP_SECRET
     },
-    jwt: process.env.JWT || 'cookiemonster',
+    adminSecret: process.env.ADMIN_SECRET,
+    jwt: process.env.JWT,
     raygunKey: process.env.RAYGUN_APIKEY,
     emailTo: process.env.EMAIL_TO,
     gmailUser: process.env.GMAIL_USER,

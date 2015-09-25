@@ -1,7 +1,7 @@
 import merge from 'lodash/object/merge';
 
 class New_brokerController {
-  constructor(Brokers, $mdToast, $state){
+  constructor(Brokers, $mdToast, $state) {
     this.broker = {
       address: {},
       leadFilters: {
@@ -10,6 +10,11 @@ class New_brokerController {
           creditRating: {},
           loanPurpose: {},
           propertyType: {}
+        },
+        detail: {
+          cltv: {},
+          ltv: {},
+          requestedLoanAmount: {}
         }
       }
     };
@@ -35,7 +40,6 @@ class New_brokerController {
       });
   }
 }
-
 
 New_brokerController.$inject = ['Brokers', '$mdToast', '$state'];
 

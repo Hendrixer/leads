@@ -1,11 +1,11 @@
-<section class="broker-list" layout="column" layout-margin>
-  <div layout="row" layout-align="center start">
-    <md-input-container flex="30">
+<section class="broker-list" layout="column" layout-margin layout-align="center center">
+  <div layout="row" layout-align="center start" flex>
+    <md-input-container flex="100">
       <label>Search</label>
       <input ng-model="search.displayName">
     </md-input-container>
   </div>
-  <div class="broker-items md-whiteframe-z2">
+  <md-card class="broker-items">
     <md-list class="list-container">
       <md-list-item class="md-2-line"
         ng-repeat-start="broker in detail.brokers | filter:search track by broker._id">
@@ -15,25 +15,35 @@
           </div>
           <div class="broker-actions" flex layout="row" layout-align="start center">
             <div class="new-order">
-              <md-button class="md-accent md-hue-3" aria="new order" ui-sref="preorder({broker: broker._id, name: broker.name})">
+              <md-button class="md-accent md-hue-2 md-icon-button" aria="new order" ui-sref="preorder({broker: broker._id, name: broker.name})">
+                <md-tooltip>
+                  order
+                </md-tooltip>
                 <md-icon md-font-set="material-icons">shopping_cart</md-icon>
               </md-button>
             </div>
-            <div class="file-types" flex>
-              <md-radio-group ng-model="broker.downloadFileMime" layout="row">
-                <md-radio-button class="md-primary"value="csv">CSV</md-radio-button>
-                <md-radio-button class="md-primary"value="txt">Text</md-radio-button>
-                <md-radio-button class="md-primary"value="pdf">PDF</md-radio-button>
-              </md-radio-group>
-            </div>
             <div class="broker-history">
-              <md-button class="md-accent md-hue-3" aria="new order" ui-sref="history({broker: broker._id, name: broker.name})">
+              <md-button class="md-accent md-hue-3 md-icon-button" aria="new order" ui-sref="history({broker: broker._id, name: broker.name})">
+                <md-tooltip>
+                  history
+                </md-tooltip>
                 <md-icon md-font-set="material-icons">history</md-icon>
               </md-button>
             </div>
             <div class="broker-edit">
-              <md-button class="md-primary" aria="edit" ui-sref="edit-broker({broker: broker._id, name: broker.name})">
+              <md-button class="md-primary md-hue-3 md-icon-button" aria="edit" ui-sref="edit-broker({broker: broker._id, name: broker.name})">
+                <md-tooltip>
+                  edit
+                </md-tooltip>
                 <md-icon md-font-set="material-icons">settings</md-icon>
+              </md-button>
+            </div>
+            <div class="broker-delete">
+              <md-button class="md-primary md-icon-button" aria="edit" ng-click="vm.removeBroker(broker)">
+                <md-tooltip>
+                  delete
+                </md-tooltip>
+                <md-icon md-font-set="material-icons">highlight_off</md-icon>
               </md-button>
             </div>
           </div>
@@ -44,5 +54,5 @@
         <h1>No Brokers</h1>
       </div>
     </md-list>
-  </div>
+  </md-card>
 </section>

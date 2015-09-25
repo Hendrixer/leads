@@ -1,6 +1,6 @@
 import {api} from './const';
 
-const LeadFactory = ($http) => {
+const LeadFactory = ($http, $q) => {
   let $leads = [];
 
   const getState = ()=> {
@@ -15,7 +15,17 @@ const LeadFactory = ($http) => {
     });
 
     $leads = $leads.concat(resp.data);
-  }
+  };
+
+  async function getLeadsCount() {
+    const resp = await $http({
+      url: `${api}/leads`,
+      method: 'GET',
+      params: {count: true}
+    });
+
+    return resp.data.count;
+  };
 
   async function updateMany(leads) {
     const resp = await $http({
@@ -25,10 +35,35 @@ const LeadFactory = ($http) => {
     });
 
     return resp.data;
-  }
+  };
 
-  return { getLeads, getState, updateMany };
+  async function search(text) {
+    if (!text) {
+      return await $q.when(false);
+    }
+
+    const resp = await $http.get(`${api}/leads/search?text=${text}`);
+    return resp.data;
+  };
+
+  async function remove(leads) {
+    if (!Array.isArray(leads)) {
+      leads = [leads];
+    }
+
+    const resp = await $http.delete(`${api}/leads?leads=${leads}`);
+    return resp.data;
+  };
+
+  return {
+    getLeads,
+    getState,
+    updateMany,
+    search,
+    getLeadsCount,
+    remove
+  };
 };
 
-LeadFactory.$inject = ['$http'];
+LeadFactory.$inject = ['$http', '$q'];
 export {LeadFactory};

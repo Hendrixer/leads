@@ -10,10 +10,12 @@ const brokers = angular.module('brokers', [
 .config(['$stateProvider', '$urlRouterProvider',($stateProvider, $urlRouterProvider) => {
   $stateProvider
     .state('brokers', {
+      auth: true,
       url: '/brokers',
       template: '<brokers></brokers>'
     })
     .state('brokers.group', {
+      auth: true,
       url: '/:letter',
       template: brokerListTemplate,
       controllerAs: 'detail',
@@ -23,7 +25,7 @@ const brokers = angular.module('brokers', [
         brokers: ['Brokers', '$stateParams', function(Brokers, $stateParams) {
           const {letter} = $stateParams;
           const query = {
-            'nameStartsWith': letter,
+            nameStartsWith: letter,
             sort: 'name',
             select: 'name displayName email'
           };

@@ -15,13 +15,14 @@ export const isAuth = ()=> {
       if (req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = 'Bearer ' + req.query.access_token;
       }
+
       validateJwt(req, res, next);
     })
     .use((req, res, next)=> {
       Admins.findByIdAsync(req.user._id)
         .then(admin => {
-          if(!admin) {
-            return res.setStatus(401).end();
+          if (!admin) {
+            return res.status(401).end();
           }
 
           req.admin = admin;
@@ -30,25 +31,31 @@ export const isAuth = ()=> {
         .catch(e => {
           next(e);
         });
-    })
+    });
 };
 
 export const signToken = (id, role)=> {
   return jwt.sign({ _id: id}, config.secrets.jwt, {
     expiresInMinutes: 24 * 60 * 15
   });
-}
+};
 
 export const createAdmin = ()=> {
   return compose()
     .use((req, res, next)=> {
+      if (req.body.secret !== config.secrets.adminSecret) {
+        console.log(req.body, config.secrets.adminSecret);
+        return res.status(401).end();
+      }
+
       Admins.findOneAsync({email: req.body.email})
         .then(admin => {
           if (admin) {
             return res.status(401).end();
           }
+
           next();
-        })
+        });
     })
     .use((req, res, next)=> {
       const password = bcrypt.hashSync(req.body.password, 8);
@@ -64,8 +71,8 @@ export const createAdmin = ()=> {
       .catch(e => {
         next(e);
       });
-    })
-}
+    });
+};
 
 export const signInAdmin = ()=> {
   return compose()
@@ -88,5 +95,5 @@ export const signInAdmin = ()=> {
         .catch(e => {
           next(e);
         });
-    })
-}
+    });
+};
