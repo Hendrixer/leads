@@ -3,7 +3,7 @@ class PreorderController {
   constructor(Orders, $state, $filter, $mdDialog) {
     this.selected = [];
     this.filters = {
-      orderBy: 'firstName',
+      orderBy: 'createdAt',
       page: 1,
       limit: 10,
       show: false,

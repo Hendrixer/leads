@@ -183,10 +183,21 @@
         </md-content>
       </md-tab>
     </md-tabs>
-    <md-button class="md-raised md-accent md-hue-3"
-    ng-disabled="newBrokerForm.$invalid"
-    ng-click="vm.whenDone()"
-    type="submit">
-    {{ vm.name }}</md-button>
+    <div class="actions" layout="row"
+    layout-align="start center">
+      <md-button class="md-raised md-accent md-hue-3"
+      ng-disabled="newBrokerForm.$invalid"
+      ng-click="vm.whenDone()"
+      type="submit">
+      {{ vm.name }}
+      </md-button>
+      <md-button ng-if="vm.broker._id"
+      class="md-accent"
+      aria="new order"
+      ui-sref="preorder({broker: vm.broker._id, name: vm.broker.name})">
+        <md-icon md-font-set="material-icons">shopping_cart</md-icon>
+        order
+      </md-button>
+    </div>
   </form>
 </div>

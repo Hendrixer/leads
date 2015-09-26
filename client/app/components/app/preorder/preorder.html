@@ -48,7 +48,7 @@
             </thead>
             <tbody>
               <tr md-auto-select
-                ng-repeat="lead in vm.leads | orderBy: vm.filters.orderBy | limitTo: vm.filters.limit: (vm.filters.page - 1) * vm.filters.limit"
+                ng-repeat="lead in ::vm.leads | orderBy: vm.filters.orderBy | limitTo: vm.filters.limit: (vm.filters.page - 1) * vm.filters.limit"
                 class="md-primary">
                 <td>{{ ::lead.createdAt | date:"MM/dd/yyyy" }}</td>
                 <td>{{ ::lead.firstName }}</td>
