@@ -4,6 +4,6 @@ export default {
   appUrl: process.env.APP_URL,
   db: {
     seed: false,
-    url: process.env.MONGOLAB_URI
+    url: process.env.MONGOHQ_URL
   }
 };
