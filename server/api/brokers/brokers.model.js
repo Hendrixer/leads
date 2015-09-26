@@ -161,7 +161,8 @@ const bluePrint = {
         }
       }
     }
-  }
+  },
+  notes: String
 };
 
 const BrokersSchema = new Schema(bluePrint);
