@@ -5,11 +5,6 @@ class BrokerListController {
     this.Brokers = Brokers;
     this.Orders = Orders;
   }
-
-  // deleteBroker(broker) {
-  //   this.Brokers.remove(broker)
-  //
-  // }
 }
 
 BrokerListController.$inject = ['brokers', 'Brokers', 'Orders'];
