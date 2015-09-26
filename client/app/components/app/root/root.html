@@ -1,19 +1,21 @@
 <div id="app" layout="column">
+  <div class="loading-backdrop"
+  ng-if="vm.global.showLoader"
+  layout="row" layout-align="center center">
+    <md-progress-circular
+    md-diameter="100"
+    md-mode="indeterminate"
+    class="md-accent">
+    </md-progress-circular>
+  </div>
   <md-toolbar class="md-whiteframe-z2">
     <div class="md-toolbar-tools">
       <span ui-sref="leads" class="logo">LeadOn</span>
       <span flex></span>
-
       <md-button ui-sref-active="md-raised md-accent" ui-sref="leads">leads</md-button>
-
       <md-button ui-sref-active="md-raised md-accent" ui-sref="brokers">brokers</md-button>
-
       <md-button ui-sref-active="md-raised md-accent" ui-sref="history">history</md-button>
-
-      <!-- <md-button ui-sref-active="md-raised md-accent" ui-sref="admin">admin</md-button> -->
-
       <md-button ng-if="vm.isAuth" ng-click="vm.signout()">sign out</md-button>
-
     </div>
   </md-toolbar>
   <md-content class="main">

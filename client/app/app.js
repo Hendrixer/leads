@@ -37,12 +37,27 @@ angular.module('app', [
   preorder
 ])
 .run(['$mdToast', '$state', 'Auth', '$rootScope', ($mdToast, $state, Auth, $rootScope) => {
+  $rootScope.showLoader = false;
   $rootScope.$on('$stateChangeStart', (e, toState) => {
     if (toState.auth && !Auth.isAuth()) {
       e.preventDefault();
       $state.go('auth.signin');
+      return;
+    }
+
+    if (toState.async && !$rootScope.showLoader) {
+      $rootScope.showLoader = true;
     }
   });
+
+  const stopLoader = (e, toState) => {
+    if (toState.async && $rootScope.showLoader) {
+      $rootScope.showLoader = false;
+    }
+  };
+
+  $rootScope.$on('$stateChangeSuccess', stopLoader);
+  $rootScope.$on('$stateChangeError', stopLoader);
 }])
 .config(['$mdThemingProvider', '$httpProvider', '$provide', ($mdThemingProvider, $httpProvider, $provide) => {
   $provide.decorator('$exceptionHandler', ['$delegate', '$log', ($delegate, $log) => {
