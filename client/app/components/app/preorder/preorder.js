@@ -11,6 +11,7 @@ const preorderModule = angular.module('preorder', [
   $stateProvider
     .state('preorder', {
       auth: true,
+      async: true,
       url: '/preorder/:broker/:name',
       template: '<preorder leads="preorder" broker="broker"></preorder>',
       resolve: {

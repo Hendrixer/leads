@@ -17,10 +17,10 @@ const brokers = angular.module('brokers', [
     .state('brokers.group', {
       auth: true,
       url: '/:letter',
+      async: true,
       template: brokerListTemplate,
       controllerAs: 'detail',
       controller: brokerListController,
-
       resolve: {
         brokers: ['Brokers', '$stateParams', function(Brokers, $stateParams) {
           const {letter} = $stateParams;

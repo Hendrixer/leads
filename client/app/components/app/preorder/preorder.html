@@ -8,7 +8,17 @@
               <h3>Preorder for {{ ::vm.broker.name }}</h3>
               <h5>Leads count: {{ ::vm.leads.length }} </h5>
             </div>
-            <div flex="65"></div>
+            <div flex="5"></div>
+            <div flex="15">
+              <md-input-container flex>
+                <label># of leads</label>
+                <input name="count"
+                ng-model="vm.selectionCount"
+                ng-model-options="{debounce: 1000}"
+                ng-change="vm.orderNumberOfleads()"
+                type="number">
+              </md-input-container>
+            </div>
             <div class="actions" flex="15" layout="row">
               <md-button ng-click="vm.orderLeads()" class="md-icon-button"
               ng-disabled="!vm.selected.length">
@@ -18,27 +28,8 @@
                 <md-icon md-font-set="material-icons">file_download</md-icon>
               </md-button>
             </div>
-            <!-- <div flex>
-              <md-button class="md-accent md-hue-3" aria="search" ng-click="vm.filters.show = true">
-                <md-icon md-font-set="material-icons">search</md-icon>
-              </md-button>
-            </div> -->
           </div>
         </md-data-table-toolbar>
-        
-        <!-- <md-data-table-toolbar ng-show="vm.filters.show && !vm.selected.length">
-          <div layout="row" layout-fill>
-            <md-input-container class="md-icon-float" flex>
-              <label>search</label>
-              <md-icon md-font-set="material-icons">search</md-icon>
-              <input name="name" ng-model="vm.filters.search">
-            </md-input-container>
-            <md-button class="md-accent md-hue-3" aria="close" ng-click="vm.filters.show = false">
-              <md-icon md-font-set="material-icons">close</md-icon>
-            </md-button>
-          </div>
-        </md-data-table-toolbar> -->
-        
         <md-data-table-container>
           <table md-data-table md-row-select="vm.selected">
             <thead md-order="vm.filters.orderBy">
@@ -57,7 +48,7 @@
             </thead>
             <tbody>
               <tr md-auto-select
-                ng-repeat="lead in vm.leads | filter:vm.filters.search | orderBy: vm.filters.orderBy | limitTo: vm.filters.limit: (vm.filters.page - 1) * vm.filters.limit"
+                ng-repeat="lead in vm.leads | orderBy: vm.filters.orderBy | limitTo: vm.filters.limit: (vm.filters.page - 1) * vm.filters.limit"
                 class="md-primary">
                 <td>{{ ::lead.createdAt | date:"MM/dd/yyyy" }}</td>
                 <td>{{ ::lead.firstName }}</td>

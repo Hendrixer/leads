@@ -1,13 +1,14 @@
 class RootController {
-  constructor(Auth){
+  constructor(Auth, $rootScope) {
     this.Auth = Auth;
     this.isAuth = Auth.isAuth();
+    this.global = $rootScope;
   }
 
-  signout(){
+  signout() {
     this.Auth.signout();
   }
 }
 
-RootController.$inject = ['Auth'];
+RootController.$inject = ['Auth', '$rootScope'];
 export {RootController};

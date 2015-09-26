@@ -5,7 +5,7 @@
   <div class="md-whiteframe-z1 card">
     <md-list>
       <md-list-item class="md-1-line"
-        ng-repeat-start="order in vm.orderList">
+        ng-repeat-start="order in vm.orderList track by order._id">
           <div class="md-list-item-text" layout="row" layout-fill layout-align="start center" layout-padding>
             <div flex="15">
               <span class="history-text">Leads sent <span class="leads-sent">{{::order.leads}}</span></span>

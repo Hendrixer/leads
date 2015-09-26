@@ -8,7 +8,7 @@
   <md-card class="broker-items">
     <md-list class="list-container">
       <md-list-item class="md-2-line"
-        ng-repeat-start="broker in detail.brokers | filter:search track by broker._id">
+        ng-repeat-start="broker in detail.brokers | filter:search track by $index">
         <div class="md-list-item-text" layout="row">
           <div class="broker-name" flex="25">
             <span>{{ ::broker.displayName }}</span>
