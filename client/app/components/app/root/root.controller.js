@@ -3,6 +3,7 @@ class RootController {
     this.Auth = Auth;
     this.isAuth = Auth.isAuth();
     this.global = $rootScope;
+    this.global.theme = 'tron';
   }
 
   signout() {

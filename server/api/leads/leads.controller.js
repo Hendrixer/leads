@@ -6,7 +6,6 @@ import path from 'path';
 import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
-import pusher from '../../util/pusher';
 
 // import {Converter} from 'csvtojson';
 import CombineStream from 'combined-stream';
@@ -69,7 +68,6 @@ export const $getOne = (req, res, next)=> {
 
 export const $post = (req, res, next)=> {
   const mergedStream = CombineStream.create();
-  logger.log(req.files[0]);
   _.map(req.files, file => {
     const pathToFile = path.join(__dirname, '/../../../', file.path);
     return fs.createReadStream(pathToFile);

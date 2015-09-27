@@ -14,6 +14,7 @@ import history from './components/app/history/history';
 import auth from './components/app/auth/auth';
 import resolve from './components/app/resolve/resolve';
 import preorder from './components/app/preorder/preorder';
+import settings from './components/app/settings/settings';
 import 'raygun4js';
 
 Raygun.init($raygunApiKey).attach();
@@ -34,7 +35,8 @@ angular.module('app', [
   auth,
   edit_broker,
   resolve,
-  preorder
+  preorder,
+  settings
 ])
 .run(['$mdToast', '$state', 'Auth', '$rootScope', ($mdToast, $state, Auth, $rootScope) => {
   $rootScope.showLoader = false;
@@ -93,8 +95,21 @@ angular.module('app', [
       }
     };
   }]);
+  const themes = [
+    {name: 'default', pri: 'blue-grey', alt: 'purple'},
+    {name: 'sunrise', pri: 'yellow', alt: 'deep-orange'},
+    {name: 'tron', pri: 'grey', alt: 'cyan'},
+    {name: 'cotton-candy', pri: 'indigo', alt: 'pink'},
+    {name: 'plum', pri: 'deep-purple', alt: 'purple'},
+    {name: 'forest', pri: 'green', alt: 'brown'},
+    {name: 'fire', pri: 'amber', alt: 'red'},
+    {name: 'sea-life', pri: 'teal', alt: 'blue'}
+  ];
 
-  $mdThemingProvider.theme('default')
-    .primaryPalette('blue-grey')
-    .accentPalette('purple');
+  themes.forEach(theme => {
+    $mdThemingProvider.theme(theme.name)
+      .primaryPalette(theme.pri)
+      .accentPalette(theme.alt);
+  });
+  $mdThemingProvider.alwaysWatchTheme(true);
 }]);

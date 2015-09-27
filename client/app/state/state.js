@@ -5,6 +5,7 @@ import {OrderFactory} from './orderFactory';
 import PusherFactory from './pusher';
 import AuthFactory from './auth';
 import {ResolveFactory} from './resolvesFactory';
+import {AdminFactory} from './adminFactory';
 
 const state = angular.module('state', [])
 .factory('Leads', LeadFactory)
@@ -12,7 +13,7 @@ const state = angular.module('state', [])
 .factory('Orders', OrderFactory)
 .factory('Pusher', PusherFactory)
 .factory('Auth', AuthFactory)
-.factory('Resolves', ResolveFactory)
+.factory('Admins', AdminFactory)
 .name;
 
 export default state;

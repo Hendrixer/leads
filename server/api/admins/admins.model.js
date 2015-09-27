@@ -14,6 +14,17 @@ const AdminsSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+
+  settings: {
+    theme: {
+      type: String,
+      default: 'default'
+    },
+    emailOrder: {
+      type: Boolean,
+      default: false
+    }
   }
 });
 

@@ -1,0 +1,33 @@
+<div class="page settings">
+  <md-content layout="row" layout-align="center start">
+    <form name="settingsForm" novalidate flex="60">
+      <md-card layout="column" class="settings-card"
+      layout-padding>
+        <div>
+          <h3 class="md-display-1">settings</h3>
+        </div>
+        <div class="theme" layout="row">
+          <span class="title">Theme</span>
+          <div flex="10"></div>
+          <md-input-container flex="30">
+            <md-select name="themeSelect"
+            ng-model="vm.admin.settings.theme">
+              <md-option ng-repeat="theme in vm.themes"
+              value="{{theme}}">
+              {{::theme}}
+            </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div class="actions" layout="row"
+          layout-align="end center">
+          <md-button ng-disabled="settingsForm.$pristine"
+          ng-click="vm.save()"
+          class="md-raised md-accent md-hue-2">
+            save
+          </md-button>
+        </div>
+      </md-card>
+    </form>
+  </md-content>
+</div>

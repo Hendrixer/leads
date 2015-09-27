@@ -1,7 +1,7 @@
 import {api} from './const';
 
 const ResolveFactory = ($http) => {
-  let $resolves = {}
+  let $resolves = {};
 
   const getState = ()=> {
     return $resolves || {};
