@@ -10,9 +10,9 @@ const settingsModule = angular.module('settings', [
     .state('settings', {
       url: '/settings',
       template: '<settings admin="vm.user"></settings>',
-      controller(user) {
+      controller: ['user', function(user) {
         this.user = user;
-      },
+      }],
 
       controllerAs: 'vm',
       async: true,
