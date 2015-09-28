@@ -38,7 +38,7 @@ angular.module('app', [
   preorder,
   settings
 ])
-.run(['$mdToast', '$state', 'Auth', '$rootScope', ($mdToast, $state, Auth, $rootScope) => {
+.run(['$mdToast', '$state', 'Auth', '$rootScope', 'Admins', ($mdToast, $state, Auth, $rootScope, Admins) => {
   $rootScope.showLoader = false;
   $rootScope.$on('$stateChangeStart', (e, toState) => {
     if (toState.auth && !Auth.isAuth()) {
@@ -60,6 +60,11 @@ angular.module('app', [
 
   $rootScope.$on('$stateChangeSuccess', stopLoader);
   $rootScope.$on('$stateChangeError', stopLoader);
+
+  Admins.getMe()
+  .then(admin => {
+    $rootScope.theme = admin.settings.theme;
+  });
 }])
 .config(['$mdThemingProvider', '$httpProvider', '$provide', ($mdThemingProvider, $httpProvider, $provide) => {
   $provide.decorator('$exceptionHandler', ['$delegate', '$log', ($delegate, $log) => {
@@ -96,9 +101,9 @@ angular.module('app', [
     };
   }]);
   const themes = [
-    {name: 'default', pri: 'blue-grey', alt: 'purple'},
+    {name: 'default', pri: 'red', alt: 'indigo'},
     {name: 'sunrise', pri: 'yellow', alt: 'deep-orange'},
-    {name: 'tron', pri: 'grey', alt: 'cyan'},
+    {name: 'tron', pri: 'blue-grey', alt: 'cyan'},
     {name: 'cotton-candy', pri: 'indigo', alt: 'pink'},
     {name: 'plum', pri: 'deep-purple', alt: 'purple'},
     {name: 'forest', pri: 'green', alt: 'brown'},

@@ -12,7 +12,6 @@ const bluePrint = {
 
   displayName: {
     type: String,
-    required: true,
     unique: true
   },
 

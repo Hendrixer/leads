@@ -2,6 +2,7 @@ import {api} from './const';
 
 const AdminFactory = ($http) => {
   async function update(updates) {
+
     const resp = await $http.put(`${api}/admins/me`, updates);
     return resp.data;
   }
