@@ -15,4 +15,5 @@ const AdminFactory = ($http) => {
   return {update, getMe};
 };
 
+AdminFactory.$inject = ['$http'];
 export {AdminFactory};
