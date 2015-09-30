@@ -55,6 +55,7 @@
     "mongoose": "^4.1.0",
     "morgan": "^1.6.1",
     "multer": "^1.0.1",
+    "newrelic": "^1.22.1",
     "ng-file-upload": "^6.2.0",
     "nodemailer": "^1.4.0",
     "pm2": "^0.14.7",
