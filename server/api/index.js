@@ -5,10 +5,8 @@ import leads from './leads/leads.routes';
 import orders from './orders/orders.routes';
 import resolves from './resolves/resolves.routes';
 import {isAuth} from '../util/auth';
-import Raygun from 'raygun';
-import config from '../config/env';
+import raygun from '../util/raygun';
 
-const raygun = new Raygun.Client().init({ apiKey: config.secrets.raygunKey });
 const api = express.Router();
 
 api.use('/admins', admin);

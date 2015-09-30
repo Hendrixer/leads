@@ -21,7 +21,7 @@ export const $getForBroker = (req, res, next)=> {
       res.json(orders);
     })
     .catch(e=> {
-      res.send(e);
+      next(e);
     });
 };
 
@@ -95,6 +95,6 @@ export const $redownload = (req, res, next) => {
     utils.downloadFile(res, req.query.filetype, order);
   })
   .catch(e => {
-    res.send(e);
+    next(e);
   });
 };

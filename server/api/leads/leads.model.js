@@ -259,15 +259,14 @@ LeadsSchema.statics.saveDupe = (lead)=> {
           };
           resolve(dupe);
         } else {
-          logger.error('nooops', err);
           reject(err);
         }
       } else {
         if (!savedLead) {
           logger.log('blank');
+        } else {
+          resolve(savedLead);
         }
-
-        resolve(savedLead);
       }
     });
   });

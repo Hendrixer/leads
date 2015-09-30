@@ -3,10 +3,12 @@
 import chalk from 'chalk';
 import _ from  'lodash';
 import config from '../config/env';
-import Raygun from 'raygun';
-const raygun = new Raygun.Client().init({ apiKey: config.secrets.raygunKey });
+import raygun from './raygun';
+
 // create a noop (no operation) function for when loggin is disabled
-const noop = function(){};
+
+const noop = function() {};
+
 // check if loggin is enabled in the config
 // if it is, then use console.log
 // if not then noop
@@ -15,21 +17,21 @@ const consoleLog = config.logging ? console.log.bind(console) : noop;
 const logger = {
   log() {
     const tag = chalk.white.bold('✨✨ ');
+
     // arguments is an array like object with all the passed
     // in arguments to this function
     const args = _.toArray(arguments)
       .map(function(arg) {
-        if(typeof arg === 'object') {
-
+        if (typeof arg === 'object') {
           // turn the object to a string so we
           // can log all the properties and color it
           const string = JSON.stringify(arg, null, 2);
           return chalk.bold.cyan(string);
 
-        } else if (_.isNumber(arg)){
+        } else if (_.isNumber(arg)) {
 
-          return chalk.magenta(arg)
-        } else if (_.isFunction(arg)){
+          return chalk.magenta(arg);
+        } else if (_.isFunction(arg)) {
 
           let funcName;
 
@@ -45,30 +47,20 @@ const logger = {
       });
 
     args.unshift(tag);
+
     // call either console.log or noop here
     // with the console object as the context
     // and the new colored args :)
     consoleLog.apply(console, args);
   },
 
-  error() {
-    const args = _.toArray(arguments);
-    const error = _.find(args, arg => {
-      return arg instanceof Error;
-    });
-
-
-    const logArgs = args.filter(arg => {
-      return !(arg instanceof Error);
-    })
-    .map(function(arg) {
-      arg = arg.stack || arg.message || arg;
-      const name = arg.name || '❌❌';
-      const log = chalk.yellow(name) + '  ' + chalk.red(arg);
+  error(error, ...messages) {
+    const logArgs = messages.map(arg => {
+      const log = chalk.red(arg);
       return log;
     });
 
-    if (process.env.NODE_ENV === 'production' && error) {
+    if (config.sendErrors && error) {
       raygun.send(error);
     }
 
@@ -76,7 +68,7 @@ const logger = {
       logArgs.push(error);
     }
 
-    consoleLog.apply(console, logArgs);
+    console.error.apply(console, logArgs);
   }
 };
 

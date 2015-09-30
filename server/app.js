@@ -4,6 +4,7 @@ import {api} from './api';
 import mongoose from 'mongoose';
 import config from './config/env';
 import Future from 'bluebird';
+import {logger} from './util/logger';
 
 // import memwatch from 'memwatch-next';
 import util from 'util';

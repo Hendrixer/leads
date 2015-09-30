@@ -38,6 +38,7 @@
     "chalk": "^1.1.1",
     "combined-stream": "^1.0.5",
     "composable-middleware": "^0.3.0",
+    "compression": "^1.5.2",
     "csv-parser": "^1.7.0",
     "csvtojson": "^0.4.2",
     "dotenv": "^1.2.0",

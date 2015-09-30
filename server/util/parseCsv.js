@@ -41,7 +41,7 @@ const sendUploadEmail = (resolveId, stats) => {
     logger.log('email sent', i);
   })
   .catch(e => {
-    logger.error('mail error', e);
+    logger.error(e, 'mail error');
   })
   .finally(()=> {
     resetClosure();
@@ -99,7 +99,7 @@ const afterMath = (stats)=> {
       return sendUploadEmail(id, stats);
     })
     .catch(e => {
-      logger.error('matchingLeads', e);
+      logger.error(e, 'matchingLeads');
     });
   } else {
     sendUploadEmail(null, stats);
@@ -135,6 +135,7 @@ const parseCsv = (stream, res) => {
       }
     })
     .catch(error => {
+      logger.error(error, 'Lead Save Error');
       $leadsTried++;
 
       if ($leadsTried === $parsedLeadsCount && $doneParsing) {
