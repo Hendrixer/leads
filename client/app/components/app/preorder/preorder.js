@@ -17,7 +17,7 @@ const preorderModule = angular.module('preorder', [
       resolve: {
         preorder: ['Orders', '$stateParams', (Orders, $stateParams) => {
           const {broker} = $stateParams;
-          return Orders.preorder(broker);
+          return Orders.preorder(broker, {});
         }],
 
         broker: ['Brokers', '$stateParams', (Brokers, $stateParams) => {

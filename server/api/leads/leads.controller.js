@@ -6,10 +6,11 @@ import path from 'path';
 import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
+import {Publisher} from '../../util/message';
+const publisher = new Publisher();
 
 // import {Converter} from 'csvtojson';
-import CombineStream from 'combined-stream';
-import parseCsv from '../../util/parseCsv';
+
 const toJson = future.promisify(spreadToJSon);
 
 export const $param = (req, res, next, id) => {
@@ -67,18 +68,8 @@ export const $getOne = (req, res, next)=> {
 };
 
 export const $post = (req, res, next)=> {
-  const mergedStream = CombineStream.create();
-  _.map(req.files, file => {
-    const pathToFile = path.join(__dirname, '/../../../', file.path);
-    return fs.createReadStream(pathToFile);
-  })
-  .forEach(stream => {
-    mergedStream.append(stream);
-  });
-
-  parseCsv(mergedStream, res);
-
-  // res.send({ok: true});
+  res.send({ok: true});
+  publisher.queueJob('csv', {files: req.files});
 
   // toJson({
   //   input:  req.files[0].path,

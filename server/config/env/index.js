@@ -23,7 +23,10 @@ let config = {
     raygunKey: process.env.RAYGUN_APIKEY,
     emailTo: process.env.EMAIL_TO,
     gmailUser: process.env.GMAIL_USER,
-    gmailPass: process.env.GMAIL_PASS
+    gmailPass: process.env.GMAIL_PASS,
+    pubnubPubKey: process.env.PUBNUB_PUBLISH_KEY,
+    pubnubSubKey: process.env.PUBNUB_SUBSCRIBE_KEY,
+    redisToGo: process.env.REDISTOGO_URL
   }
 };
 

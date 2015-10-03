@@ -16,10 +16,10 @@ const makeDupeEmail = (stats) => {
     Here are the results of your recent upload:
 
 
-    Leads uploaded:   ${stats.uploaded} ✔
+     Leads uploaded:  ${stats.tried} ✔
     Processing Time:  ${stats.duration} ✔
-    Leads saved:         ${stats.saved} ✔
-    Possible dupes:      ${stats.dupes} ✔
+        Leads saved:  ${stats.saved} ✔
+     Possible dupes:  ${stats.dupes} ✔
   `;
 
   if (stats.dupes && stats.dupeLink) {

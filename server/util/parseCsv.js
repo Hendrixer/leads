@@ -6,6 +6,9 @@ import sendMail from './email';
 import config from '../config/env';
 import {Resolves} from '../api/resolves/resolves.model';
 import _ from 'lodash';
+import Future from 'bluebird';
+import fs from 'fs';
+import path from 'path';
 
 let $dupes = [];
 let $parsedLeadsCount = 0;
@@ -102,53 +105,66 @@ const afterMath = (stats)=> {
       logger.error(e, 'matchingLeads');
     });
   } else {
-    sendUploadEmail(null, stats);
+    return sendUploadEmail(null, stats);
   }
 };
 
-const parseCsv = (stream, res) => {
-  if ($inProgress) {
-    return res.send({message: 'In progress'});
-  }
+const getStream  = (files) => {
+  const mergedStream = CombineStream.create();
+  _.map(files, file => {
+    const pathToFile = path.join(__dirname, '../../', file.path);
 
-  res.send({ok: true});
-  const startTime = Date.now();
-
-  stream.pipe(csvParser())
-  .on('data', row => {
-    $inProgress = true;
-    $parsedLeadsCount++;
-    Leads.saveDupe(row)
-    .then(data => {
-      $leadsTried++;
-      if (data.type === 'dupe') {
-        $dupes.push(data.lead);
-      } else {
-        $leadsSaved++;
-      }
-
-      if ($leadsTried === $parsedLeadsCount && $doneParsing) {
-        afterMath({
-          start: startTime
-        });
-        $doneParsing = false;
-      }
-    })
-    .catch(error => {
-      logger.error(error, 'Lead Save Error');
-      $leadsTried++;
-
-      if ($leadsTried === $parsedLeadsCount && $doneParsing) {
-        afterMath({
-          start: startTime
-        });
-        $doneParsing = false;
-      }
-    });
+    return fs.createReadStream(pathToFile);
   })
-  .on('end', ()=> {
-    logger.log(`Parsed ${$parsedLeadsCount} leads`);
-    $doneParsing = true;
+  .forEach(stream => {
+    mergedStream.append(stream);
+  });
+
+  return mergedStream;
+};
+
+const parseCsv = (job) => {
+
+  const stream = getStream(job.data.files);
+  return new Future((yes, no) => {
+    const startTime = Date.now();
+
+    stream.pipe(csvParser())
+    .on('data', row => {
+      $inProgress = true;
+      $parsedLeadsCount++;
+      Leads.saveDupe(row)
+      .then(data => {
+        $leadsTried++;
+        if (data.type === 'dupe') {
+          $dupes.push(data.lead);
+        } else {
+          $leadsSaved++;
+        }
+
+        if ($leadsTried === $parsedLeadsCount && $doneParsing) {
+          $doneParsing = false;
+          yes(afterMath({
+            start: startTime
+          }));
+        }
+      })
+      .catch(error => {
+        logger.error(error, 'Lead Save Error');
+        console.error(error);
+        $leadsTried++;
+
+        if ($leadsTried === $parsedLeadsCount && $doneParsing) {
+          $doneParsing = false;
+          yes(afterMath({
+            start: startTime
+          }));
+        }
+      });
+    })
+    .on('end', ()=> {
+      $doneParsing = true;
+    });
   });
 };
 

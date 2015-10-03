@@ -1,12 +1,18 @@
-import {Resolves} from './resolves.model';
+import {ResolvesSession, Resolves} from './resolves.model';
 import _ from 'lodash';
 import future from 'bluebird';
 
 future.promisifyAll(Resolves);
 future.promisifyAll(Resolves.prototype);
+future.promisifyAll(ResolvesSession);
+future.promisifyAll(ResolvesSession.prototype);
 
 export const $param = (req, res, next, id)=> {
-  Resolves.findByIdAsync(id)
+  ResolvesSession.findById(id)
+  .populate({
+    path: 'resolves',
+    select: ''
+  })
   .then(resolve => {
     req.resolution = resolve;
     next();

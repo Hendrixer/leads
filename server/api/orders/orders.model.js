@@ -47,7 +47,7 @@ const getBrokerOrderHistory = (broker)=> {
     });
 };
 
-const getLeads = ({broker, blacklist})=> {
+const makeQuery = (broker, blacklist) => {
   broker = broker.toJSON();
   const basic = broker.leadFilters.basic;
   const query = {
@@ -57,10 +57,24 @@ const getLeads = ({broker, blacklist})=> {
     'address.state': utils.makeRegexFromStates(broker.leadFilters.states),
     _id: {$nin: blacklist}
   };
-  return Leads.find(query)
-    .select('-type -dupeKey')
-    .lean()
-    .stream();
+
+  return query;
+};
+
+const getLeads = ({broker, blacklist, limit, skip})=> {
+  const query = makeQuery(broker, blacklist);
+
+  let selection = Leads.find(query).select('-type -dupeKey').lean();
+
+  if (limit) {
+    selection = selection.limit(limit);
+  }
+
+  if (skip) {
+    selection = selection.skip(skip);
+  }
+
+  return selection.stream();
 };
 
 const createOrder = ({leads, broker}) => {
@@ -72,15 +86,28 @@ OrdersSchema.statics.createOrder = ({broker, leads})=> {
   return createOrder({leads, broker});
 };
 
-OrdersSchema.statics.preorder = (broker) => {
-  return Brokers.findById(broker._id)
+OrdersSchema.statics.getCountForPreorder = (broker) => {
+  const Orders = mongoose.model('orders');
+  return Brokers.findByIdAsync(broker._id)
   .then(getBrokerOrderHistory)
-  .then(getLeads);
+  .then(({broker, blacklist}) => {
+    const query = makeQuery(broker, blacklist);
+    return Leads.count(query);
+  });
+};
+
+OrdersSchema.statics.preorder = (broker, {limit, skip}) => {
+  return Brokers.findByIdAsync(broker._id)
+  .then(getBrokerOrderHistory)
+  .then(opts => {
+    opts.limit = limit;
+    opts.skip = skip;
+    return getLeads(opts);
+  });
 };
 
 OrdersSchema.statics.saveOrder = (order)=> {
   const Order = mongoose.model('orders');
-
   const {leads, broker} = order;
 
   return new Promise((yes, no) => {

@@ -29,12 +29,23 @@ const OrderFactory = ($http, $window) => {
   //   $window.open(`${api}/orders/create?access_token=${token}&broker=${broker._id}&filetype=${broker.downloadFileMime}`, '_blank', '');
   // };
 
-  async function preorder(broker) {
+  async function preorder(broker, {limit=1000, skip=0}) {
     const resp = await $http({
       method: 'GET',
-      url: `${api}/orders/preorder?broker=${broker}`
+      url: `${api}/orders/preorder`,
+      params: {limit, skip, broker}
     });
     return resp.data;
+  };
+
+  async function getCountForPreorder(broker) {
+    const resp = await $http({
+      method: 'GET',
+      url: `${api}/orders/preorder`,
+      params: {count: true, broker}
+    });
+
+    return resp.data.count;
   };
 
   async function createOrder(leads, broker, opts={}) {
@@ -47,7 +58,14 @@ const OrderFactory = ($http, $window) => {
     downloadOrder(order);
   }
 
-  return { getOrders, getState, createOrder, downloadOrder, preorder };
+  return {
+    getOrders,
+    getState,
+    createOrder,
+    downloadOrder,
+    preorder,
+    getCountForPreorder
+  };
 };
 
 OrderFactory.$inject = ['$http', '$window'];

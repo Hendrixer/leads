@@ -2,7 +2,7 @@
   <md-content layout="column" layout-padding>
     <div class="preorder-table" flex>
       <md-card>
-        <md-data-table-toolbar ng-hide="vm.filters.show">
+        <md-data-table-toolbar ng-hide="filters.show">
           <div layout="row" layout-fill>
             <div flex="20">
               <h3>Preorder for {{ ::vm.broker.name }}</h3>
@@ -32,7 +32,7 @@
         </md-data-table-toolbar>
         <md-data-table-container>
           <table md-data-table md-row-select="vm.selected">
-            <thead md-order="vm.filters.orderBy">
+            <thead md-order="filters.orderBy">
               <tr>
                 <th name="Created on" order-by="createdAt"></th>
                 <th name="First Name" order-by="firstName"></th>
@@ -48,7 +48,7 @@
             </thead>
             <tbody>
               <tr md-auto-select
-                ng-repeat="lead in vm.leads | orderBy: vm.filters.orderBy | limitTo: vm.filters.limit: (vm.filters.page - 1) * vm.filters.limit"
+                ng-repeat="lead in leads | orderBy: filters.orderBy | limitTo: filters.limit: (filters.page - 1) * filters.limit"
                 class="md-primary">
                 <td>{{ ::lead.createdAt | date:"MM/dd/yyyy" }}</td>
                 <td>{{ ::lead.firstName }}</td>
@@ -64,9 +64,11 @@
             </tbody>
           </table>
         </md-data-table-container>
-        <md-data-table-pagination md-limit="vm.filters.limit"
-        md-page="vm.filters.page"
-        md-total="{{ ::vm.leads.length }}">
+        <md-data-table-pagination
+        md-trigger="fetchMoreLeads"
+        md-limit="filters.limit"
+        md-page="filters.page"
+        md-total="{{ vm.totalLeads }}">
         </md-data-table-pagination>
       </md-card>
     </div>

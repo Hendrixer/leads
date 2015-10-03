@@ -5,6 +5,8 @@ import {Brokers} from '../brokers/brokers.model';
 import {logger} from '../../util/logger';
 import * as utils from '../constants';
 import JsonStream from 'JSONStream';
+import jsonToCsv from 'json-csv';
+import es from 'event-stream';
 
 export const $param = (req, res, next, orderId) => {
 };
@@ -31,7 +33,18 @@ export const $getOne = (req, res, next)=> {
 
 export const $preorder = (req, res, next) => {
   const broker = {_id: req.query.broker};
-  Orders.preorder(broker)
+  if (req.query.count) {
+    return Orders.getCountForPreorder(broker)
+    .then(count => {
+      logger.log('count', count);
+      res.json({count});
+    })
+    .catch(e => {
+      next(e);
+    });
+  }
+
+  Orders.preorder(broker, req.query)
   .then(stream => {
     stream
     .pipe(JsonStream.stringify())
@@ -88,13 +101,22 @@ export const $redownload = (req, res, next) => {
     return res.send({message: `${mimeType} files not supoorted yet!`});
   }
 
+  res.attachment(new Date().toLocaleDateString().replace(/\//g, '-') + '.csv');
   Orders.findById(req.query.order)
-  .populate('leads broker')
-  .execAsync()
-  .then(order => {
-    utils.downloadFile(res, req.query.filetype, order);
-  })
-  .catch(e => {
-    next(e);
-  });
+  .populate('leads')
+  .select('leads')
+  .stream()
+  .pipe(es.map((data, cb) => {
+    logger.log(data.leads.length);
+    cb(null, es.readArray(data.leads));
+  }))
+  .pipe(jsonToCsv.csv({headers: utils.csvHeaders}))
+  .pipe(res);
+
+  // .then(order => {
+  //   utils.downloadFile(res, req.query.filetype, order);
+  // })
+  // .catch(e => {
+  //   next(e);
+  // });
 };

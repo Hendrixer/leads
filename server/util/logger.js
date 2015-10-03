@@ -64,11 +64,8 @@ const logger = {
       raygun.send(error);
     }
 
-    if (error) {
-      logArgs.push(error);
-    }
-
     console.error.apply(console, logArgs);
+    console.error(error);
   }
 };
 
