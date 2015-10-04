@@ -19,7 +19,8 @@
     "url": "https://github.com/Hendrixer/leads/issues"
   },
   "engines": {
-    "node": "0.12.7"
+    "node": "4.1.1",
+    "npm": "2.14.4"
   },
   "homepage": "https://github.com/Hendrixer/leads#readme",
   "dependencies": {
