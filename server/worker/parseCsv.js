@@ -11,6 +11,8 @@ import fs from 'fs';
 import path from 'path';
 import es from 'event-stream';
 import uuidMaker from 'node-uuid';
+import {Reciever} from '../util/message';
+const messenger = new Reciever();
 
 export const createStreamFromFiles = (files) => {
   const mergedStream = CombineStream.create();
@@ -33,7 +35,11 @@ export const parseCsvStream = (files) => {
       tried: 0,
       startTime
     };
+
     const uuid = uuidMaker.v1();
+    const throttleSend = _.throttle(message => {
+      messenger.sendMessage('leads-uploaded', message);
+    }, 2000, {trailing: false});
 
     csvStream
     .pipe(csvParser())
@@ -43,6 +49,7 @@ export const parseCsvStream = (files) => {
       Leads.createAsync(data)
       .then(lead => {
         meta.saved++;
+        throttleSend({saved: meta.saved});
         done(null, lead);
       })
       .catch(err => {
@@ -60,6 +67,8 @@ export const parseCsvStream = (files) => {
     .on('end', ()=> {
       meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
       meta.uuid = uuid;
+      let update = {saved: meta.saved, final: true};
+      messenger.sendMessage('leads-uploaded', update);
       resolve(meta);
     });
   });
@@ -87,7 +96,7 @@ export const handleJob = (job) => {
       });
     })
     .then(session => {
-      meta.sessionId = session._id;
+      meta.dupeLink = `${config.appUrl}/#/resolves/${session._id}`;
       return meta;
     });
   })
@@ -98,9 +107,7 @@ export const handleJob = (job) => {
 
 export const saveResolveSession = (Session, resolves) => {
   return new Promise((resolve, reject) => {
-    Session.resolves = _.map(resolves, resolve => {
-      return resolve._id;
-    });
+    Session.resolves = _.pluck(resolves, '_id');
     Session.save((err, saved) => {
       err ? reject(err) : resolve(saved);
     });
@@ -126,7 +133,7 @@ export const saveDupe = (dupe, uuid) => {
     return Resolves.createAsync({
       dupe,
       uuid,
-      lead: lead._id,
+      lead
     });
   });
 };

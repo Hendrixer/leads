@@ -2,28 +2,26 @@ import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import resolve from './resolve.directive';
 
-const resolveModule = angular.module('resolve', [
-  uiRouter
-])
+const resolveModule = angular.module('resolves', [])
 .config(['$stateProvider', $stateProvider => {
-  $stateProvider
-    .state('resolve', {
-      url: '/resolve/:id',
-      auth: true,
-      template: '<resolve resolution="resolution"></resolve>',
-      resolve: {
-        resolution: ['$stateParams', 'Resolves', ($stateParams, Resolves) => {
-          const {id} = $stateParams;
-          return Resolves.getOne(id)
-          .then(()=> {
-            return Resolves.getState()[id];
-          });
-        }]
-      },
-      controller: ['$scope', 'resolution', ($scope, resolution) => {
-        $scope.resolution = resolution;
+  $stateProvider.state('resolves', {
+    url: '/resolves/:id',
+    auth: true,
+    async: true,
+    template: '<resolve resolution="data"></resolve>',
+    resolve: {
+      data: ['$stateParams', 'Resolves', function($stateParams, Resolves) {
+        const {id} = $stateParams;
+        return Resolves.getOne(id)
+        .then(()=> {
+          return Resolves.getState()[id];
+        });
       }]
-    });
+    },
+    controller: ['$scope', 'data', ($scope, data) => {
+      $scope.data = data;
+    }]
+  });
 }])
 .directive('resolve', resolve)
 .name;

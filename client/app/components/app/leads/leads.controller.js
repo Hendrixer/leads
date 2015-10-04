@@ -4,7 +4,7 @@ import modalTemplate from './modalTemplate.html';
 import pluck from 'lodash/collection/pluck';
 
 class LeadsController {
-  constructor(Leads, $mdDialog, $mdToast, $scope) {
+  constructor(Leads, $mdDialog, $mdToast, $scope, PubNub) {
     this.Leads = Leads;
     this.modal = $mdDialog;
     this.leads = [];
@@ -24,6 +24,17 @@ class LeadsController {
       }
     });
 
+    let soFar = 0;
+
+    PubNub.listenTo('leads-uploaded', message => {
+      if (message.final) {
+        this.leadsCount += message.saved;
+        soFar = 0;
+      } else {
+        this.leadsCount += (message.saved - soFar);
+        soFar = message.saved;
+      }
+    });
   }
 
   checkBeforeDelete(ev) {
@@ -109,5 +120,5 @@ class LeadsController {
   }
 }
 
-LeadsController.$inject = ['Leads', '$mdDialog', '$mdToast', '$scope'];
+LeadsController.$inject = ['Leads', '$mdDialog', '$mdToast', '$scope', 'PubNub'];
 export {LeadsController};

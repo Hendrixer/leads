@@ -13,52 +13,33 @@ Future.promisifyAll(mongoose.Query.prototype);
 
 class Background {
   constructor() {
-    this.queue = kue.createQueue();
-    this.doingWork = false;
-    this.queue.on('job enqueue', (id, type) => {
-      logger.log(`Job ${id} queued of type ${type}`);
-      this.doingWork = true;
-    })
-    .on('job complete', () => {
-      this.doingWork = false;
-    });
-
-    this.init();
-  }
-
-  busy() {
-    return this.doingWork;
-  }
-
-  init() {
-    mongoose.connect(config.db.url);
-    if (config.secrets.redisToGo) {
-      const rtg = url.parse(config.secrets.redisToGo);
-      const redis = require('redis').createClient(rtg.port, rtg.hostname);
-      redis.auth(rtg.auth.split(':')[1]);
+    if (config.env === 'production') {
+      this.queue({
+        redis: config.secrets.redisToGo
+      });
+    } else {
+      this.queue = kue.createQueue();
     }
 
-    const redis = require('redis').createClient();
+    mongoose.connect(config.db.url);
 
-    this.startTheJobs();
-  }
+    this.working = false;
+    this.queue.on('job enqueue', (id, type) => {
+      logger.log(`Job ${id} queued of type ${type}`);
+      this.startJob();
+    });
 
-  startTheJobs() {
-    setInterval(()=> {
-      if (!this.busy()) {
-        this.startJob('csv');
-      }
-    }, config.jobInterval);
   }
 
   onComplete(result) {
     logger.log('Job complteted');
-    this.doingWork = false;
+    this.working = false;
+    this.startJob();
   }
 
   onFailed() {
     logger.log('Job failed', arguments);
-    this.doingWork = false;
+    this.working = false;
   }
 
   onFailedAttempt() {
@@ -85,8 +66,15 @@ class Background {
   }
 
   startJob(jobName='csv') {
+    if (this.working) {
+      logger.log('I am busy bitch');
+      return;
+    }
+
     this.queue.process(jobName, (job, done) => {
+      this.working = true;
       logger.log('about to process');
+      logger.log(job);
       handleJob(job)
       .then(() => {
         done();

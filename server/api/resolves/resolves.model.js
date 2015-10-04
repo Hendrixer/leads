@@ -2,14 +2,9 @@ import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
 const ResolvesSchema = new Schema({
-  dupe: {
+  dupe: {},
 
-  },
-
-  lead: {
-    type: Schema.Types.ObjectId,
-    ref: 'leads'
-  },
+  lead: {},
 
   uuid: {
     type: String,

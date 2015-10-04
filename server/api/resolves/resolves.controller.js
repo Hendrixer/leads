@@ -11,7 +11,7 @@ export const $param = (req, res, next, id)=> {
   ResolvesSession.findById(id)
   .populate({
     path: 'resolves',
-    select: ''
+    select: 'lead dupe'
   })
   .then(resolve => {
     req.resolution = resolve;

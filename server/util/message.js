@@ -51,6 +51,10 @@ class Reciever extends EventEmitter {
       }
     });
   }
+
+  sendMessage(channel, message) {
+    this.pubnub.publish({channel, message});
+  }
 }
 
 export {Reciever, Publisher};

@@ -6,7 +6,7 @@ router.param('id', controller.$param);
 
 router.route('/')
   .get(controller.$get)
-  .post(controller.$post)
+  .post(controller.$post);
 
 router.route('/:id')
   .get(controller.$getOne)

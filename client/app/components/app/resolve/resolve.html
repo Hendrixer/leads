@@ -3,7 +3,7 @@
     <md-data-table-toolbar>
       <div layout="row" layout-fill>
         <div flex="20">
-          <h3>Resolve {{ ::vm.resolution.dupes.length }} duplicate(s)</h3>
+          <h3>Resolve {{ ::vm.resolution.resolves.length }} duplicate(s)</h3>
         </div>
         <div flex="30"></div>
         <div flex layout="row">
@@ -24,27 +24,27 @@
             <th name="Dupe Last Name" order-by="dupe.lastName"></th>
             <th name="Dupe Email" order-by="dupe.email"></th>
             
-            <th name="Lead First Name" order-by="alike.firstName"></th>
-            <th name="Lead Last Name" order-by="alike.lastName"></th>
-            <th name="Lead Email" order-by="alike.email"></th>
+            <th name="Lead First Name" order-by="lead.firstName"></th>
+            <th name="Lead Last Name" order-by="lead.lastName"></th>
+            <th name="Lead Email" order-by="lead.email"></th>
           </tr>
         </thead>
         <tbody>
           <tr md-auto-select
-            ng-repeat="pair in vm.resolution.dupes | orderBy: 'dupe.firstName' | limitTo: vm.limit: (vm.page - 1) * vm.limit track by pair.dupe.dupeKey">
+            ng-repeat="pair in vm.resolution.resolves | orderBy: 'dupe.firstName' | limitTo: vm.limit: (vm.page - 1) * vm.limit track by pair.dupe.dupeKey">
             <td>{{ ::pair.dupe.firstName}}</td>
             <td>{{ ::pair.dupe.lastName}}</td>
             <td>{{ ::pair.dupe.email}}</td>
-            <td>{{ ::pair.alike.firstName}}</td>
-            <td>{{ ::pair.alike.lastName}}</td>
-            <td>{{ ::pair.alike.email}}</td>
+            <td>{{ ::pair.lead.firstName}}</td>
+            <td>{{ ::pair.lead.lastName}}</td>
+            <td>{{ ::pair.lead.email}}</td>
           </tr>
         </tbody>
       </table>
     </md-data-table-container>
     <md-data-table-pagination md-limit="vm.limit"
     md-page="vm.page"
-    md-total="{{ ::vm.resolution.dupes.length }}">
+    md-total="{{ ::vm.resolution.resolves.length }}">
     </md-data-table-pagination>
   </md-card>
 </section>

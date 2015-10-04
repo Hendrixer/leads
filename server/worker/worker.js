@@ -8,9 +8,8 @@ const reciever = new Reciever();
 const background = new Background();
 http.globalAgent.maxSockets = Infinity;
 const start = () => {
-  logger.log('worker starting');
+  logger.log('...worker starting');
   reciever.on('newjob', message => {
-    logger.log('Got the new job', message.name);
     background.addJob(message.name, message.config);
   });
 };

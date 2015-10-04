@@ -14,7 +14,6 @@ const ResolveFactory = ($http) => {
     });
 
     const resolve = resp.data;
-
     $resolves[resolve._id] = resolve;
   };
 
