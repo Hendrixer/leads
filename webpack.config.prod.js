@@ -6,13 +6,13 @@ var pathToNgMaterial = path.resolve(node_modules, 'angular-material/angular-mate
 var pathToNgAnimate = path.resolve(node_modules, 'angular-animate/angular-animate.min.js');
 var pathToUiRouter = path.resolve(node_modules, 'angular-ui-router/release/angular-ui-router.min.js');
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 module.exports = {
   resolve: {
     alias: {
       'ngMaterial.css': path.resolve(node_modules, 'angular-material/angular-material.min.css'),
-      'ngTableCss': path.resolve(node_modules, 'angular-material-data-table/dist/md-data-table.min.css')
+      ngTableCss: path.resolve(node_modules, 'angular-material-data-table/dist/md-data-table.min.css')
     }
   },
   output: {
