@@ -52,6 +52,7 @@
     "jeet": "^6.1.2",
     "json-csv": "^1.0.5",
     "jsonwebtoken": "^5.0.5",
+    "kue": "^0.9.5",
     "lodash": "^3.10.1",
     "memwatch-next": "^0.2.9",
     "mongoose": "^4.1.0",
