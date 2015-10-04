@@ -8,7 +8,8 @@ const messageChannel = config.messageChannel || 'demjobs';
 const createPublisher = () => {
   return Pubnub({
     publish_key: config.secrets.pubnubPubKey,
-    subscribe_key: config.secrets.pubnubSubKey
+    subscribe_key: config.secrets.pubnubSubKey,
+    ssl: config.env === 'production' ? true : false
   });
 };
 
