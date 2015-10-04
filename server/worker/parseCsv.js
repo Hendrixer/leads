@@ -13,8 +13,6 @@ import es from 'event-stream';
 import uuidMaker from 'node-uuid';
 import {Reciever} from '../util/message';
 const messenger = new Reciever();
-
-logger.log('pwd ', process.cwd());
 export const createStreamFromFiles = (files) => {
   const mergedStream = CombineStream.create();
 

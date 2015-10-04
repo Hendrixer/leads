@@ -74,7 +74,6 @@ class Background {
     this.queue.process(jobName, (job, done) => {
       this.working = true;
       logger.log('about to process');
-      logger.log(job);
       handleJob(job)
       .then(() => {
         done();

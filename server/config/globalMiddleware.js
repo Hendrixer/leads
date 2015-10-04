@@ -11,7 +11,7 @@ const setup = (app) => {
   app.use(express.static(__dirname + '/../../dist'));
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(multer({dest: 'uploads/'}).array('leads'));
+  app.use(multer({dest: __dirname + '/uploads/'}).array('leads'));
   app.use(bodyParser.json({limit: 7000000}));
   app.use(raygun.expressHandler);
 };
