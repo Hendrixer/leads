@@ -1,4 +1,3 @@
-import throng from 'throng';
 import Background from './background';
 import {Reciever} from '../util/message';
 import {logger} from '../util/logger';
@@ -15,7 +14,3 @@ const start = () => {
 };
 
 start();
-
-// throng(start, {
-//   workers: 1
-// });
