@@ -69,6 +69,7 @@ export const $getOne = (req, res, next)=> {
 
 export const $post = (req, res, next)=> {
   res.send({ok: true});
+  logger.log(req.files[0].path);
   publisher.queueJob('csv', {files: req.files});
 
   // toJson({
