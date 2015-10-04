@@ -2,7 +2,7 @@ import * as controller from './orders.controller';
 import express from 'express';
 
 const router = express.Router();
-
+router.param('id', controller.$param);
 router.get('/broker', controller.$getForBroker);
 router.post('/', controller.$create);
 

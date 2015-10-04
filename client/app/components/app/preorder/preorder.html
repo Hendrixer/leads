@@ -6,7 +6,7 @@
           <div layout="row" layout-fill>
             <div flex="20">
               <h3>Preorder for {{ ::vm.broker.name }}</h3>
-              <h5>Leads count: {{ ::vm.leads.length }} </h5>
+              <h5>Leads count: {{ totalLeads }} </h5>
             </div>
             <div flex="5"></div>
             <div flex="15">
@@ -20,7 +20,7 @@
               </md-input-container>
             </div>
             <div class="actions" flex="15" layout="row">
-              <md-button ng-click="vm.orderLeads()" class="md-icon-button"
+              <md-button ng-click="vm.onDownloadClick()" class="md-icon-button"
               ng-disabled="!vm.selected.length">
                 <md-tooltip>
                   download
@@ -31,19 +31,21 @@
           </div>
         </md-data-table-toolbar>
         <md-data-table-container>
-          <table md-data-table md-row-select="vm.selected">
-            <thead md-order="filters.orderBy">
+          <table md-data-table md-row-select="vm.selected"
+          md-progress="vm.$promise">
+            <thead md-order="filters.orderBy"
+            on-all-checked>
               <tr>
                 <th name="Created on" order-by="createdAt"></th>
-                <th name="First Name" order-by="firstName"></th>
-                <th name="Last Name" order-by="LastName"></th>
-                <th name="State" order-by="address.state"></th>
-                <th name="Home Owner" order-by="homeOwner"></th>
-                <th name="Credit Rating" order-by="creditRating"></th>
+                <th name="First Name" ></th>
+                <th name="Last Name" ></th>
+                <th name="State" ></th>
+                <th name="Home Owner" ></th>
+                <th name="Credit Rating" ></th>
                 <th name="LTV" order-by="LTV"></th>
                 <th name="CLTV" order-by="CLTV"></th>
-                <th name="Loan Purpose" order-by="requestedLoan.purpose"></th>
-                <th name="Loan Description" order-by="requestedLoan.description"></th>
+                <th name="Loan Purpose" ></th>
+                <th name="Loan Description" ></th>
               </tr>
             </thead>
             <tbody>
@@ -68,7 +70,7 @@
         md-trigger="fetchMoreLeads"
         md-limit="filters.limit"
         md-page="filters.page"
-        md-total="{{ vm.totalLeads }}">
+        md-total="{{ totalLeads }}">
         </md-data-table-pagination>
       </md-card>
     </div>

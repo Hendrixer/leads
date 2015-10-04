@@ -29,3 +29,4 @@ dist
 uploads
 .env
 .DS_Store
+dump.rdb

@@ -32,6 +32,24 @@ const preorderModule = angular.module('preorder', [
     });
 }])
 .directive('preorder', preorder)
+.directive('onAllChecked', () => {
+  return (scope, element, attr) => {
+    var checkBox = element.find('md-checkbox');
+    var checkboxScope = checkBox.scope();
+    const notifyScope = (e) => {
+      scope.$apply(()=> {
+        scope.allSelected = checkboxScope.allSelected();
+      });
+    };
+
+    checkBox.on('click', notifyScope);
+
+    const destroy = scope.$on('$destroy', () => {
+      checkBox.off('click', notifyScope);
+      destroy();
+    });
+  };
+})
 .name;
 
 export default preorderModule;

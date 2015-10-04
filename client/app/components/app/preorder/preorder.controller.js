@@ -1,4 +1,5 @@
 import pluck from 'lodash/collection/pluck';
+import {makeDataReadyForCsv, headerKeys} from './csv';
 
 class PreorderController {
   constructor(Orders, $state, $filter, $mdDialog, $scope) {
@@ -15,14 +16,17 @@ class PreorderController {
     this.selectionCount;
     this.$filter = $filter;
     this.modal = $mdDialog;
+    this.$promise = null;
     const cursor = {
       limit: 1000,
       skip: 1000
     };
     $scope.leads = this.leads;
     $scope.broker = this.broker;
+    let previousPage = 1;
     $scope.fetchMoreLeads = (page) => {
-      if (page > $scope.filter.page && $scope.leads < this.totalLeads) {
+      if (page > previousPage && $scope.leads.length < $scope.totalLeads) {
+        previousPage = page;
         Orders.preorder($scope.broker._id, {
           limit: cursor.limit,
           skip: cursor.skip
@@ -36,74 +40,119 @@ class PreorderController {
     };
 
     this.$scope = $scope;
+    this.$scope.allSelected = false;
     this.Orders = Orders;
-    this.totalLeads = 0;
-
     this.getCount();
   }
 
   getCount() {
     this.Orders.getCountForPreorder(this.broker._id)
     .then(count => {
-      this.totalLeads = count;
+      this.$scope.totalLeads = count;
       this.$scope.$apply();
     });
   }
 
-  changePage(page, limit) {
-    return this.$scope.filters.page = page;
+  onDownloadClick() {
+    let count = this.selected.length;
+    if (this.$scope.allSelected) {
+      count = this.$scope.totalLeads;
+    }
+
+    this.fetchAndDownloadCsv(count);
   }
 
-  orderLeads(leads=this.selected) {
+  downloadCsv(leads) {
     const csv = Papa.unparse({
-      fields: [
-        'createdAt',
-        'firstName',
-        'lastName',
-        'creditRating',
-        'LTV',
-        'CLTV'
-      ],
-      data: leads
+      fields: headerKeys,
+      data: makeDataReadyForCsv(leads)
     });
 
-    var pom = document.createElement('a');
-    pom.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`);
-    pom.setAttribute('download', 'test.csv');
-    pom.click();
+    const now = new Date().toLocaleDateString().replace(/\//g, '-');
+    const brokerName = this.broker.name.replace(/\s/g, '');
+    const filename = `${brokerName}-${now}.csv`;
+    const link = document.createElement('a');
 
-    // this.Orders.createOrder(
-    //   leads,
-    //   this.broker,
-    //   {filetype: 'csv'}
-    // )
-    // .then(() => {
-    //   this.$state.go('history', {
-    //     broker: this.broker._id,
-    //     name: this.broker.name
-    //   });
-    // });
+    const csvData = new Blob([csv], { type: 'text/csv' });
+    const csvUrl = URL.createObjectURL(csvData);
+
+    link.setAttribute('href', csvUrl);
+    link.setAttribute('download', filename);
+    link.click();
+    return;
+  }
+
+  fetchAndDownloadCsv(count) {
+    if (count > this.$scope.leads.length) {
+      this.$promise = this.Orders.getPreorderByChunk(
+        this.broker._id,
+        this.$scope.leads.length,
+        count
+      )
+      .then(leads => {
+        this.$scope.leads = this.$scope.leads.concat(leads);
+
+        this.downloadCsv(leads);
+        return leads;
+      })
+      .then(leads => {
+        this.updateOrder(leads);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+    } else {
+      const leads = this.$scope.leads.slice(0, count);
+      this.downloadCsv(leads);
+      this.updateOrder(leads);
+    }
+  }
+
+  updateOrder(leads) {
+    this.Orders.createLargeOrder(leads, this.broker)
+    .then(order => {
+      this.$state.go('history', {
+        broker: this.broker._id,
+        name: this.broker.name
+      });
+    });
   }
 
   orderNumberOfleads(ev) {
-    const leads = pluck(this.$filter('orderBy')(this.leads, this.filters.orderBy)
-    .slice(0, this.selectionCount));
+    if (!this.selectionCount) return;
+    if (this.selectionCount > this.$scope.totalLeads) {
+      const alertModal = this.modal.alert()
+        .title('Can\'t be done!')
+        .content(
+          `There are only ${this.$scope.totalLeads} available`
+        )
+        .ariaLabel('nope')
+        .targetEvent(ev)
+        .ok('ok');
 
-    let word = leads.length > 1 ? 'leads' : 'lead';
+      return this.modal.show(alertModal)
+      .then(() => {
+        this.selectionCount = null;
+      }, e => {
+
+      });
+    }
+
+    let word = this.selectionCount > 1 ? 'leads' : 'lead';
 
     const confirm = this.modal.confirm()
-      .title(`Order ${leads.length} ${word}?`)
+      .title(`Order ${this.selectionCount} ${word}?`)
       .content(
-        `The first ${leads.length} ${word} from the list below ordered by ${this.filters.orderBy} are selected.`
+        `The first ${this.selectionCount} ${word} from the list below ordered by Created at are selected.`
       )
       .ariaLabel('order')
       .targetEvent(ev)
-      .ok('Yes, order')
+      .ok('Yes, download')
       .cancel('Nevermind');
 
     this.modal.show(confirm)
     .then(() => {
-      this.orderLeads(leads);
+      this.fetchAndDownloadCsv(this.selectionCount);
     }, e => this.selectionCount = undefined);
   }
 }

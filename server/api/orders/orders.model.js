@@ -66,12 +66,12 @@ const getLeads = ({broker, blacklist, limit, skip})=> {
 
   let selection = Leads.find(query).select('-type -dupeKey').lean();
 
-  if (limit) {
-    selection = selection.limit(limit);
-  }
-
   if (skip) {
     selection = selection.skip(skip);
+  }
+
+  if (limit) {
+    selection = selection.limit(limit);
   }
 
   return selection.stream();

@@ -9,6 +9,18 @@ import jsonToCsv from 'json-csv';
 import es from 'event-stream';
 
 export const $param = (req, res, next, orderId) => {
+  Orders.findByIdAsync(orderId)
+  .then(order => {
+    if (!order) {
+      res.status(404).end();
+    } else {
+      req.order = order;
+      next();
+    }
+  })
+  .catch(e => {
+    next('ERROR', e);
+  });
 };
 
 export const $getForBroker = (req, res, next)=> {
@@ -36,7 +48,6 @@ export const $preorder = (req, res, next) => {
   if (req.query.count) {
     return Orders.getCountForPreorder(broker)
     .then(count => {
-      logger.log('count', count);
       res.json({count});
     })
     .catch(e => {
@@ -56,37 +67,30 @@ export const $preorder = (req, res, next) => {
 };
 
 export const $create = (req, res, next)=> {
-  // const mimeType = req.query.filetype;
-  // oly support csvs for now
-  // if (/text|txt|pdf/g.test(mimeType)) {
-  //   return res.send({message: `${mimeType} files not supoorted yet!`});
-  // }
-
-  Orders.createOrder(req.body)
+  Orders.createAsync({broker: req.body.broker._id})
   .then(order => {
-    res.json(order);
+    order.leads = req.body.leads;
+    order.save((err, saved) => {
+      err ? next(err) : res.json({_id: saved._id});
+    });
   })
   .catch(e => {
     next(e);
   });
 
-  // Orders.createOrder({_id: req.query.broker})
-  //   .then(data => {
-  //     if (data.message) {
-  //       res.json(data.message);
-  //     } else {
-  //       utils.downloadFile(res, req.query.filetype, data);
-  //     }
-  //   })
-  //   .catch(e => {
-  //     // logger.error('error', e);
-  //     console.error(e);
-  //     res.send(e);
-  //   });
 };
 
 export const $put = (req, res, next)=> {
+  const order = req.order;
+  if (req.body.leads) {
+    req.body.leads = order.leads.concat(req.body.leads);
+  }
 
+  _.merge(order, req.body);
+
+  order.save((err, saved) => {
+    err ? next(err) : res.json({_id: saved._id});
+  });
 };
 
 export const $destroy = (req, res, next)=> {

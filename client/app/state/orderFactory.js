@@ -1,7 +1,10 @@
 import {api} from './const';
 import merge from 'lodash/object/merge';
+import times from 'lodash/utility/times';
+import flatten from 'lodash/array/flatten';
+import pluck from 'lodash/collection/pluck';
 
-const OrderFactory = ($http, $window) => {
+const OrderFactory = ($http, $window, $q, $timeout) => {
   let $orders = {};
 
   const getState = ()=> {
@@ -38,6 +41,29 @@ const OrderFactory = ($http, $window) => {
     return resp.data;
   };
 
+  async function getPreorderByChunk(broker, leadsSofar, totalLeads) {
+    const cursor = {
+      limit: 1000,
+      skip: leadsSofar
+    };
+    const leadsLeft = totalLeads - leadsSofar;
+    const numOfCalls = Math.ceil(leadsLeft / cursor.limit) + 1;
+    let callsLeft = numOfCalls;
+    const responses = await $q.all(times(numOfCalls, i => {
+      const prom = preorder(broker, cursor);
+      callsLeft--;
+      cursor.skip += cursor.limit;
+      if (callsLeft === 1) {
+        cursor.limit = ((numOfCalls - 1) * 1000) - totalLeads;
+      }
+
+      return prom;
+    }));
+
+    const results = flatten(responses);
+    return results;
+  }
+
   async function getCountForPreorder(broker) {
     const resp = await $http({
       method: 'GET',
@@ -55,19 +81,53 @@ const OrderFactory = ($http, $window) => {
       url: `${api}/orders`
     });
     const order = merge(resp.data, opts);
-    downloadOrder(order);
+    return order;
+  }
+
+  function createLargeOrder(leads, broker, opts={}) {
+    const numOfCalls = Math.ceil(leads.length / 1000);
+    return createOrder(pluck(leads.splice(0, 1000), '_id'), broker, opts)
+    .then(order => {
+      return recursiveUpdate(numOfCalls, leads, order);
+    });
+  };
+
+  const recursiveUpdate = (numOfCalls, leads, order) => {
+    let callsLeft = numOfCalls;
+    return updateOrder(order._id,
+      {leads: pluck(leads.splice(0, 1000), '_id')}
+    )
+    .then(order => {
+      callsLeft--;
+      if (callsLeft && leads.length) {
+        return recursiveUpdate(callsLeft, leads, order);
+      }
+    });
+  };
+
+  async function updateOrder(orderId, updated) {
+    const resp = await $http({
+      method: 'PUT',
+      url: `${api}/orders/${orderId}`,
+      data: updated
+    });
+
+    return resp.data;
   }
 
   return {
+    updateOrder,
+    createLargeOrder,
     getOrders,
     getState,
     createOrder,
     downloadOrder,
     preorder,
-    getCountForPreorder
+    getCountForPreorder,
+    getPreorderByChunk
   };
 };
 
-OrderFactory.$inject = ['$http', '$window'];
+OrderFactory.$inject = ['$http', '$window', '$q', '$timeout'];
 
 export {OrderFactory};
