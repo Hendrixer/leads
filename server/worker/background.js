@@ -14,7 +14,7 @@ Future.promisifyAll(mongoose.Query.prototype);
 class Background {
   constructor() {
     if (config.env === 'production') {
-      this.queue({
+      this.queue = kue.createQueue({
         redis: config.secrets.redisToGo
       });
     } else {
