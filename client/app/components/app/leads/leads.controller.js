@@ -27,13 +27,8 @@ class LeadsController {
     let soFar = 0;
 
     PubNub.listenTo('leads-uploaded', message => {
-      if (message.final) {
-        this.leadsCount += message.saved;
-        soFar = 0;
-      } else {
-        this.leadsCount += (message.saved - soFar);
-        soFar = message.saved;
-      }
+      this.leadsCount += (message.saved - soFar);
+      soFar = message.saved;
     });
   }
 
@@ -107,7 +102,7 @@ class LeadsController {
       template: modalTemplate,
       controller: modalController,
     })
-    .then(()=> {
+    .then(success => {
       this.$mdToast.show(
         this.$mdToast.simple()
           .content('You\'ll be emailed when files are done')

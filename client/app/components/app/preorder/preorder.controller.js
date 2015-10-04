@@ -2,7 +2,7 @@ import pluck from 'lodash/collection/pluck';
 import {makeDataReadyForCsv, headerKeys} from './csv';
 
 class PreorderController {
-  constructor(Orders, $state, $filter, $mdDialog, $scope) {
+  constructor(Orders, $state, $filter, $mdDialog, $scope, $mdToast) {
     this.selected = [];
     $scope.filters = {
       orderBy: 'createdAt',
@@ -11,6 +11,7 @@ class PreorderController {
       show: false,
       search: ''
     };
+    this.$mdToast = $mdToast;
     this.$state = $state;
     this.Orders = Orders;
     this.selectionCount;
@@ -84,6 +85,18 @@ class PreorderController {
 
   fetchAndDownloadCsv(count) {
     if (count > this.$scope.leads.length) {
+      this.$mdToast.show(
+        this.$mdToast.simple()
+          .content('Gathering the leads to download')
+          .position('bottom right')
+          .hideDelay(4500)
+      );
+      this.$mdToast.show(
+        this.$mdToast.simple()
+          .content('Download will start automatically')
+          .position('bottom right')
+          .hideDelay(5500)
+      );
       this.$promise = this.Orders.getPreorderByChunk(
         this.broker._id,
         this.$scope.leads.length,
@@ -109,7 +122,13 @@ class PreorderController {
   }
 
   updateOrder(leads) {
-    this.Orders.createLargeOrder(leads, this.broker)
+    this.$mdToast.show(
+      this.$mdToast.simple()
+        .content('Updating this brokers\' order history, wait')
+        .position('bottom right')
+        .hideDelay(3500)
+    );
+    this.$promise = this.Orders.createLargeOrder(leads, this.broker)
     .then(order => {
       this.$state.go('history', {
         broker: this.broker._id,
@@ -157,6 +176,6 @@ class PreorderController {
   }
 }
 
-PreorderController.$inject = ['Orders', '$state', '$filter', '$mdDialog', '$scope'];
+PreorderController.$inject = ['Orders', '$state', '$filter', '$mdDialog', '$scope', '$mdToast'];
 
 export default PreorderController;

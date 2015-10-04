@@ -13,7 +13,7 @@ module.exports = {
   resolve: {
     alias: {
       'ngMaterial.css': path.resolve(node_modules, 'angular-material/angular-material.min.css'),
-      'ngTableCss': path.resolve(node_modules, 'angular-material-data-table/dist/md-data-table.min.css')
+      ngTableCss: path.resolve(node_modules, 'angular-material-data-table/dist/md-data-table.min.css')
     }
   },
   output: {

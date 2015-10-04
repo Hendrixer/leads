@@ -35,9 +35,14 @@ class ModalController {
     });
   }
 
-  cancel() {
+  hide() {
     this.startingUpload = false;
     this.modal.hide();
+  }
+
+  cancel() {
+    this.startingUpload = false;
+    this.modal.cancel();
   }
 
   upload() {
@@ -48,7 +53,6 @@ class ModalController {
       file: this.files,
       fileFormDataName: 'leads',
     })
-
     .progress(evt => {
       const progress = parseInt(100.0 * evt.loaded / evt.total);
       this.progress = progress;
@@ -56,14 +60,10 @@ class ModalController {
         this.progressType = 'indeterminate';
         this.progress = 0;
       }
-
-      console.log((100.0 * evt.loaded), evt.total);
     })
-
     .success(() => {
-      this.cancel();
+      this.hide();
     })
-
     .error();
   }
 

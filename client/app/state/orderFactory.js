@@ -85,8 +85,8 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
   }
 
   function createLargeOrder(leads, broker, opts={}) {
-    const numOfCalls = Math.ceil(leads.length / 1000);
-    return createOrder(pluck(leads.splice(0, 1000), '_id'), broker, opts)
+    const numOfCalls = Math.ceil(leads.length / 5000);
+    return createOrder(pluck(leads.splice(0, 5000), '_id'), broker, opts)
     .then(order => {
       return recursiveUpdate(numOfCalls, leads, order);
     });
@@ -95,7 +95,7 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
   const recursiveUpdate = (numOfCalls, leads, order) => {
     let callsLeft = numOfCalls;
     return updateOrder(order._id,
-      {leads: pluck(leads.splice(0, 1000), '_id')}
+      {leads: pluck(leads.splice(0, 5000), '_id')}
     )
     .then(order => {
       callsLeft--;
@@ -108,7 +108,7 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
   async function updateOrder(orderId, updated) {
     const resp = await $http({
       method: 'PUT',
-      url: `${api}/orders/${orderId}`,
+      url: `${api}/orders/batch/${orderId}`,
       data: updated
     });
 

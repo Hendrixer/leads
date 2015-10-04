@@ -12,6 +12,7 @@ router.get('/redownload', controller.$redownload);
 // router.get('/create', controller.$create);
 router.get('/preorder', controller.$preorder);
 
+router.put('/batch/:broker', controller.$updateLeads);
 router.route('/:id')
   .get(controller.$getOne)
   .put(controller.$put)

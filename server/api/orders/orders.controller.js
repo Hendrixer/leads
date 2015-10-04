@@ -9,7 +9,8 @@ import jsonToCsv from 'json-csv';
 import es from 'event-stream';
 
 export const $param = (req, res, next, orderId) => {
-  Orders.findByIdAsync(orderId)
+  Orders.findById(orderId)
+  .select('')
   .then(order => {
     if (!order) {
       res.status(404).end();
@@ -93,6 +94,18 @@ export const $put = (req, res, next)=> {
   });
 };
 
+export const $updateLeads = (req, res, next) => {
+  Orders.findByIdAndUpdateAsync(req.params.broker, {
+    $push: { leads: { $each: req.body.leads }}
+  }, {select: '_id' })
+  .then(order => {
+    res.json(order);
+  })
+  .catch(e => {
+    next(e);
+  });
+};
+
 export const $destroy = (req, res, next)=> {
 
 };
@@ -111,16 +124,8 @@ export const $redownload = (req, res, next) => {
   .select('leads')
   .stream()
   .pipe(es.map((data, cb) => {
-    logger.log(data.leads.length);
     cb(null, es.readArray(data.leads));
   }))
   .pipe(jsonToCsv.csv({headers: utils.csvHeaders}))
   .pipe(res);
-
-  // .then(order => {
-  //   utils.downloadFile(res, req.query.filetype, order);
-  // })
-  // .catch(e => {
-  //   next(e);
-  // });
 };
