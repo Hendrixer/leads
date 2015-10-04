@@ -1,5 +1,5 @@
 export default {
-  logging: false,
+  logging: true,
   port: process.env.PORT,
   appUrl: process.env.APP_URL,
   sendErrors: true,
