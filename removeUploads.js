@@ -1,5 +1,5 @@
 var fs = require('fs-extra');
-
-fs.emptyDir(__dirname + '/uploads', function(err) {
+import path from 'path';
+fs.emptyDir(path.join(process.cwd(), 'uploads'), function(err) {
   console.error(err);
 });

@@ -6,15 +6,15 @@ import util from 'util';
 import compress from 'compression';
 import raygun from '../util/raygun';
 import path from 'path';
-import config from '../env';
-logger.log(process.cwd());
+import config from './env';
+console.log(path.join(process.cwd(), 'uploads'));
 
 const setup = (app) => {
   app.use(compress());
   app.use(express.static(__dirname + '/../../dist'));
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(multer({dest: config.uploadDest}).array('leads'));
+  app.use(multer({dest: path.join(process.cwd(), 'uploads')}).array('leads'));
   app.use(bodyParser.json({limit: 7000000}));
   app.use(raygun.expressHandler);
 };

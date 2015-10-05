@@ -20,7 +20,7 @@ export const createStreamFromFiles = (files) => {
     logger.log('DIRNAME ', __dirname);
     logger.log('file path ', file.path);
     stream.append(fs.createReadStream(
-      path.join('/..', file.path)
+      file.path
     ));
     return stream;
   }, mergedStream);
