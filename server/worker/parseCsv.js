@@ -13,15 +13,12 @@ import es from 'event-stream';
 import uuidMaker from 'node-uuid';
 import {Reciever} from '../util/message';
 const messenger = new Reciever();
+
 export const createStreamFromFiles = (files) => {
   const mergedStream = CombineStream.create();
-
   return files.reduce((stream, file) => {
-    logger.log('DIRNAME ', __dirname);
-    logger.log('file path ', file.path);
-    stream.append(fs.createReadStream(
-      file.path
-    ));
+    const filepath = path.join(process.cwd(), file.path);
+    stream.append(fs.createReadStream(filepath));
     return stream;
   }, mergedStream);
 };
