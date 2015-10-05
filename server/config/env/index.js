@@ -26,7 +26,10 @@ let config = {
     gmailPass: process.env.GMAIL_PASS,
     pubnubPubKey: process.env.PUBNUB_PUBLISH_KEY,
     pubnubSubKey: process.env.PUBNUB_SUBSCRIBE_KEY,
-    redisToGo: process.env.REDISTOGO_URL
+    redisToGo: process.env.REDISTOGO_URL,
+    awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    awsS3Bucket: process.env.AWS_S3_BUCKET
   }
 };
 

@@ -11,14 +11,15 @@ const getFileSize = (bytes, decimals) => {
 };
 
 class ModalController {
-  constructor($mdDialog, $scope, Upload) {
+  constructor($mdDialog, $scope, Upload, Leads, $http) {
     this.modal = $mdDialog;
     this.files = [];
     this.$upload = Upload;
+    this.Leads = Leads;
     this.progress = 0;
     this.startingUpload = false;
     this.uploadSize = 0;
-
+    this.$http = $http;
     $scope.$watch(()=> {
       return this.files;
     },
@@ -45,26 +46,44 @@ class ModalController {
     this.modal.cancel();
   }
 
-  upload() {
+  sign() {
+    const file = this.files[0];
+    this.$http.get(`/api/leads/upload?filename=${file.name}&filetype=${file.type}`)
+    .then(({data}) => {
+      // console.log(data);
+      this.upload(file, data);
+    });
+  }
+
+  upload(file, data) {
     this.startingUpload = true;
     this.progressType = 'determinate';
-    this.$upload.upload({
-      url: '/api/leads',
-      file: this.files,
-      fileFormDataName: 'leads',
-    })
-    .progress(evt => {
-      const progress = parseInt(100.0 * evt.loaded / evt.total);
-      this.progress = progress;
-      if (this.progress === 100) {
-        this.progressType = 'indeterminate';
-        this.progress = 0;
-      }
-    })
-    .success(() => {
+    this.Leads.upload(file, data)
+    .then(() => {
+      console.log('done');
       this.hide();
-    })
-    .error();
+    });
+    // this.$upload.upload({
+    //   data,
+    //   url: data.signed_request,
+    //   method: 'PUT',
+    //   file: file,
+    //   headers: {
+    //     'x-amz-acl': 'public-read'
+    //   }
+    // })
+    // .progress(evt => {
+    //   const progress = parseInt(100.0 * evt.loaded / evt.total);
+    //   this.progress = progress;
+    //   if (this.progress === 100) {
+    //     this.progressType = 'indeterminate';
+    //     this.progress = 0;
+    //   }
+    // })
+    // .success(() => {
+    //   this.hide();
+    // })
+    // .error();
   }
 
   dropping($files) {
@@ -72,5 +91,5 @@ class ModalController {
   }
 }
 
-ModalController.$inject = ['$mdDialog', '$scope', 'Upload'];
+ModalController.$inject = ['$mdDialog', '$scope', 'Upload', 'Leads', '$http'];
 export default ModalController;

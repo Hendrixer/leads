@@ -55,7 +55,30 @@ const LeadFactory = ($http, $q) => {
     return resp.data;
   };
 
+  const upload = (file, data) => {
+    console.log(data, file);
+    return $q((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', data.signed_request);
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
+      xhr.onload = () => {
+        if (xhr.status < 400) {
+          resolve({status: xhr.status});
+        } else {
+          reject(new Error(xhr.status));
+        }
+      };
+
+      xhr.onerror = (e) => {
+        reject(new Error('Could not upload file', e));
+      };
+
+      xhr.send(file);
+    });
+  };
+
   return {
+    upload,
     getLeads,
     getState,
     updateMany,

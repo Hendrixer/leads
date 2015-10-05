@@ -7,11 +7,40 @@ import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
 import {Publisher} from '../../util/message';
+import aws from 'aws-sdk';
+import config from '../../config/env';
 const publisher = new Publisher();
 
-// import {Converter} from 'csvtojson';
-
 const toJson = future.promisify(spreadToJSon);
+
+export const $sign = (req, res, next) => {
+  aws.config.update({
+    accessKeyId: config.secrets.awsAccessKeyId,
+    secretAccessKey: config.secrets.awsSecretAccessKey
+  });
+  const stamp = new Date().toLocaleDateString().replace(/\//g, '-');
+  const filename = `${req.query.filename}-${stamp}`;
+  const s3 = new aws.S3();
+  const s3Params = {
+    Bucket: config.secrets.awsS3Bucket,
+    Key: filename,
+    Expires: 60,
+    ContentType: req.query.filetype,
+    ACL: 'public-read'
+  };
+
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if (err) {
+      next(err);
+    } else {
+      const resp = {
+        signed_request: data,
+        url: `https://${config.secrets.awsS3Bucket}.s3.amazonaws.com/${filename}`
+      };
+      res.json(resp);
+    }
+  });
+};
 
 export const $param = (req, res, next, id) => {
   Leads.findByIdAsync(id)
