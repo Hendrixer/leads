@@ -18,8 +18,7 @@ export const createStreamFromFiles = (files) => {
   const mergedStream = CombineStream.create();
   return files.reduce((stream, file) => {
     logger.log(file.path);
-    const filepath = path.join(process.cwd(), file.path);
-    stream.append(fs.createReadStream(filepath));
+    stream.append(fs.createReadStream(file.path));
     return stream;
   }, mergedStream);
 };

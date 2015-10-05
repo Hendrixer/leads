@@ -9,7 +9,7 @@ import path from 'path';
 import config from './env';
 const  storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'app/uploads');
+    cb(null, 'uploads');
   },
 
   filename(req, file, cb) {
