@@ -17,7 +17,10 @@ const messenger = new Reciever();
 export const createStreamFromFiles = (files) => {
   const mergedStream = CombineStream.create();
   return files.reduce((stream, file) => {
-    const pathToFile = path.join(__dirname, '/../../', file.path);
+    logger.log(file);
+    const base = __dirname.replace('app', '');
+    logger.log(base);
+    const pathToFile = path.join(base, '/../../', file.path);
     stream.append(fs.createReadStream(pathToFile));
     return stream;
   }, mergedStream);
