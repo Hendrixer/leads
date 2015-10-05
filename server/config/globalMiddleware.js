@@ -5,13 +5,14 @@ import multer from 'multer';
 import util from 'util';
 import compress from 'compression';
 import raygun from '../util/raygun';
+import path from 'path';
 
 const setup = (app) => {
   app.use(compress());
   app.use(express.static(__dirname + '/../../dist'));
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(multer({dest: __dirname + '/uploads/'}).array('leads'));
+  app.use(multer({dest: path.join(__dirname,  '../../uploads')}).array('leads'));
   app.use(bodyParser.json({limit: 7000000}));
   app.use(raygun.expressHandler);
 };
