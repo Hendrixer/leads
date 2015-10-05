@@ -55,11 +55,10 @@ const LeadFactory = ($http, $q) => {
     return resp.data;
   };
 
-  const upload = (file, data) => {
-    console.log(data, file);
+  const upload = (file, data, onProgress) => {
     return $q((resolve, reject) => {
+      alert('hey')
       const xhr = new XMLHttpRequest();
-      xhr.open('PUT', data.signed_request);
       xhr.setRequestHeader('x-amz-acl', 'public-read');
       xhr.onload = () => {
         if (xhr.status < 400) {
@@ -73,6 +72,11 @@ const LeadFactory = ($http, $q) => {
         reject(new Error('Could not upload file', e));
       };
 
+      xhr.upload.onprogress = (e) => {
+        onProgress(e);
+      };
+
+      xhr.open('PUT', data.signed_request, true);
       xhr.send(file);
     });
   };

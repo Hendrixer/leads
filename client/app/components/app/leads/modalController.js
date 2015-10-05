@@ -55,35 +55,18 @@ class ModalController {
     });
   }
 
+  onProgress(e) {
+    console.log(e);
+  }
+
   upload(file, data) {
     this.startingUpload = true;
     this.progressType = 'determinate';
-    this.Leads.upload(file, data)
+    this.Leads.upload(file, data, this.onProgress)
     .then(() => {
       console.log('done');
       this.hide();
     });
-    // this.$upload.upload({
-    //   data,
-    //   url: data.signed_request,
-    //   method: 'PUT',
-    //   file: file,
-    //   headers: {
-    //     'x-amz-acl': 'public-read'
-    //   }
-    // })
-    // .progress(evt => {
-    //   const progress = parseInt(100.0 * evt.loaded / evt.total);
-    //   this.progress = progress;
-    //   if (this.progress === 100) {
-    //     this.progressType = 'indeterminate';
-    //     this.progress = 0;
-    //   }
-    // })
-    // .success(() => {
-    //   this.hide();
-    // })
-    // .error();
   }
 
   dropping($files) {
