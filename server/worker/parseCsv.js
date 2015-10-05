@@ -24,10 +24,14 @@ const s3 = new aws.S3();
 const messenger = new Reciever();
 
 export const getFileStreamFromS3 = (filename) => {
-  return s3Stream.ReadStream(s3, {
+  // return s3Stream.ReadStream(s3, {
+  //   Bucket: config.secrets.awsS3Bucket,
+  //   Key: filename
+  // });
+  return s3.getObject({
     Bucket: config.secrets.awsS3Bucket,
     Key: filename
-  });
+  }).createReadStream();
 };
 
 export const parseCsvStream = (filename) => {
@@ -42,9 +46,9 @@ export const parseCsvStream = (filename) => {
     };
 
     const uuid = uuidMaker.v1();
-    const throttleSend = _.before(20, message => {
+    const throttleSend = _.throttle(message => {
       messenger.sendMessage('leads-uploaded', message);
-    }, 20, {trailing: false});
+    }, 2000, {trailing: false});
 
     csvStream
     .pipe(csvParser())
