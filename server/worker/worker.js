@@ -9,7 +9,7 @@ http.globalAgent.maxSockets = Infinity;
 const start = () => {
   logger.log('...worker starting');
   reciever.on('newjob', message => {
-    background.addJob(message.name, message.config);
+    background.addJob(message.name, message);
   });
 };
 

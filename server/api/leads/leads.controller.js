@@ -18,7 +18,7 @@ export const $sign = (req, res, next) => {
     accessKeyId: config.secrets.awsAccessKeyId,
     secretAccessKey: config.secrets.awsSecretAccessKey
   });
-  const stamp = new Date().toLocaleDateString().replace(/\//g, '-');
+  const stamp = Date.now();
   const filename = `${req.query.filename}-${stamp}`;
   const s3 = new aws.S3();
   const s3Params = {
@@ -34,6 +34,7 @@ export const $sign = (req, res, next) => {
       next(err);
     } else {
       const resp = {
+        filename,
         signed_request: data,
         url: `https://${config.secrets.awsS3Bucket}.s3.amazonaws.com/${filename}`
       };
@@ -99,26 +100,6 @@ export const $getOne = (req, res, next)=> {
 export const $post = (req, res, next)=> {
   res.send({ok: true});
   publisher.queueJob('csv', {files: req.files});
-
-  // toJson({
-  //   input:  req.files[0].path,
-  //   output: null,
-  // })
-  //   .then(rawLeads => {
-  //     const leads = rawLeads.map(lead => {
-  //       return lead = Leads.format(lead);
-  //
-  //       return Leads.createAsync(lead);
-  //     });
-  //
-  //     return future.all(leads);
-  //   })
-  //
-  //   .then(leads => {
-  //     res.json(leads);
-  //   })
-  //
-  //   .catch(next.bind(next));
 };
 
 export const $putMany = (req, res, next) => {

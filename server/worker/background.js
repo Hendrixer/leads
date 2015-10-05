@@ -5,7 +5,6 @@ import Future from 'bluebird';
 import {handleJob} from './parseCsv';
 import mongoose from 'mongoose';
 import config from '../config/env';
-import url from 'url';
 
 Future.promisifyAll(mongoose.Model);
 Future.promisifyAll(mongoose.Model.prototype);

@@ -12,23 +12,27 @@ import path from 'path';
 import es from 'event-stream';
 import uuidMaker from 'node-uuid';
 import {Reciever} from '../util/message';
+import aws from 'aws-sdk';
+import s3Stream from 's3-streams';
+
+aws.config.update({
+  accessKeyId: config.secrets.awsAccessKeyId,
+  secretAccessKey: config.secrets.awsSecretAccessKey
+});
+
+const s3 = new aws.S3();
 const messenger = new Reciever();
 
-export const createStreamFromFiles = (files) => {
-  const mergedStream = CombineStream.create();
-  return files.reduce((stream, file) => {
-    logger.log(file);
-    const base = __dirname.replace('app', '');
-    logger.log(base);
-    const pathToFile = path.join(base, '/../../', file.path);
-    stream.append(fs.createReadStream(pathToFile));
-    return stream;
-  }, mergedStream);
+export const getFileStreamFromS3 = (filename) => {
+  return s3Stream.ReadStream(s3, {
+    Bucket: config.secrets.awsS3Bucket,
+    Key: filename
+  });
 };
 
-export const parseCsvStream = (files) => {
+export const parseCsvStream = (filename) => {
   return new Promise((resolve, reject) => {
-    const csvStream = createStreamFromFiles(files);
+    const csvStream = getFileStreamFromS3(filename);
     const startTime = Date.now();
     const meta = {
       dupes: 0,
@@ -38,9 +42,9 @@ export const parseCsvStream = (files) => {
     };
 
     const uuid = uuidMaker.v1();
-    const throttleSend = _.throttle(message => {
+    const throttleSend = _.before(20, message => {
       messenger.sendMessage('leads-uploaded', message);
-    }, 2000, {trailing: false});
+    }, 20, {trailing: false});
 
     csvStream
     .pipe(csvParser())
@@ -83,7 +87,7 @@ const dupeErr = (err) => {
 };
 
 export const handleJob = (job) => {
-  return parseCsvStream(job.data.files)
+  return parseCsvStream(job.data.filename)
   .then(meta => {
     if (!meta.dupes) {
       return meta;

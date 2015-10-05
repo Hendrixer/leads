@@ -119,6 +119,19 @@ gulp.task('generate', function() {
     .pipe(gulp.dest(destPath));
 });
 
+gulp.task('watch-heroku', function() {
+  const paths = [].concat(paths.client.app, path.server);
+  gulp.watch(paths, ['prod', 'heroku-serve']);
+});
+
+gulp.task('heroku-serve', shell.task([
+  'heroku local'
+]));
+
+gulp.task('heroku-local', function(done) {
+  sync('prod', 'heroku-serve', 'watch-heroku', done);
+});
+
 gulp.task('prod', function(done) {
   sync('bundle:prod', 'copy', done);
 });

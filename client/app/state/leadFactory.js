@@ -57,9 +57,7 @@ const LeadFactory = ($http, $q) => {
 
   const upload = (file, data, onProgress) => {
     return $q((resolve, reject) => {
-      alert('hey')
       const xhr = new XMLHttpRequest();
-      xhr.setRequestHeader('x-amz-acl', 'public-read');
       xhr.onload = () => {
         if (xhr.status < 400) {
           resolve({status: xhr.status});
@@ -77,6 +75,7 @@ const LeadFactory = ($http, $q) => {
       };
 
       xhr.open('PUT', data.signed_request, true);
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
       xhr.send(file);
     });
   };

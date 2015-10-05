@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV === 'production') {
+  // require('newrelic');
+}
+
 var pm2 = require('pm2');
 var instances = process.env.WEB_CONCURRENCY || -1;
 var maxMem = process.env.WEB_MEMORY || 512;

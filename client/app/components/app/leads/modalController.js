@@ -11,15 +11,16 @@ const getFileSize = (bytes, decimals) => {
 };
 
 class ModalController {
-  constructor($mdDialog, $scope, Upload, Leads, $http) {
+  constructor($mdDialog, $scope, Leads, $http, PubNub) {
     this.modal = $mdDialog;
     this.files = [];
-    this.$upload = Upload;
     this.Leads = Leads;
     this.progress = 0;
     this.startingUpload = false;
     this.uploadSize = 0;
     this.$http = $http;
+    this.$scope = $scope;
+    this.PubNub = PubNub;
     $scope.$watch(()=> {
       return this.files;
     },
@@ -56,16 +57,22 @@ class ModalController {
   }
 
   onProgress(e) {
-    console.log(e);
+    this.$scope.$apply(()=> {
+      this.progress = Math.ceil((e.loaded / e.total) * 100);
+    });
   }
 
   upload(file, data) {
     this.startingUpload = true;
     this.progressType = 'determinate';
-    this.Leads.upload(file, data, this.onProgress)
+    this.Leads.upload(file, data, this.onProgress.bind(this))
     .then(() => {
-      console.log('done');
       this.hide();
+      this.PubNub.sendTo('demjobs', {
+        name: 'csv',
+        url: data.url,
+        filename: data.filename
+      });
     });
   }
 
@@ -74,5 +81,5 @@ class ModalController {
   }
 }
 
-ModalController.$inject = ['$mdDialog', '$scope', 'Upload', 'Leads', '$http'];
+ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub'];
 export default ModalController;

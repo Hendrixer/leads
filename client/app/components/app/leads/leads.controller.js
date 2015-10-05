@@ -27,8 +27,12 @@ class LeadsController {
     let soFar = 0;
 
     PubNub.listenTo('leads-uploaded', message => {
-      this.leadsCount += (message.saved - soFar);
-      soFar = message.saved;
+      if (message.final) {
+        this.getLeadsCount();
+      } else {
+        this.leadsCount += (message.saved - soFar);
+        soFar = message.saved;
+      }
     });
   }
 
