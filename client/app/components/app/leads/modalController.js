@@ -68,7 +68,7 @@ class ModalController {
     this.Leads.upload(file, data, this.onProgress.bind(this))
     .then(() => {
       this.hide();
-      this.PubNub.sendTo('demjobs', {
+      this.PubNub.sendTo(`${$pubnubPrefix}demjobs`, {
         name: 'csv',
         url: data.url,
         filename: data.filename

@@ -34,9 +34,7 @@ class ResolveController {
       this.cleanUp();
     }
 
-    this.Leads.updateMany(this.selected.map(pair => {
-      return pair.dupe;
-    }))
+    this.Leads.updateMany(this.selected.map(pair => pair.dupe))
     .then(this.cleanUp.bind(this))
     .catch(e => {
       console.error(e);

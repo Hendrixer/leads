@@ -26,7 +26,7 @@ class LeadsController {
 
     let soFar = 0;
 
-    PubNub.listenTo('leads-uploaded', message => {
+    PubNub.listenTo(`${$pubnubPrefix}leads-uploaded`, message => {
       if (message.final) {
         this.getLeadsCount();
       } else {

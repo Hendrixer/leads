@@ -47,7 +47,7 @@ export const parseCsvStream = (filename) => {
 
     const uuid = uuidMaker.v1();
     const throttleSend = _.throttle(message => {
-      messenger.sendMessage('leads-uploaded', message);
+      messenger.sendMessage(`${config.secrets.pubnubPrefix}leads-uploaded`, message);
     }, 2000, {trailing: false});
 
     csvStream
@@ -77,7 +77,7 @@ export const parseCsvStream = (filename) => {
       meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
       meta.uuid = uuid;
       let update = {saved: meta.saved, final: true};
-      messenger.sendMessage('leads-uploaded', update);
+      messenger.sendMessage(`${config.secrets.pubnubPrefix}leads-uploaded`, update);
       resolve(meta);
     });
   });
