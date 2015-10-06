@@ -3,6 +3,16 @@ import {logger} from '../util/logger';
 import es from 'event-stream';
 import jsonToCsv from 'json-csv';
 import {stateMap} from './leads/states';
+_.mixin({compactObject(o) {
+  let clone = _.clone(o);
+
+  _.each(clone, (v, k) => {
+    if (!v) {
+      delete clone[k];
+    }
+  });
+  return clone;
+}});
 
 export const whiteListEmails = [
   'willscottmoss@gmail.com',
@@ -84,9 +94,10 @@ export const makeOptionRegex = (opts, type) => {
 };
 
 export const makeRegexFromStates = (opts) => {
-  let size = _.size(opts);
-
-  const str = _.reduce(opts, (_str, val, state) => {
+  const states = _.compactObject(opts);
+  let size = _.size(states);
+  logger.log(states);
+  const str = _.reduce(states, (_str, val, state) => {
     size--;
 
     if (val) {
@@ -98,10 +109,10 @@ export const makeRegexFromStates = (opts) => {
     }
 
     return _str;
-
   }, '^(') + ')';
 
-  return new RegExp(str, 'gi');
+  const reg = new RegExp(str, 'gi');
+  return reg;
 };
 
 export const validator = (type)=> {
