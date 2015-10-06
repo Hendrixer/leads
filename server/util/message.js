@@ -3,7 +3,7 @@ import config from '../config/env';
 import EventEmitter from 'eventemitter3';
 import {logger} from './logger';
 
-const messageChannel = config.messageChannel || 'demjobs';
+const messageChannel = `${config.secrets.pubnubPrefix}demjobs`;
 
 const createPublisher = () => {
   return Pubnub({

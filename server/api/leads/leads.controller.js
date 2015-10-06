@@ -106,11 +106,15 @@ export const $putMany = (req, res, next) => {
   const queue = Promise.all(_.map(req.body.leads, lead => {
     return Leads.findOneAndUpdateAsync({
       $or: [{email: lead.email}, {dupeKey: lead.dupeKey}]
-    }, {new: true});
+    }, lead);
   }));
 
   queue.then(leads => {
-    res.json(leads);
+    logger.log(leads[0]);
+    res.json({ok: true});
+  })
+  .catch(e => {
+    next(e);
   });
 };
 

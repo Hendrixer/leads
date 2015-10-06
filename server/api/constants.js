@@ -96,7 +96,6 @@ export const makeOptionRegex = (opts, type) => {
 export const makeRegexFromStates = (opts) => {
   const states = _.compactObject(opts);
   let size = _.size(states);
-  logger.log(states);
   const str = _.reduce(states, (_str, val, state) => {
     size--;
 
