@@ -43,7 +43,8 @@ module.exports = {
       $pusherKey: JSON.stringify(process.env.PUSHER_APP_KEY),
       $raygunApiKey: JSON.stringify(process.env.RAYGUN_APIKEY),
       $pubnubPubKey: JSON.stringify(process.env.PUBNUB_PUBLISH_KEY),
-      $pubnubSubKey: JSON.stringify(process.env.PUBNUB_SUBSCRIBE_KEY)
+      $pubnubSubKey: JSON.stringify(process.env.PUBNUB_SUBSCRIBE_KEY),
+      $pubnubPrefix: JSON.stringify(process.env.PUBNUB_PREFIX)
     })
   ],
 
