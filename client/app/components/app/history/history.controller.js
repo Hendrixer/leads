@@ -1,5 +1,5 @@
 class HistoryController {
-  constructor(Orders){
+  constructor(Orders) {
     this.name = 'history';
     this.Orders = Orders;
     this.orderList = this.orders.map(order => {

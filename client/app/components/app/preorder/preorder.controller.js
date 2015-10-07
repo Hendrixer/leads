@@ -1,5 +1,5 @@
 import pluck from 'lodash/collection/pluck';
-import {makeDataReadyForCsv, headerKeys} from './csv';
+import {makeDataReadyForCsv, headerKeys, startDownload} from './csv';
 
 class PreorderController {
   constructor(Orders, $state, $filter, $mdDialog, $scope, $mdToast) {
@@ -64,22 +64,17 @@ class PreorderController {
   }
 
   downloadCsv(leads) {
+    const data = makeDataReadyForCsv(leads);
+
     const csv = Papa.unparse({
+      data,
       fields: headerKeys,
-      data: makeDataReadyForCsv(leads)
     });
 
     const now = new Date().toLocaleDateString().replace(/\//g, '-');
     const brokerName = this.broker.name.replace(/\s/g, '');
     const filename = `${brokerName}-${now}.csv`;
-    const link = document.createElement('a');
-
-    const csvData = new Blob([csv], { type: 'text/csv' });
-    const csvUrl = URL.createObjectURL(csvData);
-
-    link.setAttribute('href', csvUrl);
-    link.setAttribute('download', filename);
-    link.click();
+    startDownload(csv, filename);
     return;
   }
 

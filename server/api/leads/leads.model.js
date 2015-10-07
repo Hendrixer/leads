@@ -151,19 +151,18 @@ const replaceNum = (prop)=> {
 
 const parseNum = (prop) => {
   if (checkForNull(prop)) {
-    let num;
     if (_.isNumber(prop)) {
       return prop;
     }
 
     try {
-      num = num.replace(/,/g, '');
-      num = parseFloat(prop);
+      prop = prop.replace(/,/g, '');
+      prop = parseFloat(prop);
     } catch (e) {
       return undefined;
     }
 
-    return num;
+    return prop;
   }
 };
 
@@ -199,7 +198,7 @@ LeadsSchema.statics.format = (lead) => {
       street: checkForNull(lead.ContactAddress1),
       city: checkForNull(lead.ContactCity),
       state: getState(lead.ContactStateOrProvince),
-      zip: parseNum(lead.ContactPostalCode)
+      zip: lead.ContactPostalCode //replaceNum()
     },
     phone: {
       home: replaceNum(lead.ContactHomePhone),

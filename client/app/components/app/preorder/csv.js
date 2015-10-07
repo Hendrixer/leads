@@ -38,6 +38,7 @@ export const headerKeys = keys(headers);
 
 export const getValueForPropChain = (prop, data) => {
   const key = headers[prop];
+
   const keys = key.split('.');
   if (keys.length === 1) {
     return data[key];
@@ -64,4 +65,24 @@ export const makeDataReadyForCsv = (data) => {
       return getValueForPropChain(header, row);
     });
   });
+};
+
+export const startDownload = (csv, filename) => {
+  const link = document.createElement('a');
+
+  const csvData = new Blob([csv], { type: 'text/csv' });
+  const csvUrl = URL.createObjectURL(csvData);
+
+  link.setAttribute('href', csvUrl);
+  link.setAttribute('download', filename);
+  link.click();
+};
+
+export const formatAndDownloadCsv = (data, filename) => {
+  const csv = Papa.unparse({
+    fields: headerKeys,
+    data: makeDataReadyForCsv(data)
+  });
+
+  startDownload(csv, filename);
 };
