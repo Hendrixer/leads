@@ -145,44 +145,49 @@
       </md-tab>
 
       <md-tab label="Specifics">
-        <md-content layout="column">
-          <div class="" layout="row">
-            <md-checkbox flex="20" class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.detail.requestedLoanAmount.use">
+        <md-content layout="column" layout-margin>
+          <div class="" layout="column" layout-align="center center" layout-fill
+          style="padding-left: 80px;padding-right: 80px;">
+            <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.detail.requestedLoanAmount.use">
               Requested Loan Amount
             </md-checkbox>
-            <md-input-container flex="15" ng-show="vm.broker.leadFilters.detail.requestedLoanAmount.use">
-              <label>{{ vm.broker.leadFilters.detail.requestedLoanAmount.minimum }}</label>
-              <md-select ng-model="vm.broker.leadFilters.detail.requestedLoanAmount.minimum ">
-                <md-option ng-repeat="amount in vm.loanAmounts" value="{{::amount}}">{{::amount | currency}}</md-option>
-              </md-select>
-            </md-input-container>
-            <md-input-container flex="15" ng-show="vm.broker.leadFilters.detail.requestedLoanAmount.use">
-              <label>{{ vm.broker.leadFilters.detail.requestedLoanAmount.maximum }}</label>
-              <md-select ng-model="vm.broker.leadFilters.detail.requestedLoanAmount.maximum ">
-                <md-option ng-repeat="amount in vm.loanAmounts" value="{{::amount}}">{{::amount | currency}}</md-option>
-              </md-select>
-            </md-input-container>
+            <div layout="row" flex style="width: 100%;" layout-align="center center">
+              <md-input-container flex="20" ng-show="vm.broker.leadFilters.detail.requestedLoanAmount.use">
+                <label>min</label>
+                <md-select ng-model="vm.broker.leadFilters.detail.requestedLoanAmount.minimum ">
+                  <md-option ng-repeat="amount in vm.loanAmounts" value="{{::amount}}">{{::amount | currency}}</md-option>
+                </md-select>
+              </md-input-container>
+              <md-input-container flex="20" ng-show="vm.broker.leadFilters.detail.requestedLoanAmount.use">
+                <label>max</label>
+                <md-select ng-model="vm.broker.leadFilters.detail.requestedLoanAmount.maximum ">
+                  <md-option ng-repeat="amount in vm.loanAmounts" value="{{::amount}}">{{::amount | currency}}</md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+            <md-divider style="width: 70%;"></md-divider>
           </div>
-          <div class="" layout="row">
-            <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.detail.ltv.use">
+          <div class="" layout="column" layout-align="center center" layout-fill>
+            <md-checkbox
+            class="md-accent md-hue-3"
+            ng-model="vm.broker.leadFilters.detail.ltv.use">
               LTV
             </md-checkbox>
-            <md-input-container flex="15" ng-show="vm.broker.leadFilters.detail.ltv.use">
-              <label>{{ vm.broker.leadFilters.detail.ltv.minimum }}</label>
-              <md-select ng-model="vm.broker.leadFilters.detail.ltv.minimum ">
-                <md-option ng-repeat="amount in vm.ltvs" value="{{::amount.val}}">{{::amount.view }}</md-option>
-              </md-select>
-            </md-input-container>
-            <md-input-container flex="15" ng-show="vm.broker.leadFilters.detail.ltv.use">
-              <label>{{ vm.broker.leadFilters.detail.ltv.maximum }}</label>
-              <md-select ng-model="vm.broker.leadFilters.detail.ltv.maximum ">
-                <md-option ng-repeat="amount in vm.ltvs" value="{{::amount.val}}">{{::amount.view }}</md-option>
-              </md-select>
-            </md-input-container>
+            <div layout="row" flex style="width: 100%;" layout-align="center center">
+              <md-input-container flex="20" ng-show="vm.broker.leadFilters.detail.ltv.use">
+                <label>min</label>
+                <md-select ng-model="vm.broker.leadFilters.detail.ltv.minimum ">
+                  <md-option ng-repeat="amount in vm.ltvs" value="{{::amount.val}}">{{::amount.view }}</md-option>
+                </md-select>
+              </md-input-container>
+              <md-input-container flex="20" ng-show="vm.broker.leadFilters.detail.ltv.use">
+                <label>max</label>
+                <md-select ng-model="vm.broker.leadFilters.detail.ltv.maximum ">
+                  <md-option ng-repeat="amount in vm.ltvs" value="{{::amount.val}}">{{::amount.view }}</md-option>
+                </md-select>
+              </md-input-container>
+            </div>
           </div>
-          <!-- <div class="" layout="row">
-            <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.detail.cltv.use">CLTV</md-checkbox>
-          </div> -->
         </md-content>
       </md-tab>
       
@@ -194,6 +199,11 @@
               columns="1" md-maxlength="150">
             </textarea>
           </md-input-container>
+        </md-content>
+      </md-tab>
+      <md-tab label="Suppress">
+        <md-content>
+          <h3>coming soon!</h3>
         </md-content>
       </md-tab>
     </md-tabs>
