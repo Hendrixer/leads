@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV === 'production') {
-  // require('newrelic');
+  require('newrelic');
 }
 
 var pm2 = require('pm2');
