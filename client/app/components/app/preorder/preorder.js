@@ -50,6 +50,11 @@ const preorderModule = angular.module('preorder', [
     });
   };
 })
+.filter('percent', ['$filter', $filter => {
+  return (input, decimals=2) => {
+    return $filter('number')(input * 100, decimals) + '%';
+  };
+}])
 .name;
 
 export default preorderModule;

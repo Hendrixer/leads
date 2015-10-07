@@ -164,11 +164,25 @@
             </md-input-container>
           </div>
           <div class="" layout="row">
-            <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.detail.ltv.use">LTV</md-checkbox>
+            <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.detail.ltv.use">
+              LTV
+            </md-checkbox>
+            <md-input-container flex="15" ng-show="vm.broker.leadFilters.detail.ltv.use">
+              <label>{{ vm.broker.leadFilters.detail.ltv.minimum }}</label>
+              <md-select ng-model="vm.broker.leadFilters.detail.ltv.minimum ">
+                <md-option ng-repeat="amount in vm.ltvs" value="{{::amount.val}}">{{::amount.view }}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex="15" ng-show="vm.broker.leadFilters.detail.ltv.use">
+              <label>{{ vm.broker.leadFilters.detail.ltv.maximum }}</label>
+              <md-select ng-model="vm.broker.leadFilters.detail.ltv.maximum ">
+                <md-option ng-repeat="amount in vm.ltvs" value="{{::amount.val}}">{{::amount.view }}</md-option>
+              </md-select>
+            </md-input-container>
           </div>
-          <div class="" layout="row">
+          <!-- <div class="" layout="row">
             <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.detail.cltv.use">CLTV</md-checkbox>
-          </div>
+          </div> -->
         </md-content>
       </md-tab>
       

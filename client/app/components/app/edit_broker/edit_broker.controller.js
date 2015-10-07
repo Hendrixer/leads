@@ -1,7 +1,7 @@
 import merge from 'lodash/object/merge';
 
 class EditBrokerController {
-  constructor(Brokers, $mdToast, $state){
+  constructor(Brokers, $mdToast, $state) {
     this.Brokers = Brokers;
     this.$mdToast = $mdToast;
     this.$state = $state;
@@ -12,8 +12,6 @@ class EditBrokerController {
   }
 
   saveBroker() {
-    // const broker = merge(this.broker, {leadFilters: this.leadFilters});
-    console.log('broker', this.broker);
     this.Brokers.edit(this.broker)
       .then(()=> {
         this.$mdToast.show(
@@ -25,7 +23,6 @@ class EditBrokerController {
       });
   }
 }
-
 
 EditBrokerController.$inject = ['Brokers', '$mdToast', '$state'];
 

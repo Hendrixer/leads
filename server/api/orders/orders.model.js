@@ -50,6 +50,8 @@ const getBrokerOrderHistory = (broker)=> {
 const makeQuery = (broker, blacklist) => {
   broker = broker.toJSON();
   const basic = broker.leadFilters.basic;
+  const detail = broker.leadFilters.detail;
+
   const query = {
     creditRating: utils.makeOptionRegex(basic.creditRating, 'creditRatings'),
     'requestedLoan.purpose': utils.makeOptionRegex(basic.loanPurpose, 'loanPurposes'),
@@ -57,6 +59,25 @@ const makeQuery = (broker, blacklist) => {
     'address.state': utils.makeRegexFromStates(broker.leadFilters.states),
     _id: {$nin: blacklist}
   };
+
+  if (detail) {
+    if (detail.ltv && detail.ltv.use) {
+      query.LTV = {
+        $gte: detail.ltv.minimum,
+        $lte: detail.ltv.maximum
+      };
+    }
+
+    if (detail.requestedLoanAmount && detail.requestedLoanAmount.use) {
+      query['requestedLoan.amountMin'] = {
+        $gte: detail.requestedLoanAmount.minimum
+      };
+
+      query['requestedLoan.amountMax'] = {
+        $lte: detail.requestedLoanAmount.maximum
+      };
+    }
+  }
 
   return query;
 };

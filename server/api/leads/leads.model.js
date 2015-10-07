@@ -68,8 +68,8 @@ const LeadsSchema = new Schema({
   CLTV: Number,
 
   requestedLoan: {
-    amountMin: String,
-    amountMax: String,
+    amountMin: Number,
+    amountMax: Number,
     description: String,
     purpose: {
       type: String,
@@ -152,12 +152,18 @@ const replaceNum = (prop)=> {
 const parseNum = (prop) => {
   if (checkForNull(prop)) {
     let num;
+    if (_.isNumber(prop)) {
+      return prop;
+    }
 
     try {
-      num = parseInt(prop);
-    } catch (e) {}
+      num = num.replace(/,/g, '');
+      num = parseFloat(prop);
+    } catch (e) {
+      return undefined;
+    }
 
-    return undefined;
+    return num;
   }
 };
 

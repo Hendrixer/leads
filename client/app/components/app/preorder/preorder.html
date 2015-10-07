@@ -4,9 +4,13 @@
       <md-card>
         <md-data-table-toolbar ng-hide="filters.show">
           <div layout="row" layout-fill>
-            <div flex="20">
-              <h3>Preorder for {{ ::vm.broker.name }}</h3>
-              <h5>Leads count: {{ totalLeads }} </h5>
+            <div flex="60" layout="row"  layout-align="space-between center">
+              <h2 style="font-weight: 300;">
+                Preorder for <span style="font-weight: 500;">{{ ::vm.broker.name }}</span>
+              </h2>
+              <h3 style="font-weight: 300;">
+                Leads count: <span style="color: #00E676;font-weight: bold;">{{ totalLeads }}</span>
+              </h3>
             </div>
             <div flex="5"></div>
             <div flex="15">
@@ -43,8 +47,9 @@
                 <th name="Home Owner" ></th>
                 <th name="Credit Rating" ></th>
                 <th name="LTV" order-by="LTV"></th>
-                <th name="CLTV" order-by="CLTV"></th>
                 <th name="Loan Purpose" ></th>
+                <th name="Loan Min" ></th>
+                <th name="Loan Max" ></th>
                 <th name="Loan Description" ></th>
               </tr>
             </thead>
@@ -58,9 +63,10 @@
                 <td>{{ ::lead.address.state }}</td>
                 <td>{{ ::lead.homeOwner }}</td>
                 <td>{{ ::lead.creditRating }}</td>
-                <td>{{ ::lead.LTV }}</td>
-                <td>{{ ::lead.CLTV }}</td>
+                <td>{{ ::lead.LTV | percent:2 }}</td>
                 <td>{{ ::lead.requestedLoan.purpose }}</td>
+                <td>{{ ::lead.requestedLoan.amountMin | currency }}</td>
+                <td>{{ ::lead.requestedLoan.amountMax | currency }}</td>
                 <td>{{ ::lead.requestedLoan.description }}</td>
               </tr>
             </tbody>
