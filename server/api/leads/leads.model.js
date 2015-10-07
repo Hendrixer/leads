@@ -68,8 +68,8 @@ const LeadsSchema = new Schema({
   CLTV: Number,
 
   requestedLoan: {
-    amountMin: String,
-    amountMax: String,
+    amountMin: Number,
+    amountMax: Number,
     description: String,
     purpose: {
       type: String,
@@ -151,13 +151,18 @@ const replaceNum = (prop)=> {
 
 const parseNum = (prop) => {
   if (checkForNull(prop)) {
-    let num;
+    if (_.isNumber(prop)) {
+      return prop;
+    }
 
     try {
-      num = parseInt(prop);
-    } catch (e) {}
+      prop = prop.replace(/,/g, '');
+      prop = parseFloat(prop);
+    } catch (e) {
+      return undefined;
+    }
 
-    return undefined;
+    return prop;
   }
 };
 
@@ -193,7 +198,7 @@ LeadsSchema.statics.format = (lead) => {
       street: checkForNull(lead.ContactAddress1),
       city: checkForNull(lead.ContactCity),
       state: getState(lead.ContactStateOrProvince),
-      zip: parseNum(lead.ContactPostalCode)
+      zip: lead.ContactPostalCode //replaceNum()
     },
     phone: {
       home: replaceNum(lead.ContactHomePhone),

@@ -48,7 +48,7 @@ export const parseCsvStream = (filename) => {
     const uuid = uuidMaker.v1();
     const throttleSend = _.throttle(message => {
       messenger.sendMessage(`${config.secrets.pubnubPrefix}leads-uploaded`, message);
-    }, 2000, {trailing: false});
+    }, 800, {trailing: false});
 
     csvStream
     .pipe(csvParser())

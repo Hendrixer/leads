@@ -4,6 +4,8 @@ import find from 'lodash/collection/find';
 import map from 'lodash/collection/map';
 import reduce from 'lodash/collection/reduce';
 import merge from 'lodash/object/merge';
+import times from 'lodash/utility/times';
+
 export default class {
   constructor() {
     this.name = this.name || 'create';
@@ -17,7 +19,7 @@ export default class {
       cltv: {},
       ltv: {}
     };
-    
+
     this.loanAmounts = [
       50000,
       100000,
@@ -31,6 +33,14 @@ export default class {
       800000,
       900000
     ];
+
+    this.ltvs = times(20, i => {
+      const num = i * 5;
+      return {
+        view: `${num}%`,
+        val: num / 100
+      };
+    });
   }
 
   checkAllStates() {

@@ -11,7 +11,7 @@ const getFileSize = (bytes, decimals) => {
 };
 
 class ModalController {
-  constructor($mdDialog, $scope, Leads, $http, PubNub) {
+  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope) {
     this.modal = $mdDialog;
     this.files = [];
     this.Leads = Leads;
@@ -21,6 +21,7 @@ class ModalController {
     this.$http = $http;
     this.$scope = $scope;
     this.PubNub = PubNub;
+    this.global = $rootScope;
     $scope.$watch(()=> {
       return this.files;
     },
@@ -81,5 +82,5 @@ class ModalController {
   }
 }
 
-ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub'];
+ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope'];
 export default ModalController;

@@ -8,9 +8,10 @@ import _ from 'lodash';
 const {Schema} = mongoose;
 
 const OrdersSchema = new Schema({
-  leads: [
-    {type: Schema.Types.ObjectId, ref: 'leads'}
-  ],
+  leadsOrdered: {
+    type: Number,
+    required: true
+  },
 
   broker: {
     type: Schema.Types.ObjectId,
@@ -20,6 +21,23 @@ const OrdersSchema = new Schema({
 
   createdAt: {
     type: Date
+  }
+});
+
+const OrdersPairSchema = new Schema({
+  lead: {
+    type: Schema.Types.ObjectId,
+    ref: 'leads'
+  },
+
+  broker: {
+    type: Schema.Types.ObjectId,
+    ref: 'brokers'
+  },
+
+  order: {
+    type: Schema.Types.ObjectId,
+    ref: 'orders'
   }
 });
 
@@ -33,23 +51,25 @@ OrdersSchema.pre('save', function(next) {
 });
 
 const getBrokerOrderHistory = (broker)=> {
-  const Orders = mongoose.model('orders');
+  const OrderPairs = mongoose.model('orderspairs');
 
-  return Orders.find({broker: broker._id}).lean().execAsync()
-    .then(orders => {
-      return {
-        broker,
-        blacklist: _.reduce(orders, (leads, order) => {
-          leads = leads.concat(order.leads);
-          return leads;
-        }, [])
-      };
-    });
+  return OrderPairs
+  .find({broker: broker._id})
+  .lean()
+  .execAsync()
+  .then(pairs => {
+    return {
+      broker,
+      blacklist: _.pluck(pairs, 'lead')
+    };
+  });
 };
 
 const makeQuery = (broker, blacklist) => {
   broker = broker.toJSON();
   const basic = broker.leadFilters.basic;
+  const detail = broker.leadFilters.detail;
+
   const query = {
     creditRating: utils.makeOptionRegex(basic.creditRating, 'creditRatings'),
     'requestedLoan.purpose': utils.makeOptionRegex(basic.loanPurpose, 'loanPurposes'),
@@ -57,6 +77,25 @@ const makeQuery = (broker, blacklist) => {
     'address.state': utils.makeRegexFromStates(broker.leadFilters.states),
     _id: {$nin: blacklist}
   };
+
+  if (detail) {
+    if (detail.ltv && detail.ltv.use) {
+      query.LTV = {
+        $gte: detail.ltv.minimum,
+        $lte: detail.ltv.maximum
+      };
+    }
+
+    if (detail.requestedLoanAmount && detail.requestedLoanAmount.use) {
+      query['requestedLoan.amountMin'] = {
+        $gte: detail.requestedLoanAmount.minimum
+      };
+
+      query['requestedLoan.amountMax'] = {
+        $lte: detail.requestedLoanAmount.maximum
+      };
+    }
+  }
 
   return query;
 };
@@ -75,15 +114,6 @@ const getLeads = ({broker, blacklist, limit, skip})=> {
   }
 
   return selection.stream();
-};
-
-const createOrder = ({leads, broker}) => {
-  const Order = mongoose.model('orders');
-  return Order.saveOrder({broker, leads});
-};
-
-OrdersSchema.statics.createOrder = ({broker, leads})=> {
-  return createOrder({leads, broker});
 };
 
 OrdersSchema.statics.getCountForPreorder = (broker) => {
@@ -121,9 +151,5 @@ OrdersSchema.statics.saveOrder = (order)=> {
   });
 };
 
-OrdersSchema.methods.trimLeads = ()=> {
-  this.leads = _.size(this.leads);
-  return this;
-};
-
 export const Orders = mongoose.model('orders', OrdersSchema);
+export const OrdersPair = mongoose.model('orderspairs', OrdersPairSchema);

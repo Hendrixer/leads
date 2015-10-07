@@ -79,7 +79,6 @@ export const makeOptionRegex = (opts, type) => {
 
     return list;
   }, []));
-
   let pattern = _.reduce(props, (_pattern, prop, i) => {
     _pattern += `${prop}`;
 
@@ -90,7 +89,8 @@ export const makeOptionRegex = (opts, type) => {
     return _pattern;
   }, '^(') + ')';
 
-  return new RegExp(pattern, 'gi');
+  const reg = new RegExp(pattern, 'gi');
+  return reg;
 };
 
 export const makeRegexFromStates = (opts) => {

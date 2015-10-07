@@ -3,6 +3,7 @@ import merge from 'lodash/object/merge';
 import times from 'lodash/utility/times';
 import flatten from 'lodash/array/flatten';
 import pluck from 'lodash/collection/pluck';
+import {formatAndDownloadCsv} from '../components/app/preorder/csv';
 
 const OrderFactory = ($http, $window, $q, $timeout) => {
   let $orders = {};
@@ -23,14 +24,44 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
   }
 
   const downloadOrder = (order) => {
-    const token = window.localStorage.getItem('leads.token');
-    $window.open(`${api}/orders/redownload?access_token=${token}&order=${order._id}&filetype=${order.filetype || 'csv'}`, '_blank', '');
+    getOrderPairsByChunk(order._id, order.leadsOrdered)
+    .then(leads => {
+      const now = new Date().toLocaleDateString().replace(/\//g, '-');
+      const name = `${leads.length}-${now}`;
+      formatAndDownloadCsv(leads, name);
+    });
   };
 
-  // const createOrder = (broker)=> {
-  //   const token = window.localStorage.getItem('leads.token');
-  //   $window.open(`${api}/orders/create?access_token=${token}&broker=${broker._id}&filetype=${broker.downloadFileMime}`, '_blank', '');
-  // };
+  async function getOrderPairsByChunk(orderId, leadsOrdered) {
+    const cursor = {
+      limit: 2000,
+      skip: 0
+    };
+
+    const numOfCalls = Math.ceil(leadsOrdered / cursor.limit) + 1;
+    let callsLeft = numOfCalls;
+
+    const responses = await $q.all(times(numOfCalls, i => {
+      const promise = $http({
+        method: 'GET',
+        url: `${api}/orders/pair/${orderId}`,
+        params: {
+          limit: cursor.limit,
+          skip: cursor.skip
+        }
+      });
+
+      callsLeft--;
+      cursor.skip += cursor.limit;
+      if (callsLeft === 1) {
+        cursor.limit = ((numOfCalls - 1) * cursor.limit) - leadsOrdered;
+      }
+
+      return promise.then(({data}) => data);
+    }));
+
+    return flatten(responses);
+  };
 
   async function preorder(broker, {limit=1000, skip=0}) {
     const resp = await $http({
@@ -74,19 +105,19 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
     return resp.data.count;
   };
 
-  async function createOrder(leads, broker, opts={}) {
+  async function createOrder(leadsOrdered, broker, opts={}) {
     const resp = await $http({
       method: 'POST',
-      data: {leads, broker},
+      data: {broker, leadsOrdered},
       url: `${api}/orders`
     });
     const order = merge(resp.data, opts);
     return order;
   }
 
-  function createLargeOrder(leads, broker, opts={}) {
+  const createLargeOrder = (leads, broker, opts={}) => {
     const numOfCalls = Math.ceil(leads.length / 5000);
-    return createOrder(pluck(leads.splice(0, 5000), '_id'), broker, opts)
+    return createOrder(leads.length, broker, opts)
     .then(order => {
       return recursiveUpdate(numOfCalls, leads, order);
     });
@@ -94,10 +125,8 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
 
   const recursiveUpdate = (numOfCalls, leads, order) => {
     let callsLeft = numOfCalls;
-    return updateOrder(order._id,
-      {leads: pluck(leads.splice(0, 5000), '_id')}
-    )
-    .then(order => {
+    return createOrderPairs(order, pluck(leads.splice(0, 5000), '_id'))
+    .then(pair => {
       callsLeft--;
       if (callsLeft && leads.length) {
         return recursiveUpdate(callsLeft, leads, order);
@@ -105,13 +134,24 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
     });
   };
 
+  async function createOrderPairs(order, leads) {
+    const resp = await $http({
+      method: 'POST',
+      url: `${api}/orders/batch/${order.broker}`,
+      data: {
+        leads,
+        orderId: order._id
+      }
+    });
+    return resp.data;
+  }
+
   async function updateOrder(orderId, updated) {
     const resp = await $http({
       method: 'PUT',
       url: `${api}/orders/batch/${orderId}`,
       data: updated
     });
-
     return resp.data;
   }
 

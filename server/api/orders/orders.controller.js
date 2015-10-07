@@ -1,4 +1,4 @@
-import {Orders} from './orders.model';
+import {Orders, OrdersPair} from './orders.model';
 import _ from 'lodash';
 import {Leads} from '../leads/leads.model';
 import {Brokers} from '../brokers/brokers.model';
@@ -7,6 +7,7 @@ import * as utils from '../constants';
 import JsonStream from 'JSONStream';
 import jsonToCsv from 'json-csv';
 import es from 'event-stream';
+import uuid from 'node-uuid';
 
 export const $param = (req, res, next, orderId) => {
   Orders.findById(orderId)
@@ -24,15 +25,29 @@ export const $param = (req, res, next, orderId) => {
   });
 };
 
+export const $getOrderPair = (req, res, next) => {
+  const {limit=0, skip=0} = req.query;
+  logger.log(limit, skip, req.params.order);
+  OrdersPair.find({
+    order: req.params.order
+  })
+  .populate('lead')
+  .select('lead')
+  .limit(limit)
+  .skip(skip)
+  .execAsync()
+  .then(orders => {
+    res.json(_.pluck(orders, 'lead'));
+  })
+  .catch(e => {
+    next(e);
+  });
+};
+
 export const $getForBroker = (req, res, next)=> {
   Orders.find({broker: req.query.broker}).lean()
     .execAsync()
     .then(orders => {
-      orders = _.map(orders, order => {
-        const {length} = order.leads;
-        order.leads = length;
-        return order;
-      });
       res.json(orders);
     })
     .catch(e=> {
@@ -68,17 +83,18 @@ export const $preorder = (req, res, next) => {
 };
 
 export const $create = (req, res, next)=> {
-  Orders.createAsync({broker: req.body.broker._id})
+  // const orderNumber = uuid.v4();
+  Orders.createAsync({
+    // orderNumber,
+    broker: req.body.broker._id,
+    leadsOrdered: req.body.leadsOrdered
+  })
   .then(order => {
-    order.leads = req.body.leads;
-    order.save((err, saved) => {
-      err ? next(err) : res.json({_id: saved._id});
-    });
+    res.json(order);
   })
   .catch(e => {
     next(e);
   });
-
 };
 
 export const $put = (req, res, next)=> {
@@ -94,16 +110,33 @@ export const $put = (req, res, next)=> {
   });
 };
 
-export const $updateLeads = (req, res, next) => {
-  Orders.findByIdAndUpdateAsync(req.params.broker, {
-    $push: { leads: { $each: req.body.leads }}
-  }, {select: '_id' })
-  .then(order => {
-    res.json(order);
+export const $batchOrderPairs = (req, res, next) => {
+  const brokerId = req.params.broker;
+  const {leads, orderId} = req.body;
+  OrdersPair.createAsync(_.map(leads, lead => {
+    return {
+      lead,
+      broker: brokerId,
+      order: orderId
+    };
+  }))
+  .then(created => {
+    logger.log(`created ${created.length} orders`);
+    res.json({ok: true});
   })
   .catch(e => {
     next(e);
   });
+
+  // Orders.findByIdAndUpdateAsync(req.params.broker, {
+  //   $push: { leads: { $each: req.body.leads }}
+  // }, {select: '_id' })
+  // .then(order => {
+  //   res.json(order);
+  // })
+  // .catch(e => {
+  //   next(e);
+  // });
 };
 
 export const $destroy = (req, res, next)=> {
