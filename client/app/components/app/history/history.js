@@ -27,8 +27,12 @@ const historyModule = angular.module('history', [
 
         }],
 
-        orders: ['$stateParams', 'Orders', function($stateParams, Orders) {
+        orders: ['$stateParams', 'Orders', '$state', function($stateParams, Orders, $state) {
           const {broker} = $stateParams;
+          if (!broker) {
+            $state.go('leads');
+            return;
+          }
 
           return Orders.getOrders({broker})
             .then(()=> {
