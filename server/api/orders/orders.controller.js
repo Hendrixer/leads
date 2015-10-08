@@ -45,7 +45,6 @@ export const $getOrderPair = (req, res, next) => {
 };
 
 export const $getForBroker = (req, res, next)=> {
-  logger.log('Broker id', req.query.broker);
   Orders.find({broker: req.query.broker}).lean()
     .execAsync()
     .then(orders => {
