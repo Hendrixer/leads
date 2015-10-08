@@ -12,7 +12,7 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
     return $orders || {};
   };
 
-  async function getOrders(params={}) {
+  async function getOrders(params) {
     const resp = await $http({
       method: 'GET',
       url: `${api}/orders/broker`,

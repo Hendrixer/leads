@@ -175,18 +175,16 @@ const getDupeKey = (lead) => {
     lead.lastName = lead.lastName.toLowerCase();
   }
 
-  lead.firstName = lead.firstName.toLowerCase();
+  if (lead.firstName) {
+    lead.firstName = lead.firstName.toLowerCase();
+  }
 
   return `${lead.firstName}${lead.lastName}${lead.email}`;
 };
 
 LeadsSchema.statics.format = (lead) => {
 
-  let type = 'education';
-
-  if (lead.Mortgage1Balance || lead.Mortgage2Balance || lead.Mortgage2Payment) {
-    type = 'mortgage';
-  }
+  let type = 'mortgage';
 
   const newLead = {
     age: parseNum(lead.Age),
