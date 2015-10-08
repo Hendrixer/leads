@@ -6,7 +6,7 @@ var pm2 = require('pm2');
 var instances = process.env.WEB_CONCURRENCY || -1;
 var maxMem = process.env.WEB_MEMORY || 512;
 
-console.log('instances %s : memory %s', instances, maxMem);
+console.log('web => instances %s : memory %s', instances, maxMem);
 pm2.connect(function() {
   pm2.start({
     script: 'server/index.js',
