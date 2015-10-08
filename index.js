@@ -6,6 +6,7 @@ var pm2 = require('pm2');
 var instances = process.env.WEB_CONCURRENCY || -1;
 var maxMem = process.env.WEB_MEMORY || 512;
 
+console.log('instances %s : memory %s', instances, maxMem);
 pm2.connect(function() {
   pm2.start({
     script: 'server/index.js',
@@ -32,11 +33,11 @@ pm2.connect(function() {
       console.log('[PM2] Log streaming started');
 
       bus.on('log:out', function(packet) {
-        console.log('[App:%s] %s', packet.process.name, packet.data);
+        console.log('[App:%s] %s', packet.process.name, JSON.stringify(packet.data));
       });
 
       bus.on('log:err', function(packet) {
-        console.error('[App:%s][Err] %s', packet.process.name, packet.data);
+        console.error('[App:%s][Err] %s', packet.process.name, JSON.stringify(packet.data));
       });
     });
   });
