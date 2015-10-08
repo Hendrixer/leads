@@ -11,10 +11,12 @@ const getFileSize = (bytes, decimals) => {
 };
 
 class ModalController {
-  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope) {
+  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope, Brokers, $state, $mdToast) {
     this.modal = $mdDialog;
     this.files = [];
     this.Leads = Leads;
+    this.$state = $state;
+    this.$mdToast = $mdToast;
     this.progress = 0;
     this.startingUpload = false;
     this.uploadSize = 0;
@@ -22,6 +24,12 @@ class ModalController {
     this.$scope = $scope;
     this.PubNub = PubNub;
     this.global = $rootScope;
+    this.searchText;
+    this.broker;
+    this.brokers = [];
+    this.createBrokerObject = {name: 'create a broker', icon: 'add_circle'};
+    this.Brokers = Brokers;
+    this.hideBroker = true;
     $scope.$watch(()=> {
       return this.files;
     },
@@ -35,6 +43,49 @@ class ModalController {
       );
 
       this.uploadSize = totalSize;
+    });
+  }
+
+  selected(broker) {
+    if (broker === this.createBrokerObject) {
+      this.cancel();
+      this.$state.go('new-broker');
+    }
+
+    if (!broker.headersSet) {
+      this.$mdToast.show(
+        this.$mdToast.simple()
+          .content(`${broker.name} doesn't have headers set`)
+          .position('bottom right')
+          .hideDelay(5000)
+      );
+      this.Leads.setActiveFile({
+        file: this.files[0],
+        broker
+      });
+      this.cancel();
+      this.$state.go('headers', {broker: broker._id});
+    }
+  }
+
+  queryBrokers(text) {
+    if (!text) {
+      return [this.createBrokerObject];
+    }
+
+    const reg = new RegExp(`^${text}`, 'i');
+    const results = this.brokers.filter(broker => {
+      return reg.test(broker.name);
+    });
+
+    if (results.length) {
+      return [this.createBrokerObject, ...results];
+    }
+
+    return this.Brokers.search(text)
+    .then(brokers => {
+      this.brokers = [...this.brokers, ...brokers];
+      return [this.createBrokerObject, ...brokers];
     });
   }
 
@@ -63,6 +114,10 @@ class ModalController {
     });
   }
 
+  selectBroker() {
+    this.hideBroker = false;
+  }
+
   upload(file, data) {
     this.startingUpload = true;
     this.progressType = 'determinate';
@@ -82,5 +137,5 @@ class ModalController {
   }
 }
 
-ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope'];
+ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope', 'Brokers', '$state', '$mdToast'];
 export default ModalController;

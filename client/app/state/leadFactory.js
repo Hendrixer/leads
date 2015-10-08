@@ -2,9 +2,17 @@ import {api} from './const';
 
 const LeadFactory = ($http, $q) => {
   let $leads = [];
-
+  let activeFile = {};
   const getState = ()=> {
     return $leads || [];
+  };
+
+  const setActiveFile = (file) => {
+    activeFile = file;
+  };
+
+  const getActiveFile = () => {
+    return activeFile;
   };
 
   async function getLeads(params={}) {
@@ -87,7 +95,9 @@ const LeadFactory = ($http, $q) => {
     updateMany,
     search,
     getLeadsCount,
-    remove
+    remove,
+    setActiveFile,
+    getActiveFile
   };
 };
 

@@ -32,6 +32,25 @@ export const $get = (req, res, next)=> {
   }
 };
 
+export const $search = (req, res, next) => {
+  const {text} = req.query;
+  const reg = new RegExp(`^${text}`, 'i');
+  Brokers.find({
+    name: reg
+  })
+  // .select('name displayName email')
+  .limit(20)
+  .lean()
+  .execAsync()
+  .then(brokers => {
+    console.log(brokers, text)
+    res.json(brokers);
+  })
+  .catch(e => {
+    next(e);
+  });
+};
+
 export const $getOne = (req, res, next)=> {
   res.json(req.broker);
 };

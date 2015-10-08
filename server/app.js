@@ -27,9 +27,9 @@ Future.promisifyAll(mongoose.Model.prototype);
 Future.promisifyAll(mongoose.Query.prototype);
 mongoose.connect(config.db.url);
 
-// if (config.db.seed) {
-//   require('./config/seed');
-// }
+if (config.db.seed) {
+  require('./config/seed');
+}
 
 const app = express();
 

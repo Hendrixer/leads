@@ -1,0 +1,10 @@
+<div>
+  <h1 ng-if="vm.hasDefaultHeaders">this broker has the right headers</h1>
+  <div class="" ng-if="!vm.hasDefaultHeaders && vm.brokerHeaders">
+    <pre>
+      <code>
+        {{vm.brokerHeaders | json}}
+      </code>
+    </pre>
+  </div>
+</div>
