@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/lang/isEmpty';
+
 const getFileSize = (bytes, decimals) => {
   if (bytes === 0) {
     return '0 Byte';
@@ -11,10 +13,14 @@ const getFileSize = (bytes, decimals) => {
 };
 
 class ModalController {
-  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope, Brokers, $state, $mdToast) {
+  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope, Brokers, $state, $mdToast, Headers, Csv) {
     this.modal = $mdDialog;
+    this.safeToUpload = false;
     this.files = [];
     this.Leads = Leads;
+    this.mainFile;
+    this.Csv = Csv;
+    this.Headers = Headers;
     this.$state = $state;
     this.$mdToast = $mdToast;
     this.progress = 0;
@@ -50,22 +56,49 @@ class ModalController {
     if (broker === this.createBrokerObject) {
       this.cancel();
       this.$state.go('new-broker');
+      return;
     }
 
-    if (!broker.headersSet) {
-      this.$mdToast.show(
-        this.$mdToast.simple()
-          .content(`${broker.name} doesn't have headers set`)
-          .position('bottom right')
-          .hideDelay(5000)
-      );
-      this.Leads.setActiveFile({
-        file: this.files[0],
-        broker
-      });
-      this.cancel();
-      this.$state.go('headers', {broker: broker._id});
-    }
+    this.Headers.getHeaderForBroker(broker._id)
+    .then(header => {
+      if (!header || (isEmpty(header.fileHeaders) && !header.hasDefaultHeaders)) {
+        return this.setAndGoToHeadersConfig(broker);
+      } else {
+        return this.Csv.areHeadersSafe(this.files[0], header)
+        .then(result => {
+          if (result.areSafe) {
+            this.headersAreSafe = true;
+            if (!result.hasDefault) {
+              return this.Csv.changeHeaders(this.files[0], header);
+            } else {
+              console.log('main!!');
+              return this.files[0];
+            }
+          } else {
+            this.headersAreSafe = false;
+          }
+        })
+        .then(file => {
+          this.mainFile = file;
+          this.safeToUpload = true;
+        });
+      }
+    });
+  }
+
+  setAndGoToHeadersConfig(broker) {
+    this.$mdToast.show(
+      this.$mdToast.simple()
+        .content(`${broker.name} doesn't have headers set`)
+        .position('bottom right')
+        .hideDelay(2000)
+    );
+    this.Leads.setActiveFile({
+      file: this.files[0],
+      broker
+    });
+    this.cancel();
+    this.$state.go('headers', {broker: broker._id});
   }
 
   queryBrokers(text) {
@@ -100,10 +133,10 @@ class ModalController {
   }
 
   sign() {
-    const file = this.files[0];
+    if (!this.mainFile) return;
+    const file = this.mainFile;
     this.$http.get(`/api/leads/upload?filename=${file.name}&filetype=${file.type}`)
     .then(({data}) => {
-      // console.log(data);
       this.upload(file, data);
     });
   }
@@ -137,5 +170,5 @@ class ModalController {
   }
 }
 
-ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope', 'Brokers', '$state', '$mdToast'];
+ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope', 'Brokers', '$state', '$mdToast', 'Headers', 'Csv'];
 export default ModalController;

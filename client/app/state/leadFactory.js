@@ -7,7 +7,7 @@ const LeadFactory = ($http, $q) => {
     return $leads || [];
   };
 
-  const setActiveFile = (file) => {
+  const setActiveFile = (file={}) => {
     activeFile = file;
   };
 

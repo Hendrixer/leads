@@ -40,10 +40,8 @@ export const $search = (req, res, next) => {
   })
   // .select('name displayName email')
   .limit(20)
-  .lean()
   .execAsync()
   .then(brokers => {
-    console.log(brokers, text)
     res.json(brokers);
   })
   .catch(e => {

@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.route('/')
   .get(controller.$get)
-  .post(controller.$post);
+  .post(controller.$post)
+  .put(controller.$put);
 
 router.route('/:id')
   .get(controller.$getOne)

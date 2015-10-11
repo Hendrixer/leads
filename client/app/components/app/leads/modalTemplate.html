@@ -69,11 +69,24 @@
          </md-autocomplete>
         </div>
       </div>
+      <div ng-if="vm.headersAreSafe" layout="row" layout-align="center center"
+      style="width: 100%;">
+        <div flex="5">
+          <md-icon md-font-set="material-icons" style="color: #00E676;">
+            done
+          </md-icon>
+        </div>
+        <div flex="40">
+          <span style="font-weight: 300; font-size: 1.8rem; color: #3D5AFE;">
+            Headers are safe
+          </span>
+        </div>
+      </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
-      <md-button ng-disabled="!vm.files.length"
+      <md-button ng-disabled="!vm.safeToUpload"
       class="md-accent md-hue-3 md-raised"
-      ng-click="vm.selectBroker()">
+      ng-click="vm.sign()">
         upload
       </md-button>
       <md-button class="md-warn"

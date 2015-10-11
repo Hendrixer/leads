@@ -1,2 +1,66 @@
+@import 'jeet'
 .headers
-  color red
+  .full
+    width 100%
+  .header-table
+  .header-items
+    padding 30px
+  .scroll-box
+    height 1000px
+    overflow-y scroll
+  .md-fab
+    position fixed
+    bottom 35px
+    right 45px
+  .pill
+    cursor pointer
+    text-align center
+    display inline-block
+    background-color #00E5FF
+    color rgba(0,0,0,0.6)
+    height 35px
+    border-radius 3px
+    padding 5px
+    opacity 0.7
+    min-width 80px
+    transition transform .4s
+    vertical-align middle
+    font-weight bold
+    &.selected
+      background-color #69F0AE
+      
+  .broker-option
+    border-right 1px solid rgba(0,0,0,0.2)
+    .broker-header-row
+      margin-bottom 5px
+    .drop-box
+      height 50px
+      border 0px transparent dashed
+      border-radius 4px
+      overflow hidden
+      transition border-size .5s, border-color .5s
+      &.hover
+        border 3px dashed #00E676
+        &.no-drop
+          border 4px solid #F50057
+      .pill
+        background-color #43A047
+        color white
+  .pickup-box
+    background-color #efefef
+    .pill
+      margin 5px
+
+  .dndDragging
+    color white
+    background-color #5E35B1
+  .dndDraggingSource
+    opacity 0.3
+    transform scale(0.7)
+  .dndPlaceholder
+    text-decoration none
+    list-style-type none
+    background-color lightgrey
+    
+  ul
+    list-style-type none
