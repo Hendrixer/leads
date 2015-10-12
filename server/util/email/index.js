@@ -2,7 +2,8 @@ import nodemailer from 'nodemailer';
 import config from '../../config/env';
 import {logger} from '../logger';
 import Bluebird from 'bluebird';
-
+import fs from 'fs';
+import _ from 'lodash';
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -11,40 +12,25 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const makeDupeEmail = (stats) => {
-  let template = `
-    Here are the results of your recent upload:
-
-
-     Leads uploaded:  ${stats.tried} ✔
-    Processing Time:  ${stats.duration} ✔
-        Leads saved:  ${stats.saved} ✔
-     Possible dupes:  ${stats.dupes} ✔
-  `;
-
-  if (stats.dupes && stats.dupeLink) {
-    template += `\n
-
-    Use this link to resolve possible duplicates
-    ${stats.dupeLink}
-    `;
-  }
-
+const makeDupeEmail = (stats, toEmail) => {
+  let template = fs.readFileSync('./server/util/email/report.html');
+  stats.mailto = stats.mailto || config.secrets.adminEmail;
+  template = _.template(template)(stats);
   const options = {
     from: 'LeadOn',
-    to: config.secrets.emailTo,
+    to: toEmail || config.secrets.emailTo,
     subject: 'LeadOn upload report 😎',
-    text: template
+    html: template
   };
 
   return options;
 };
 
-const sendMail = (type, stats) => {
+const sendMail = (type, stats, toEmail) => {
   return new Bluebird((yes, no) => {
     let ops;
     if (type === 'upload') {
-      ops = makeDupeEmail(stats);
+      ops = makeDupeEmail(stats, toEmail);
     }
 
     transporter.sendMail(ops, (err, info) => {
