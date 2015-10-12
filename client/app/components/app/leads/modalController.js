@@ -53,6 +53,12 @@ class ModalController {
   }
 
   selected(broker) {
+    if (!broker) {
+      this.headersAreSafe = false;
+      this.safeToUpload = false;
+      return;
+    }
+
     if (broker === this.createBrokerObject) {
       this.cancel();
       this.$state.go('new-broker');
