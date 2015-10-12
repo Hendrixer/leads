@@ -81,6 +81,6 @@ class BrokerInfoCardController {
   }
 }
 
-BrokerInfoCardController.inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state'];
+BrokerInfoCardController.$inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state'];
 
 export default BrokerInfoCardController;
