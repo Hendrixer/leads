@@ -88,11 +88,25 @@ const CsvFactory = ['$q', $q => {
     });
   };
 
+  const createFileFromHeaders = (headers) => {
+    const brokerHeaders = values(headers);
+    const csv = Papa.unparse({
+      data: [new Array(brokerHeaders.length)],
+      fields: brokerHeaders
+    });
+
+    const newFile = new Blob([csv], { type: 'text/csv'});
+    newFile.name = 'changeForBroker.csv';
+    newFile.lastModifiedDate = new Date();
+    return newFile;
+  };
+
   return {
     getHeaders,
     getDefaultHeaders,
     areHeadersSafe,
-    changeHeaders
+    changeHeaders,
+    createFileFromHeaders
   };
 }];
 
