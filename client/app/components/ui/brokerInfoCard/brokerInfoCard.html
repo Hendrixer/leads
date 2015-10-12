@@ -134,8 +134,8 @@
         </md-content>
       </md-tab>
       <md-tab label="State Filters">
-        <md-button class="md-accent md-raised md-hue-3" ng-click="vm.checkAllStates()"
-        >select all</md-button>
+        <md-button class="md-accent md-raised md-hue-3" ng-click="vm.toggleAllStates()"
+        >toggle all</md-button>
         <md-content layout="row" layout-wrap>
           <div flex="25" ng-repeat="state in vm.states">
             <md-checkbox class="md-accent md-hue-3" ng-model="vm.broker.leadFilters.states[state.abbrev]" aria-label="{{state.name}}">{{ ::state.name }}
@@ -199,6 +199,15 @@
               columns="1" md-maxlength="150">
             </textarea>
           </md-input-container>
+        </md-content>
+      </md-tab>
+      <md-tab label="Headers">
+        <md-content layout="row" layout-align="center center"
+        style="width: 100%;">
+          <md-button ng-click="vm.editHeadersForBroker()"
+          class="md-raised md-accent md-hue-2">
+          Edit Headers
+          </md-button>
         </md-content>
       </md-tab>
       <md-tab label="Suppress">
