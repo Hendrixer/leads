@@ -82,7 +82,7 @@ const CsvFactory = ['$q', $q => {
       });
 
       const newFile = new Blob([csv], { type: 'text/csv' });
-      newFile.filename = new Date().toLocaleDateString().replace(/\//g, '-') + '.csv';
+      newFile.name = new Date().toLocaleDateString().replace(/\//g, '-') + '.csv';
       newFile.lastModifiedDate = new Date();
       return newFile;
     });

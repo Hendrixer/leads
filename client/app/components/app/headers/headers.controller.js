@@ -101,7 +101,6 @@ class HeadersController {
   }
 
   onComplete(results, file) {
-    console.log(results);
     this.brokerHeaders = results.data[0].sort();
     this.showHeadersMap = true;
     this.buckets = reduce(this.brokerHeaders, (map, header) => {

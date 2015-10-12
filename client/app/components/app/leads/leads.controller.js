@@ -114,7 +114,7 @@ class LeadsController {
           .hideDelay(5000)
       );
     }, ()=> {
-      console.log('nooope');
+
     });
   }
 }

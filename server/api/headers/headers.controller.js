@@ -28,7 +28,6 @@ export const $post = (req, res, next)=> {
 
 export const $put = (req, res, next)=> {
   const broker = req.body.broker;
-  logger.log(broker);
   Headers.findOneAndUpdateAsync(
     {broker},
     req.body,

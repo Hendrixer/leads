@@ -71,7 +71,6 @@ class ModalController {
             if (!result.hasDefault) {
               return this.Csv.changeHeaders(this.files[0], header);
             } else {
-              console.log('main!!');
               return this.files[0];
             }
           } else {
@@ -135,7 +134,8 @@ class ModalController {
   sign() {
     if (!this.mainFile) return;
     const file = this.mainFile;
-    this.$http.get(`/api/leads/upload?filename=${file.name}&filetype=${file.type}`)
+    const name = file.name || new Date().toLocaleDateString().replace(/\//g, '-') + '.csv';
+    this.$http.get(`/api/leads/upload?filename=${name}&filetype=${file.type}`)
     .then(({data}) => {
       this.upload(file, data);
     });
