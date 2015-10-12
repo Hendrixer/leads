@@ -110,7 +110,6 @@ export const $putMany = (req, res, next) => {
   }));
 
   queue.then(leads => {
-    logger.log(leads[0]);
     res.json({ok: true});
   })
   .catch(e => {
@@ -134,7 +133,6 @@ export const $destroyMany = (req, res, next)=> {
 
   Leads.removeAsync({_id: {$in: leads}})
   .then(leads => {
-    logger.log(leads);
     res.json(leads);
   })
   .catch(e => {

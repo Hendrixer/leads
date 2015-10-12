@@ -11,7 +11,7 @@
         layout="column"
         layout-align="center center"
         ngf-drop
-        ngf-multiple="true" ngf-accept="'.xlsx,.csv'"
+        ngf-multiple="true" ngf-accept="'.csv'"
         ngf-allow-dir
         ngf-drag-over-class="accept"
         ngf-select
@@ -20,30 +20,71 @@
       </div>
       
       <div layout="row">
-        <div flex="60" ng-if="vm.startingUpload" flex-order="2" layout="row">
+        <div flex="30" ng-if="vm.startingUpload" flex-order="2" layout="row">
           <div flex="60">
             <md-progress-linear
-              md-mode="{{vm.progressType}}" value="{{vm.progress}}">
+              md-mode="{{vm.progressType}}"
+              value="{{vm.progress}}">
             </md-progress-linear>
           </div>
-          <div flex="40" class="upload-percentage" ng-show="vm.progress > 0">
+          <div flex="30" class="upload-percentage" ng-show="vm.progress > 0">
             <h3>{{vm.progress}}%</h3>
           </div>
-          <!-- <md-progress-circular md-mode="indeterminate"></md-progress-circular> -->
         </div>
         <div class="file-list" layout="row" flex="30"
           flex-order="1" ng-if="vm.files.length">
           <div flex="50">
-            <span>{{ vm.files.length }} file(s)</span>
+            <span style="font-weight: 300;font-size: 1.2rem;">{{ vm.files[0].name }}</span>
           </div>
           <div flex="50">
-            <span>{{ vm.uploadSize }}</span>
+            <span style="font-weight: 300;font-size: 1.2rem;color: green;">{{ vm.uploadSize }}</span>
           </div>
+        </div>
+        <div flex="40" flex-order="3">
+          <md-autocomplete
+           ng-show="vm.files.length"
+           md-selected-item="vm.broker"
+           md-search-text="vm.searchText"
+           md-selected-item-change="vm.selected(vm.broker)"
+           md-items="broker in vm.queryBrokers(vm.searchText)"
+           md-item-text="broker.name"
+           md-min-length="2"
+           md-delay="600"
+           md-menu-class="autocomplete-custom-template"
+           placeholder="Select a broker (required)">
+           <md-item-template>
+            <span class="item-title">
+              <md-icon md-font-set="material-icons">{{broker.icon || 'account_circle'}}</md-icon>
+              <span> {{broker.name}} </span>
+            </span>
+            <span class="item-metadata">
+              <span class="item-metastat">
+                <strong>{{broker.displayName}}</strong>
+              </span>
+            </span>
+          </md-item-template>
+          <md-not-found>
+            No brokers for '{{vm.searchText}}'
+          </md-not-found>
+         </md-autocomplete>
+        </div>
+      </div>
+      <div ng-if="vm.headersAreSafe" layout="row" layout-align="center center"
+      style="width: 100%;">
+        <div flex="5">
+          <md-icon md-font-set="material-icons" style="color: #00E676;">
+            done
+          </md-icon>
+        </div>
+        <div flex="40">
+          <span style="font-weight: 300; font-size: 1.8rem; color: #3D5AFE;">
+            Headers are safe
+          </span>
         </div>
       </div>
     </md-dialog-content>
     <div class="md-actions" layout="row">
-      <md-button ng-disabled="!vm.files.length"
+      <md-button ng-disabled="!vm.safeToUpload"
       class="md-accent md-hue-3 md-raised"
       ng-click="vm.sign()">
         upload

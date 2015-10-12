@@ -110,8 +110,8 @@ LeadsSchema.index({
 });
 
 const checkForNull = (prop) => {
-  if (prop === 'NULL') {
-    return;
+  if (/^null$/ig.test(prop)) {
+    return undefined;
   } else {
     return prop;
   }
@@ -151,14 +151,15 @@ const replaceNum = (prop)=> {
 
 const parseNum = (prop) => {
   if (checkForNull(prop)) {
+
     if (_.isNumber(prop)) {
       return prop;
     }
 
-    try {
-      prop = prop.replace(/,/g, '');
-      prop = parseFloat(prop);
-    } catch (e) {
+    prop = prop.replace(/,/g, '');
+    prop = parseFloat(prop);
+
+    if (_.isNaN(prop)) {
       return undefined;
     }
 

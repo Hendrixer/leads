@@ -20,6 +20,7 @@ class Background {
       this.queue = kue.createQueue();
     }
 
+    this.timeoutKey;
     mongoose.connect(config.db.url);
 
     this.working = false;
@@ -34,6 +35,13 @@ class Background {
     logger.log('Job complteted');
     this.working = false;
     this.startJob();
+    if (this.timeoutKey) {
+      clearTimeout(this.timeoutKey);
+    }
+
+    this.timeoutKey = setTimeout(() => {
+      this.working = false;
+    }, 60000 * 6);
   }
 
   onFailed() {
@@ -67,7 +75,6 @@ class Background {
   startJob(jobName='csv') {
     if (this.working) {
       logger.log('I am busy bitch');
-      return;
     }
 
     this.queue.process(jobName, (job, done) => {

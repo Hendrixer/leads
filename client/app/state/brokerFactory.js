@@ -75,7 +75,23 @@ const BrokerFactory = ($http, $q) => {
     bucket[i] = savedBroker;
   };
 
-  return { getBrokers, getState, createBroker, getOne, edit };
+  const search = (text) => {
+    if (!text) {
+      return $q.when(false);
+    }
+
+    return $http.get(`${api}/brokers/search?text=${text}`)
+    .then(resp => resp.data);
+  };
+
+  return {
+    getBrokers,
+    getState,
+    createBroker,
+    getOne,
+    edit,
+    search
+  };
 };
 
 BrokerFactory.$inject = ['$http', '$q'];
