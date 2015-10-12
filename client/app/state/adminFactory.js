@@ -1,6 +1,8 @@
 import {api} from './const';
 
-const AdminFactory = ($http) => {
+const AdminFactory = ($http, $q) => {
+  let user;
+
   async function update(updates) {
 
     const resp = await $http.put(`${api}/admins/me`, updates);
@@ -8,12 +10,17 @@ const AdminFactory = ($http) => {
   }
 
   async function getMe() {
-    const resp = await $http.get(`${api}/admins/me`);
-    return resp.data;
+    if (user) {
+      return await $q.when(user);
+    } else {
+      const resp = await $http.get(`${api}/admins/me`);
+      user = resp.data;
+      return user;
+    }
   }
 
   return {update, getMe};
 };
 
-AdminFactory.$inject = ['$http'];
+AdminFactory.$inject = ['$http', '$q'];
 export {AdminFactory};

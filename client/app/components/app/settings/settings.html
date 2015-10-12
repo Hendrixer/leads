@@ -7,9 +7,10 @@
           <h3 class="md-display-1">settings</h3>
         </div>
         <div class="theme" layout="row">
-          <span class="title">Theme</span>
+          <span class="title"
+          flex="30">Theme</span>
           <div flex="10"></div>
-          <md-input-container flex="30">
+          <md-input-container flex="25">
             <md-select name="themeSelect"
             ng-model="vm.admin.settings.theme">
               <md-option ng-repeat="theme in vm.themes"
@@ -18,6 +19,17 @@
             </md-option>
             </md-select>
           </md-input-container>
+        </div>
+        <md-divider></md-divider>
+        <div layout="row">
+          <span class="title"
+          flex="30">Progress report email</span>
+          <div flex="10"></div>
+          <md-input-container flex="25">
+            <label>email</label>
+            <input type="email" ng-model="vm.admin.settings.email">
+          </md-input-container>
+          <small style="padding-top: 25px;">* defaults to your sign in email</small>
         </div>
         <div class="actions" layout="row"
           layout-align="end center">

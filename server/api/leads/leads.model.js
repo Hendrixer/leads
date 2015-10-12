@@ -197,7 +197,7 @@ LeadsSchema.statics.format = (lead) => {
       street: checkForNull(lead.ContactAddress1),
       city: checkForNull(lead.ContactCity),
       state: getState(lead.ContactStateOrProvince),
-      zip: lead.ContactPostalCode //replaceNum()
+      zip: parseNum(lead.ContactPostalCode) //replaceNum()
     },
     phone: {
       home: replaceNum(lead.ContactHomePhone),

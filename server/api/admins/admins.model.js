@@ -21,9 +21,8 @@ const AdminsSchema = new Schema({
       type: String,
       default: 'default'
     },
-    emailOrder: {
-      type: Boolean,
-      default: false
+    email: {
+      type: String
     }
   }
 });
