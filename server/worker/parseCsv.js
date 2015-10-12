@@ -110,7 +110,7 @@ export const handleJob = (job) => {
     });
   })
   .then(meta => {
-    return sendMail('upload', meta);
+    return sendMail('upload', meta, job.data.email);
   });
 };
 

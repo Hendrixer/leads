@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Leadon report</title>
+  </head>
+  <body itemscope="" itemtype="http://schema.org/EmailMessage">&#13;
+&#13;
+<table><tr><td></td>&#13;
+    <td width="600">&#13;
+      <div>&#13;
+        <table width="100%" cellpadding="0" cellspacing="0"><tr><td>&#13;
+              <table width="100%" cellpadding="0" cellspacing="0"><tr><td>&#13;
+                    <h1>Leads Uploaded</h1>&#13;
+                  </td>&#13;
+                </tr><tr><td>&#13;
+                    <h2>Here's your report.</h2>&#13;
+                  </td>&#13;
+                </tr><tr><td>&#13;
+                    <table><tr><td>&#13;
+                          <table cellpadding="0" cellspacing="0"><tr><td>Leads uploaded</td>&#13;
+                              <td><%= tried %></td>&#13;
+                            </tr><tr><td>Leads saved</td>&#13;
+                              <td><%= saved %></td>&#13;
+                            </tr><tr><td>Posible Duplicates</td>&#13;
+                              <td><%= dupes %></td>&#13;
+                            </tr><tr><td>Duration</td>&#13;
+                              <td><%= duration %></td>&#13;
+                            </tr>
+                            <% if (dupes && dupeLink) { %>
+                            <tr><td>Resolve Dupes</td>&#13;
+                                <td>&#13;
+                                  <a href="<%= dupeLink %>;">click here</a>&#13;
+                                </td><td>&#13;
+                              </td></tr>
+                              <% } %>
+                            </table></td>&#13;
+                      </tr></table></td>&#13;
+                </tr></table></td>&#13;
+          </tr></table><div>&#13;
+          <table width="100%"><tr><td>Questions? Email <a href="mailto:<%= mailto %>"><%= mailto %></a></td>&#13;
+            </tr></table></div></div>&#13;
+    </td>&#13;
+    <td></td>&#13;
+  </tr></table></body>
+</html>

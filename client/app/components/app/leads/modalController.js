@@ -13,9 +13,10 @@ const getFileSize = (bytes, decimals) => {
 };
 
 class ModalController {
-  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope, Brokers, $state, $mdToast, Headers, Csv) {
+  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope, Brokers, $state, $mdToast, Headers, Csv, Admins) {
     this.modal = $mdDialog;
     this.safeToUpload = false;
+    this.Admins = Admins;
     this.files = [];
     this.Leads = Leads;
     this.mainFile;
@@ -68,10 +69,12 @@ class ModalController {
     this.Headers.getHeaderForBroker(broker._id)
     .then(header => {
       if (!header || (isEmpty(header.fileHeaders) && !header.hasDefaultHeaders)) {
+        console.log('not headers');
         return this.setAndGoToHeadersConfig(broker);
       } else {
         return this.Csv.areHeadersSafe(this.files[0], header)
         .then(result => {
+          console.log('read file', result);
           if (result.areSafe) {
             this.headersAreSafe = true;
             if (!result.hasDefault) {
@@ -81,6 +84,7 @@ class ModalController {
             }
           } else {
             this.headersAreSafe = false;
+            return this.setAndGoToHeadersConfig(broker);
           }
         })
         .then(file => {
@@ -163,10 +167,14 @@ class ModalController {
     this.Leads.upload(file, data, this.onProgress.bind(this))
     .then(() => {
       this.hide();
+      return this.Admins.getMe();
+    })
+    .then(user => {
       this.PubNub.sendTo(`${$pubnubPrefix}demjobs`, {
         name: 'csv',
         url: data.url,
-        filename: data.filename
+        filename: data.filename,
+        emailTo: user.settings.email || user.email
       });
     });
   }
@@ -176,5 +184,5 @@ class ModalController {
   }
 }
 
-ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope', 'Brokers', '$state', '$mdToast', 'Headers', 'Csv'];
+ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope', 'Brokers', '$state', '$mdToast', 'Headers', 'Csv', 'Admins'];
 export default ModalController;

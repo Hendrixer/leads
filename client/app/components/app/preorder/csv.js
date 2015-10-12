@@ -10,7 +10,7 @@ export const headers = {
   State: 'address.state',
   Zip: 'address.zip',
   'Phone Home': 'phone.home',
-  'Phome Work': 'phone work',
+  'Phone Work': 'phone work',
   'Best Time To Contact': 'bestTimeToContact',
   'Home Owner': 'homeOwner',
   'Credit Rating': 'creditRating',

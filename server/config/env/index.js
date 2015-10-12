@@ -25,6 +25,7 @@ let config = {
     gmailUser: process.env.GMAIL_USER,
     gmailPass: process.env.GMAIL_PASS,
     pubnubPubKey: process.env.PUBNUB_PUBLISH_KEY,
+    adminEmail: process.env.ADMIN_EMAIL,
     pubnubSubKey: process.env.PUBNUB_SUBSCRIBE_KEY,
     pubnubPrefix: process.env.PUBNUB_PREFIX,
     redisToGo: process.env.REDISTOGO_URL,
