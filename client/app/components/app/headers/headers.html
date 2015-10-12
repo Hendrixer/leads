@@ -1,0 +1,74 @@
+<div class="page headers">
+  <div ng-if="vm.showDevtools">
+    <md-button class="md-raised"
+    ng-click="vm.randomAssign()">
+      random fill
+    </md-button>
+  </div>
+  <div layout="column" layout-padding>
+    <div layout="row" layout-align="center center" style="margin-bottom: 25px;">
+      <div flex style="text-align: center;">
+        <span style="font-weight: 300; font-size: 2rem;">
+          file headers
+        </span>
+      </div>
+      <div flex style="text-align: center;">
+        <span style="font-weight: 300; font-size: 2rem;">
+          correct headers
+        </span>
+      </div>
+    </div>
+    <md-card class="header-table full" layout="row"
+    flex="100"
+    layout-align="center center">
+      <div flex="50" class="full scroll-box broker-option">
+        <div layout="row"
+        class="broker-header-row"
+        ng-repeat-start="brokerHeader in vm.brokerHeaders">
+          <div flex="45">
+            <span>{{brokerHeader}}</span>
+          </div>
+          <div flex="55" class="drop-box" dnd-list="vm.buckets[brokerHeader]"
+          drag-over="hover"
+          ng-class="{'no-drop': vm.buckets[brokerHeader].length === 1}"
+          dnd-drop="vm.onDrop(index, item, vm.buckets[brokerHeader], 1)">
+            <span ng-repeat="dropped in vm.buckets[brokerHeader]"
+            dnd-draggable="dropped"
+            dnd-moved="vm.buckets[brokerHeader].splice($index, 1)"
+            dnd-effect-allowed="move"
+            dnd-selected="vm.activeHeader = dropped"
+            class="pill"
+            ng-class="{'selected': vm.activeHeader === dropped}">
+              {{dropped}}
+            </span>
+          </div>
+        </div>
+        <md-divider ng-repeat-end></md-divider>
+      </div>
+      <md-divider ng-repeat-end></md-divider>
+      <div
+      flex="50"
+      class="pickup-box full scroll-box"
+      dnd-drop="vm.onDrop(index, item, vm.defaultHeaders)"
+      dnd-list="vm.defaultHeaders">
+        <span
+        flex
+        dnd-draggable="header"
+        dnd-moved="vm.defaultHeaders.splice($index, 1)"
+        dnd-effect-allowed="move"
+        dnd-selected="vm.activeHeader = header"
+        class="pill"
+        ng-class="{'selected': vm.activeHeader === header}"
+        ng-repeat="header in vm.defaultHeaders">
+          {{::header}}
+        </span>
+      </div>
+    </md-card>
+    <md-button class="md-fab md-primary hue-3"
+    ng-click="vm.save()">
+    <md-icon md-font-set="material-icons">
+      done
+    </md-icon>
+    </md-button>
+  </div>
+</div>

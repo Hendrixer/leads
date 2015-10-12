@@ -5,6 +5,8 @@ import {OrderFactory} from './orderFactory';
 import AuthFactory from './auth';
 import {ResolveFactory} from './resolvesFactory';
 import {AdminFactory} from './adminFactory';
+import {CsvFactory} from './csvFactory';
+import {HeaderFactory} from './headerFactory';
 import PubnubFactory from './pubnub';
 
 const state = angular.module('state', [])
@@ -15,6 +17,8 @@ const state = angular.module('state', [])
 .factory('Auth', AuthFactory)
 .factory('Admins', AdminFactory)
 .factory('PubNub', PubnubFactory)
+.factory('Csv', CsvFactory)
+.factory('Headers', HeaderFactory)
 .name;
 
 export default state;

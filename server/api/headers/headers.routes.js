@@ -1,14 +1,12 @@
-import * as controller from './brokers.controller';
+import * as controller from './headers.controller';
 import express from 'express';
 
 const router = express.Router();
 
-router.param('id', controller.$param);
-router.get('/search', controller.$search);
-
 router.route('/')
   .get(controller.$get)
-  .post(controller.$post);
+  .post(controller.$post)
+  .put(controller.$put);
 
 router.route('/:id')
   .get(controller.$getOne)

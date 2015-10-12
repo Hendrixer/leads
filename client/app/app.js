@@ -15,6 +15,7 @@ import auth from './components/app/auth/auth';
 import resolve from './components/app/resolve/resolve';
 import preorder from './components/app/preorder/preorder';
 import settings from './components/app/settings/settings';
+import headers from './components/app/headers/headers';
 import 'raygun4js';
 
 Raygun.init($raygunApiKey).attach();
@@ -36,7 +37,8 @@ angular.module('app', [
   edit_broker,
   resolve,
   preorder,
-  settings
+  settings,
+  headers
 ])
 .run(['$mdToast', '$state', 'Auth', '$rootScope', 'Admins', ($mdToast, $state, Auth, $rootScope, Admins) => {
   $rootScope.showLoader = false;

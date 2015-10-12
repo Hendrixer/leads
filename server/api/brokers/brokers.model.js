@@ -7,7 +7,8 @@ const {Schema} = mongoose;
 const bluePrint = {
   name: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
 
   displayName: {
@@ -35,7 +36,6 @@ const bluePrint = {
     trim: true,
     unique: true,
     sparse: true,
-    index: true
   },
 
   fax: Number,
@@ -165,5 +165,8 @@ const bluePrint = {
 };
 
 const BrokersSchema = new Schema(bluePrint);
+BrokersSchema.index({
+  name: 'text'
+});
 
 export const Brokers = mongoose.model('brokers', BrokersSchema);
