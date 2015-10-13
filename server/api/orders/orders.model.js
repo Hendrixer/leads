@@ -81,18 +81,18 @@ const makeQuery = (broker, blacklist) => {
   if (detail) {
     if (detail.ltv && detail.ltv.use) {
       query.LTV = {
-        $gte: detail.ltv.minimum,
-        $lte: detail.ltv.maximum
+        $gte: detail.ltv.minimum || 0,
+        $lte: detail.ltv.maximum || 1
       };
     }
 
     if (detail.requestedLoanAmount && detail.requestedLoanAmount.use) {
       query['requestedLoan.amountMin'] = {
-        $gte: detail.requestedLoanAmount.minimum
+        $gte: detail.requestedLoanAmount.minimum || 0
       };
 
       query['requestedLoan.amountMax'] = {
-        $lte: detail.requestedLoanAmount.maximum
+        $lte: detail.requestedLoanAmount.maximum || 1000000
       };
     }
   }
