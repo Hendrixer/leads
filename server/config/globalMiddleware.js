@@ -19,6 +19,10 @@ const  storage = multer.diskStorage({
 
 const setup = (app) => {
   app.use(compress());
+  app.use('/bundle.js', (req, res, next) => {
+    res.set('X-SourceMap', 'bundle.js.map');
+    next();
+  });
   app.use(express.static(__dirname + '/../../dist'));
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
