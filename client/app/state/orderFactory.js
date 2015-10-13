@@ -116,7 +116,7 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
   }
 
   const createLargeOrder = (leads, broker, opts={}) => {
-    const numOfCalls = Math.ceil(leads.length / 5000);
+    const numOfCalls = Math.ceil(leads.length / 10000);
     return createOrder(leads.length, broker, opts)
     .then(order => {
       return recursiveUpdate(numOfCalls, leads, order);
@@ -125,7 +125,7 @@ const OrderFactory = ($http, $window, $q, $timeout) => {
 
   const recursiveUpdate = (numOfCalls, leads, order) => {
     let callsLeft = numOfCalls;
-    return createOrderPairs(order, pluck(leads.splice(0, 5000), '_id'))
+    return createOrderPairs(order, pluck(leads.splice(0, 10000), '_id'))
     .then(pair => {
       callsLeft--;
       if (callsLeft && leads.length) {
