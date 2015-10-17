@@ -20,8 +20,8 @@ class BrokerInfoCardController {
     this.savedStates = {};
     this.broker.leadFilters.detail = this.broker.leadFilters.detail || {
       requestedLoanAmount: {},
-      cltv: {},
-      ltv: {}
+      ltv: {},
+      rate: {}
     };
 
     this.loanAmounts = [
@@ -45,6 +45,14 @@ class BrokerInfoCardController {
         val: num / 100
       };
     });
+
+    this.rates = [];
+    for (let i = 0; i <= 12; i += .5) {
+      this.rates.push({
+        view: `${i}%`,
+        val: i
+      });
+    }
   }
 
   toggleAllStates() {

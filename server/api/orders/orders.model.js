@@ -95,6 +95,16 @@ const makeQuery = (broker, blacklist) => {
         $lte: detail.requestedLoanAmount.maximum || 1000000
       };
     }
+
+    if (detail.rate && detail.rate.use) {
+      query['mortgage.first.rate'] = {
+        $gte: detail.rate.minimum || 0
+      };
+
+      query['mortgage.first.rate'] = {
+        $lte: detail.rate.maximum || 20
+      };
+    }
   }
 
   return query;

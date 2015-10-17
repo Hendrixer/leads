@@ -14,7 +14,7 @@ class HeadersController {
     this.$scope = $scope;
     this.active = Leads.getActiveFile();
     this.brokerHeaders = [];
-    if (!this.active.file && active.broker) {
+    if (!this.active.file) {
       return $state.go('leads');
     }
 
@@ -81,16 +81,15 @@ class HeadersController {
     }
 
     const configMap = reduce(this.buckets, (map, bucket, fileHeader) => {
-      map[bucket[0]] = fileHeader;
+      map[fileHeader] = bucket[0];
       return map;
     }, {});
 
-    this.Headers.createHeader(configMap, this.active.broker)
-    .then(headerConfig => {
-      this.Leads.setActiveFile();
+    this.Csv.changeHeaders(this.active.file, configMap)
+    .then(file => {
+      this.Leads.setActiveFile({file});
       this.$state.go('leads');
     });
-
   }
 
   parseFile() {

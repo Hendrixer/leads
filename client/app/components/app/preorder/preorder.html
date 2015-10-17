@@ -51,6 +51,7 @@
                 <th name="Loan Min" ></th>
                 <th name="Loan Max" ></th>
                 <th name="Loan Description" ></th>
+                <th name="First Mortgage Rate" ></th>
               </tr>
             </thead>
             <tbody>
@@ -68,6 +69,7 @@
                 <td>{{ ::lead.requestedLoan.amountMin | currency }}</td>
                 <td>{{ ::lead.requestedLoan.amountMax | currency }}</td>
                 <td>{{ ::lead.requestedLoan.description }}</td>
+                <td>{{ ::lead.mortgage.first.rate }}</td>
               </tr>
             </tbody>
           </table>

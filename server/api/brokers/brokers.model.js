@@ -71,6 +71,11 @@ const bluePrint = {
         use: Boolean,
         minimum: Number,
         maximum: Number
+      },
+      rate: {
+        use: Boolean,
+        minimum: Number,
+        maximum: Number
       }
     },
     basic: {
