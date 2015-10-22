@@ -37,77 +37,71 @@ class ModalController {
     this.createBrokerObject = {name: 'create a broker', icon: 'add_circle'};
     this.Brokers = Brokers;
     this.hideBroker = true;
-    $scope.$watch(()=> {
+
+    if (this.file || $scope.file) {
+      this.resume(this.file || $scope.file);
+    }
+
+    const remove = $scope.$watch(()=> {
       return this.files;
     },
 
     (fresh, old) => {
-      const totalSize = getFileSize(
-        fresh.reduce((size, file) => {
-          size += file.size;
-          return size;
-        }, 0)
-      );
+      this.readyToUpload(fresh, remove);
+    });
+  }
 
+  readyToUpload(files, remove) {
+    const totalSize = getFileSize(
+      files.reduce((size, file) => {
+        size += file.size;
+        return size;
+      }, 0)
+    );
+
+    if (files.length) {
       this.uploadSize = totalSize;
-    });
+      this.checkFile();
+      remove && remove();
+    }
   }
 
-  selected(broker) {
-    if (!broker) {
-      this.headersAreSafe = false;
-      this.safeToUpload = false;
-      return;
-    }
+  resume(file) {
+    const theFile = file;
+    this.Leads.setActiveFile();
+    this.files[0] = theFile;
+    this.readyToUpload(this.files);
+  }
 
-    if (broker === this.createBrokerObject) {
-      this.cancel();
-      this.$state.go('new-broker');
-      return;
-    }
-
-    this.Headers.getHeaderForBroker(broker._id)
-    .then(header => {
-      if (!header || (isEmpty(header.fileHeaders) && !header.hasDefaultHeaders)) {
-        console.log('not headers');
-        return this.setAndGoToHeadersConfig(broker);
+  checkFile() {
+    return this.Csv.areHeadersSafe(this.files[0])
+    .then(areSafe => {
+      if (areSafe) {
+        this.headersAreSafe = true;
+        return this.files[0];
       } else {
-        return this.Csv.areHeadersSafe(this.files[0], header)
-        .then(result => {
-          console.log('read file', result);
-          if (result.areSafe) {
-            this.headersAreSafe = true;
-            if (!result.hasDefault) {
-              return this.Csv.changeHeaders(this.files[0], header);
-            } else {
-              return this.files[0];
-            }
-          } else {
-            this.headersAreSafe = false;
-            return this.setAndGoToHeadersConfig(broker);
-          }
-        })
-        .then(file => {
-          this.mainFile = file;
-          this.safeToUpload = true;
-        });
+        this.headersAreSafe = false;
+        return this.setAndGoToHeadersConfig();
       }
+    })
+    .then(file => {
+      this.mainFile = file;
+      this.safeToUpload = true;
     });
   }
 
-  setAndGoToHeadersConfig(broker) {
+  setAndGoToHeadersConfig() {
     this.$mdToast.show(
       this.$mdToast.simple()
-        .content(`${broker.name} doesn't have headers set`)
+        .content(`File doesn't have correct headers`)
         .position('bottom right')
         .hideDelay(2000)
     );
     this.Leads.setActiveFile({
-      file: this.files[0],
-      broker
+      file: this.files[0]
     });
     this.cancel();
-    this.$state.go('headers', {broker: broker._id});
+    this.$state.go('headers');
   }
 
   queryBrokers(text) {
@@ -176,11 +170,12 @@ class ModalController {
         filename: data.filename,
         emailTo: user.settings.email || user.email
       });
+      this.Leads.setActiveFile();
     });
   }
 
   dropping($files) {
-    this.files = this.files.concat($files);
+    this.files = [$files[0]];
   }
 }
 

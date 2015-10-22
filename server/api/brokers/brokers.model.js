@@ -71,6 +71,11 @@ const bluePrint = {
         use: Boolean,
         minimum: Number,
         maximum: Number
+      },
+      rate: {
+        use: Boolean,
+        minimum: Number,
+        maximum: Number
       }
     },
     basic: {
@@ -160,8 +165,7 @@ const bluePrint = {
         }
       }
     }
-  },
-  notes: String
+  }
 };
 
 const BrokersSchema = new Schema(bluePrint);

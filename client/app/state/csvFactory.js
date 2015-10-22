@@ -34,20 +34,9 @@ const CsvFactory = ['$q', $q => {
     return getHeaders(file)
     .then(({results, file}) => {
       const fileHeaders = results.data[0];
-      const setHeaders = values(brokerHeaders.fileHeaders);
-      const hasDefault = every(fileHeaders, header => {
+      return every(fileHeaders, header => {
         return headersMap[header];
       });
-
-      if (hasDefault) {
-        return {hasDefault, areSafe: true};
-      } else {
-        const areSafe = every(fileHeaders, header => {
-          return setHeaders.indexOf(header) !== -1;
-        });
-
-        return {areSafe, hasDefault};
-      }
     });
   };
 
@@ -62,15 +51,11 @@ const CsvFactory = ['$q', $q => {
     });
   };
 
-  const changeHeaders = (file, brokerHeaders) => {
-    return getEntireFile(file)
+  const changeHeaders = (mainFile, headersToCheck) => {
+    return getEntireFile(mainFile)
     .then(({result, file}) => {
       const headers = result.data.shift();
       const data = result.data;
-      const headersToCheck = reduce(brokerHeaders.fileHeaders, (map, val, key) => {
-        map[val] = key;
-        return map;
-      }, {});
 
       const correctHeaders = headers.map(fileHeader => {
         return headersToCheck[fileHeader];
@@ -82,7 +67,8 @@ const CsvFactory = ['$q', $q => {
       });
 
       const newFile = new Blob([csv], { type: 'text/csv' });
-      newFile.name = new Date().toLocaleDateString().replace(/\//g, '-') + '.csv';
+      const day = new Date().toLocaleDateString().replace(/\//g, '-');
+      newFile.name =  mainFile.name;
       newFile.lastModifiedDate = new Date();
       return newFile;
     });

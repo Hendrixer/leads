@@ -32,6 +32,6 @@ export const headers = [
 ];
 
 export const headersMap = headers.reduce((map, header) => {
-  map[header] = true;
+  map[header] = header;
   return map;
 }, {});

@@ -8,10 +8,12 @@ import times from 'lodash/utility/times';
 import isEmpty from 'lodash/lang/isEmpty';
 
 class BrokerInfoCardController {
-  constructor(Leads, Csv, Headers, $mdToast, $state) {
+  constructor(Leads, Csv, Headers, $mdToast, $state, Notes) {
     this.name = this.name || 'create';
     this.Leads = Leads;
     this.Csv = Csv;
+    this.Notes = Notes;
+    this.newNote = {broker: this.broker._id};
     this.Headers = Headers;
     this.states = states;
     this.$mdToast = $mdToast;
@@ -20,9 +22,10 @@ class BrokerInfoCardController {
     this.savedStates = {};
     this.broker.leadFilters.detail = this.broker.leadFilters.detail || {
       requestedLoanAmount: {},
-      cltv: {},
-      ltv: {}
+      ltv: {},
+      rate: {}
     };
+    this.notes = [];
 
     this.loanAmounts = [
       50000,
@@ -45,6 +48,18 @@ class BrokerInfoCardController {
         val: num / 100
       };
     });
+
+    this.rates = [];
+    for (let i = 0; i <= 12; i += .5) {
+      this.rates.push({
+        view: `${i}%`,
+        val: i
+      });
+    }
+    
+    if (this.broker._id) {
+      this.getNotes();
+    }
   }
 
   toggleAllStates() {
@@ -52,7 +67,7 @@ class BrokerInfoCardController {
     const trueStates = {};
 
     const states = reduce(this.states, (map, state) => {
-      map[state.abbrev] = !map[state.abbrev];
+      map[state.abbrev] = !this.broker.leadFilters.states[state.abbrev];
       return map;
     }, trueStates);
 
@@ -79,8 +94,23 @@ class BrokerInfoCardController {
       }
     });
   }
+  
+  saveNewNote() {
+    this.Notes.create(this.newNote)
+    .then(note => {
+      this.notes.push(note);
+      this.newNote.content = '';
+    })
+  }
+  
+  getNotes() {
+    this.Notes.getForBroker(this.broker._id)
+    .then(notes => {
+      this.notes = notes;
+    });
+  }
 }
 
-BrokerInfoCardController.$inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state'];
+BrokerInfoCardController.$inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state', 'Notes'];
 
 export default BrokerInfoCardController;

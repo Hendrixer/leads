@@ -16,6 +16,7 @@ import resolve from './components/app/resolve/resolve';
 import preorder from './components/app/preorder/preorder';
 import settings from './components/app/settings/settings';
 import headers from './components/app/headers/headers';
+import animate from 'angular-animate';
 import 'raygun4js';
 
 Raygun.init($raygunApiKey).attach();
@@ -24,6 +25,7 @@ angular.module('app', [
   /* 3rd party */
   ngMaterial,
   uiRouter,
+  animate,
   /* factories */
   state,
 

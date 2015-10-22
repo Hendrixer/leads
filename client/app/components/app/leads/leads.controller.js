@@ -4,10 +4,11 @@ import modalTemplate from './modalTemplate.html';
 import pluck from 'lodash/collection/pluck';
 
 class LeadsController {
-  constructor(Leads, $mdDialog, $mdToast, $scope, PubNub) {
+  constructor(Leads, $mdDialog, $mdToast, $scope, PubNub, $rootScope) {
     this.Leads = Leads;
     this.modal = $mdDialog;
     this.leads = [];
+    this.$rootScope = $rootScope;
     this.page = 1;
     this.limit = 10;
     this.orderBy = 'firstName';
@@ -34,6 +35,11 @@ class LeadsController {
         soFar = message.saved;
       }
     });
+
+    const file = this.Leads.getActiveFile().file;
+    if (file) {
+      this.showUploadModal(new Event('click'), file);
+    }
   }
 
   checkBeforeDelete(ev) {
@@ -97,15 +103,23 @@ class LeadsController {
       });
   }
 
-  showUploadModal(ev) {
-    this.modal.show({
+  showUploadModal(ev, file) {
+    const config = {
       clickOutsideToClose: true,
       parent: element(document.body),
       targetEvent: ev,
       controllerAs: 'vm',
       template: modalTemplate,
-      controller: modalController,
-    })
+      controller: modalController
+    };
+
+    if (file) {
+      const $scope = this.$rootScope.$new(true);
+      $scope.file = file;
+      config.scope = $scope;
+    }
+
+    this.modal.show(config)
     .then(success => {
       this.$mdToast.show(
         this.$mdToast.simple()
@@ -119,5 +133,5 @@ class LeadsController {
   }
 }
 
-LeadsController.$inject = ['Leads', '$mdDialog', '$mdToast', '$scope', 'PubNub'];
+LeadsController.$inject = ['Leads', '$mdDialog', '$mdToast', '$scope', 'PubNub', '$rootScope'];
 export {LeadsController};
