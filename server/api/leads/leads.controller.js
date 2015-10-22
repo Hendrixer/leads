@@ -43,6 +43,21 @@ export const $sign = (req, res, next) => {
   });
 };
 
+export const $supress = (req, res, next) => {
+  const findDupes = req.body.numbers.map(number => {
+    number = number.replace(/-/g, '');
+    number = number.parseInt(number);
+    return Lead.isThere(number);
+  })
+  .then(checks => {
+    const count = _.compact(checks).length;
+    res.json({dupes: count});
+  })
+  .catch(e => {
+    next(e);
+  });
+};
+
 export const $param = (req, res, next, id) => {
   Leads.findByIdAsync(id)
   .then(lead => {
