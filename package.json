@@ -26,7 +26,7 @@
   "dependencies": {
     "JSONStream": "^1.0.4",
     "angular": "^1.4.4",
-    "angular-animate": "^1.4.4",
+    "angular-animate": "^1.4.7",
     "angular-aria": "^1.4.4",
     "angular-drag-and-drop-lists": "^1.2.3",
     "angular-material": "^0.10.1",

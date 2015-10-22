@@ -8,7 +8,7 @@ future.promisifyAll(Notes.prototype);
 export const $get = (req, res, next)=> {
   Notes.findAsync()
     .then(notess => {
-      req.json(notess);
+      res.json(notess);
     })
     .catch(next.bind.next);
 };
@@ -28,7 +28,13 @@ export const $getOne = (req, res, next)=> {
 };
 
 export const $post = (req, res, next)=> {
-
+  Notes.createAsync(req.body)
+  .then(note => {
+    res.json(note);
+  })
+  .catch(e => {
+    next(e);
+  });
 };
 
 export const $put = (req, res, next)=> {
