@@ -1,3 +1,4 @@
+tcolor = alpha(black, .38)
 .brokers-box
   md-content
     background-color white !important
@@ -22,3 +23,17 @@
       .date
         color rgba(0,0,0,0.3)
         margin-bottom 6px
+  .file-drop-box
+    border dashed 3px tcolor
+    min-width 1000px
+    min-height 200px
+    cursor pointer
+    margin-bottom 20px
+    transform border .3s ease
+    .cta
+      color tcolor
+      font-weight 300
+    &.accept
+      border dashed 3px #18FFFF
+      .cta
+        color #00E5FF

@@ -1,4 +1,7 @@
 import {api} from './const';
+import times from 'lodash/utility/times';
+import flatten from 'lodash/array/flatten';
+import sum from 'lodash/math/sum';
 
 const LeadFactory = ($http, $q) => {
   let $leads = [];
@@ -88,6 +91,21 @@ const LeadFactory = ($http, $q) => {
     });
   };
 
+  const batchSupress = (numbers) => {
+    const count = numbers.length;
+    const numOfCalls = Math.ceil(count / 20000);
+    return $q.all(times(numOfCalls, i => {
+      const nums = numbers.splice(0, 20000);
+      return $http({
+        url: `${api}/leads/supress`,
+        method: 'POST',
+        data: {numbers: nums}
+      })
+      .then(({data}) => data.dupes);
+    }))
+    .then(counts => sum(counts));
+  };
+
   return {
     upload,
     getLeads,
@@ -97,7 +115,8 @@ const LeadFactory = ($http, $q) => {
     getLeadsCount,
     remove,
     setActiveFile,
-    getActiveFile
+    getActiveFile,
+    batchSupress
   };
 };
 

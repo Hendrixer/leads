@@ -246,8 +246,28 @@
         </md-content>
       </md-tab>
       <md-tab label="Suppress">
-        <md-content>
-          <h3>coming soon!</h3>
+        <md-content layout="column" layout-align="center center">
+          <md-progress-circular
+            class="fade md-accent md-hue-3"
+            md-diameter="100"
+            ng-if="vm.fileLoading"
+            md-mode="indeterminate">
+          </md-progress-circular>
+          <div class="file-drop-box"
+            ng-if="!vm.fileLoading"
+            flex="70"
+            layout="column"
+            layout-align="center center"
+            ngf-drop
+            ngf-accept="'.csv'"
+            ngf-drag-over-class="accept"
+            ngf-select
+            ng-model-options="{updateOn: 'change drop paste'}"
+            ngf-change="vm.fileDropped($file, $newFiles, $event, $rejected)">
+            <h1 class="cta">
+              click or drag to upload phone numbers
+            </h1>
+          </div>
         </md-content>
       </md-tab>
     </md-tabs>

@@ -92,7 +92,8 @@ const CsvFactory = ['$q', $q => {
     getDefaultHeaders,
     areHeadersSafe,
     changeHeaders,
-    createFileFromHeaders
+    createFileFromHeaders,
+    getEntireFile
   };
 }];
 

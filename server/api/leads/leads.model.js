@@ -282,16 +282,16 @@ LeadsSchema.statics.isThere = (number) => {
     Leads.findOneAsync({
       $or: [{'phone.home': number}, {'phone.work': number}]
     })
-    .then(() => {
-      resolve(false);
-    })
-    .catch(e => {
-      if (dupeErr(e)) {
-        resolve(true);
+    .then(lead => {
+      if (lead) {
+        res(true);
       } else {
-        resolve(false);
+        res(false);
       }
     })
+    .catch(e => {
+      res(false);
+    });
   });
 };
 
