@@ -6,6 +6,8 @@ import reduce from 'lodash/collection/reduce';
 import merge from 'lodash/object/merge';
 import times from 'lodash/utility/times';
 import isEmpty from 'lodash/lang/isEmpty';
+import flatten from 'lodash/array/flatten';
+import isNum from 'lodash/lang/isFinite';
 
 class BrokerInfoCardController {
   constructor(Leads, Csv, Headers, $mdToast, $state, Notes) {
@@ -56,7 +58,7 @@ class BrokerInfoCardController {
         val: i
       });
     }
-    
+
     if (this.broker._id) {
       this.getNotes();
     }
@@ -74,40 +76,55 @@ class BrokerInfoCardController {
     merge(this.broker.leadFilters.states, states);
   }
 
-  editHeadersForBroker() {
-    this.Headers.getHeaderForBroker(this.broker._id)
-    .then(header => {
-      if (!header || isEmpty(header.fileHeaders)) {
-        this.$mdToast.show(
-          this.$mdToast.simple()
-            .content(`Upload a file for this broker 1st`)
-            .position('bottom right')
-            .hideDelay(2000)
-        );
-      } else {
-        const file = this.Csv.createFileFromHeaders(header.fileHeaders);
-        this.Leads.setActiveFile({
-          file,
-          broker: this.broker
-        });
-        this.$state.go('headers');
-      }
-    });
-  }
-  
   saveNewNote() {
     this.Notes.create(this.newNote)
     .then(note => {
       this.notes.push(note);
       this.newNote.content = '';
-    })
+    });
   }
-  
+
   getNotes() {
     this.Notes.getForBroker(this.broker._id)
     .then(notes => {
       this.notes = notes;
     });
+  }
+
+  fileDropped(file, newFile, event, rejected) {
+    if (rejected) {
+      console.error(rejected);
+      return;
+    }
+
+    this.fileLoading = true;
+    this.Csv.getEntireFile(file)
+    .then(({result, file}) => {
+      const {data} = result;
+      const headers = data[0];
+      let numbers = [];
+
+      if (isNum(parseInt(headers[0]))) {
+        numbers = numbers.concat(headers);
+      }
+
+      numbers = numbers.concat(...flatten(data.slice(1)));
+      return this.Leads.batchSupress(numbers);
+    })
+    .then(dupes => {
+      this.fileLoading = false;
+      this.showDupeCount(dupes);
+    });
+    return true;
+  }
+
+  showDupeCount(count=0) {
+    this.$mdToast.show(
+      this.$mdToast.simple()
+      .content(`There were ${count} dupe(s)`)
+      .position('bottom right')
+      .hideDelay(6000)
+    );
   }
 }
 

@@ -276,6 +276,25 @@ LeadsSchema.statics.saveDupe = (lead)=> {
   });
 };
 
+LeadsSchema.statics.isThere = (number) => {
+  const Leads = mongoose.model('leads');
+  return new Promise((res, rej) => {
+    Leads.findOneAsync({
+      $or: [{'phone.home': number}, {'phone.work': number}]
+    })
+    .then(lead => {
+      if (lead) {
+        res(true);
+      } else {
+        res(false);
+      }
+    })
+    .catch(e => {
+      res(false);
+    });
+  });
+};
+
 LeadsSchema.methods.saveDupe = () => {
   const Leads = mongoose.model('leads');
   return Leads.saveDupe([this]);
