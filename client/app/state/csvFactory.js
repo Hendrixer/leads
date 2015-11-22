@@ -2,6 +2,7 @@ import {headers, headersMap} from './defaultHeaders';
 import every from 'lodash/collection/every';
 import values from 'lodash/object/values';
 import reduce from 'lodash/collection/reduce';
+import compact from 'lodash/array/compact';
 
 const CsvFactory = ['$q', $q => {
   const config = {
@@ -34,7 +35,7 @@ const CsvFactory = ['$q', $q => {
     return getHeaders(file)
     .then(({results, file}) => {
       const fileHeaders = results.data[0];
-      return every(fileHeaders, header => {
+      return every(compact(fileHeaders), header => {
         return headersMap[header];
       });
     });

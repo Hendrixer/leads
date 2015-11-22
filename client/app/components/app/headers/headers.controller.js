@@ -1,16 +1,16 @@
-import every from 'lodash/collection/every';
+import filter from 'lodash/collection/filter';
 import uniq from 'lodash/array/uniq';
 import values from 'lodash/object/values';
 import reduce from 'lodash/collection/reduce';
 import sortBy from 'lodash/collection/sortBy';
 import forEach from 'lodash/collection/forEach';
 import random from 'lodash/number/random';
+import size from 'lodash/collection/size';
 
 class HeadersController {
   constructor(Leads, $mdToast, $scope, Headers, Csv, $state) {
-    const {headers, headersMap} = Csv.getDefaultHeaders();
+    const {headers} = Csv.getDefaultHeaders();
     this.headers = headers;
-    this.headersMap = headersMap;
     this.$scope = $scope;
     this.active = Leads.getActiveFile();
     this.brokerHeaders = [];
@@ -37,6 +37,12 @@ class HeadersController {
 
     this.Leads = Leads;
     this.parseFile();
+    this.fileIsFixed = false;
+    $scope.$on('$stateChangeStart', e => {
+      if (!this.fileIsFixed) {
+        this.Leads.setActiveFile({file: false});
+      }
+    });
   }
 
   randomAssign() {
@@ -47,7 +53,7 @@ class HeadersController {
 
       const index = random(0, this.defaultHeaders.length - 1);
       const header = this.defaultHeaders.splice(index, 1)[0];
-      this.buckets[brokerHeader].push(header);
+      header && this.buckets[brokerHeader].push(header);
     });
   }
 
@@ -64,10 +70,10 @@ class HeadersController {
   }
 
   areAllBucketsFilled() {
-    return every(this.buckets, bucket => {
+    const bucketsWithMaps =  filter(this.buckets, bucket => {
       return bucket.length;
-    });
-
+    }).length;
+    return bucketsWithMaps === size(this.headers);
   }
 
   save() {
@@ -88,6 +94,7 @@ class HeadersController {
     this.Csv.changeHeaders(this.active.file, configMap)
     .then(file => {
       this.Leads.setActiveFile({file});
+      this.fileIsFixed = true;
       this.$state.go('leads');
     });
   }
