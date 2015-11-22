@@ -19,7 +19,6 @@ import headers from './components/app/headers/headers';
 import animate from 'angular-animate';
 import 'raygun4js';
 
-console.log(angular);
 Raygun.init($raygunApiKey).attach();
 
 angular.module('app', [
