@@ -38,10 +38,15 @@ class HeadersController {
     this.Leads = Leads;
     this.parseFile();
     this.fileIsFixed = false;
-    $scope.$on('$stateChangeStart', e => {
+    const undoRoutes = $scope.$on('$stateChangeStart', e => {
       if (!this.fileIsFixed) {
         this.Leads.setActiveFile({file: false});
       }
+    });
+
+    const undoDestroy = $scope.$on('$destroy', () => {
+      undoRoutes();
+      undoDestroy();
     });
   }
 

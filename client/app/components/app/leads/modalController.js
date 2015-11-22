@@ -138,8 +138,7 @@ class ModalController {
   sign() {
     if (!this.mainFile) return;
     const file = this.mainFile;
-    const name = file.name || new Date().toLocaleDateString().replace(/\//g, '-') + '.csv';
-    this.$http.get(`/api/leads/upload?filename=${name}&filetype=${file.type}`)
+    this.Csv.sign(file.name, file)
     .then(({data}) => {
       this.upload(file, data);
     });
@@ -158,7 +157,7 @@ class ModalController {
   upload(file, data) {
     this.startingUpload = true;
     this.progressType = 'determinate';
-    this.Leads.upload(file, data, this.onProgress.bind(this))
+    this.Csv.upload(file, data, this.onProgress.bind(this))
     .then(() => {
       this.hide();
       return this.Admins.getMe();

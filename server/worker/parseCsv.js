@@ -146,3 +146,40 @@ export const saveDupe = (dupe, uuid) => {
     });
   });
 };
+
+export const scrubPhones = (job) => {
+  console.log('scrub');
+  return new Promise((res, rej) => {
+    const csvStream = getFileStreamFromS3(job.data.filename);
+    const startTime = Date.now();
+    const meta = {
+      dupes: 0,
+      tried: 0,
+      startTime
+    };
+    csvStream
+    .pipe(csvParser())
+    .pipe(es.map((data, done) => {
+      meta.tried++;
+      return Leads.isThere(_.values(data)[0])
+      .then(dupe => {
+        dupe && meta.dupes++;
+        done();
+      })
+      .catch(e => {
+        done();
+      });
+    }))
+    .on('end', ()=> {
+      meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
+      console.log(meta);
+      res(meta);
+    })
+    .on('error', () => {
+      rej(e);
+    });
+  })
+  .then(meta => {
+    sendMail('phone', meta, job.data.email);
+  });
+};

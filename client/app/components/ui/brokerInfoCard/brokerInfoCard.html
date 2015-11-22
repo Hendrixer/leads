@@ -188,7 +188,7 @@
               </md-input-container>
             </div>
           </div>
-          
+
           <div class="" layout="row" layout-align="start center" layout-fill>
             <md-checkbox
             class="md-accent md-hue-3"
@@ -213,7 +213,7 @@
           </div>
         </md-content>
       </md-tab>
-      
+
       <md-tab label="Notes">
         <md-content layout="column" layout-align="center center">
           <div class="notes-list">
@@ -247,12 +247,17 @@
       </md-tab>
       <md-tab label="Suppress">
         <md-content layout="column" layout-align="center center">
-          <md-progress-circular
-            class="fade md-accent md-hue-3"
-            md-diameter="100"
-            ng-if="vm.fileLoading"
-            md-mode="indeterminate">
-          </md-progress-circular>
+          <div flex="30" ng-if="vm.fileLoading" flex-order="2" layout="row">
+            <div flex="60">
+              <md-progress-linear
+                md-mode="{{vm.progressType}}"
+                value="{{vm.progress}}">
+              </md-progress-linear>
+            </div>
+            <div flex="30" class="upload-percentage" ng-show="vm.progress > 0">
+              <h3>{{vm.progress}}%</h3>
+            </div>
+          </div>
           <div class="file-drop-box"
             ng-if="!vm.fileLoading"
             flex="70"

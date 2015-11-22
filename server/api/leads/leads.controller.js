@@ -45,8 +45,8 @@ export const $sign = (req, res, next) => {
 
 export const $supress = (req, res, next) => {
   const findDupes = Promise.all(req.body.numbers.map(number => {
-    number = number.replace(/-/g, '');
-    number = parseInt(number);
+    // number = number.replace(/-/g, '');
+    // number = parseInt(number);
     if (_.isFinite(number)) {
       return Leads.isThere(number);
     } else {
@@ -54,6 +54,7 @@ export const $supress = (req, res, next) => {
     }
   }))
   .then(checks => {
+    console.log(checks);
     const count = _.size(_.compact(checks));
     res.json({dupes: count});
   })

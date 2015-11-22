@@ -2,7 +2,7 @@ import EventEmitter from 'eventemitter3';
 import kue from 'kue';
 import {logger} from '../util/logger';
 import Future from 'bluebird';
-import {handleJob} from './parseCsv';
+import {handleJob, scrubPhones} from './parseCsv';
 import mongoose from 'mongoose';
 import config from '../config/env';
 
@@ -26,7 +26,7 @@ class Background {
     this.working = false;
     this.queue.on('job enqueue', (id, type) => {
       logger.log(`Job ${id} queued of type ${type}`);
-      this.startJob();
+      this.startJob(type);
     });
 
   }
@@ -72,6 +72,25 @@ class Background {
     });
   }
 
+  pickWorker(jobName, job, done) {
+    console.log('pick worker');
+    let task;
+    if (jobName === 'csv') {
+      task = handleJob(job);
+    }
+
+    if (jobName === 'phone') {
+      task = scrubPhones(job);
+    }
+
+    task.then(()=> {
+      done();
+    })
+    .catch(e => {
+      done(e);
+    });
+  }
+
   startJob(jobName='csv') {
     if (this.working) {
       logger.log('I am busy bitch');
@@ -80,13 +99,7 @@ class Background {
     this.queue.process(jobName, (job, done) => {
       this.working = true;
       logger.log('about to process');
-      handleJob(job)
-      .then(() => {
-        done();
-      })
-      .catch(e => {
-        done(e);
-      });
+      this.pickWorker(jobName, job, done);
     });
   }
 }

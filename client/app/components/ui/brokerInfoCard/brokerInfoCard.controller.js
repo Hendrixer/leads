@@ -10,11 +10,14 @@ import flatten from 'lodash/array/flatten';
 import isNum from 'lodash/lang/isFinite';
 
 class BrokerInfoCardController {
-  constructor(Leads, Csv, Headers, $mdToast, $state, Notes) {
+  constructor(Leads, Csv, Headers, $mdToast, $state, Notes, $scope, Admins, PubNub) {
+    this.$scope = $scope;
     this.name = this.name || 'create';
     this.Leads = Leads;
     this.Csv = Csv;
     this.Notes = Notes;
+    this.Admins = Admins;
+    this.PubNub = PubNub;
     this.newNote = {broker: this.broker._id};
     this.Headers = Headers;
     this.states = states;
@@ -91,6 +94,12 @@ class BrokerInfoCardController {
     });
   }
 
+  onProgress(e) {
+    this.$scope.$apply(()=> {
+      this.progress = Math.ceil((e.loaded / e.total) * 100);
+    });
+  }
+
   fileDropped(file, newFile, event, rejected) {
     if (rejected) {
       console.error(rejected);
@@ -101,33 +110,43 @@ class BrokerInfoCardController {
     this.Csv.getEntireFile(file)
     .then(({result, file}) => {
       const {data} = result;
-      const headers = data[0];
-      let numbers = [];
+      const firstHeader = data[0][0];
 
-      if (isNum(parseInt(headers[0]))) {
-        numbers = numbers.concat(headers);
+      if (!isNum(parseInt(firstHeader))) {
+        data.shift();
       }
 
-      numbers = numbers.concat(...flatten(data.slice(1)));
-      return this.Leads.batchSupress(numbers);
+      return this.Csv.sign(file.name, file);
     })
-    .then(dupes => {
-      this.fileLoading = false;
-      this.showDupeCount(dupes);
+    .then(({data}) => {
+      return this.Csv.upload(file, data, this.onProgress.bind(this))
+      .then(() => {
+        return this.Admins.getMe();
+      })
+      .then(user => {
+        this.fileLoading = false;
+        this.PubNub.sendTo(`${$pubnubPrefix}demjobs`, {
+          name: 'phone',
+          url: data.url,
+          filename: data.filename,
+          emailTo: user.settings.email || user.email
+        });
+        this.showMessage();
+      });
     });
     return true;
   }
 
-  showDupeCount(count=0) {
+  showMessage() {
     this.$mdToast.show(
       this.$mdToast.simple()
-      .content(`There were ${count} dupe(s)`)
+      .content(`You'll be notified by email`)
       .position('bottom right')
-      .hideDelay(6000)
+      .hideDelay(4500)
     );
   }
 }
 
-BrokerInfoCardController.$inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state', 'Notes'];
+BrokerInfoCardController.$inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state', 'Notes', '$scope', 'Admins', 'PubNub'];
 
 export default BrokerInfoCardController;
