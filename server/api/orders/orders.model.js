@@ -97,16 +97,12 @@ const makeQuery = (broker, blacklist) => {
     }
 
     if (detail.rate && detail.rate.use) {
-      query['mortgage.first.rate'] = {
-        $gte: detail.rate.minimum || 0
-      };
-
-      query['mortgage.first.rate'] = {
-        $lte: detail.rate.maximum || 20
-      };
+      const key = 'mortgage.first.rate';
+      query[key] = {};
+      query[key].$gte = detail.rate.minimum || 0;
+      query[key].$lte = detail.rate.maximum || 20;
     }
   }
-
   return query;
 };
 
