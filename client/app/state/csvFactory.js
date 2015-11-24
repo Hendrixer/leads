@@ -2,8 +2,9 @@ import {headers, headersMap} from './defaultHeaders';
 import every from 'lodash/collection/every';
 import values from 'lodash/object/values';
 import reduce from 'lodash/collection/reduce';
+import compact from 'lodash/array/compact';
 
-const CsvFactory = ['$q', $q => {
+const CsvFactory = ['$q', '$http', ($q, $http) => {
   const config = {
     headers: {
       preview: 2,
@@ -34,7 +35,7 @@ const CsvFactory = ['$q', $q => {
     return getHeaders(file)
     .then(({results, file}) => {
       const fileHeaders = results.data[0];
-      return every(fileHeaders, header => {
+      return every(compact(fileHeaders), header => {
         return headersMap[header];
       });
     });
@@ -43,10 +44,11 @@ const CsvFactory = ['$q', $q => {
   const getEntireFile = (file) => {
     return $q((resolve, reject) => {
       const parseConfig = config.whole;
-      parseConfig.complete = (result, file) => {
+      parseConfig.complete = (result) => {
         resolve({result, file});
       };
 
+      console.log('before parse ', file);
       Papa.parse(file, parseConfig);
     });
   };
@@ -87,7 +89,44 @@ const CsvFactory = ['$q', $q => {
     return newFile;
   };
 
+  const getFileName = () => {
+    return new Date().toLocaleDateString().replace(/\//g, '-') + '.csv';
+  };
+
+  const sign = (name=getFileName(), file) => {
+    return $http.get(`/api/leads/upload?filename=${name}&filetype=${file.type}`);
+  };
+
+  function noop() {}
+
+  const upload = (file, data, onProgress=noop) => {
+    return $q((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = () => {
+        if (xhr.status < 400) {
+          resolve({status: xhr.status});
+        } else {
+          reject(new Error(xhr.status));
+        }
+      };
+
+      xhr.onerror = (e) => {
+        reject(new Error('Could not upload file', e));
+      };
+
+      xhr.upload.onprogress = (e) => {
+        onProgress(e);
+      };
+
+      xhr.open('PUT', data.signed_request, true);
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
+      xhr.send(file);
+    });
+  };
+
   return {
+    upload,
+    sign,
     getHeaders,
     getDefaultHeaders,
     areHeadersSafe,

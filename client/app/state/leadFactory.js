@@ -3,7 +3,7 @@ import times from 'lodash/utility/times';
 import flatten from 'lodash/array/flatten';
 import sum from 'lodash/math/sum';
 
-const LeadFactory = ($http, $q) => {
+const LeadFactory = ($http, $q, $interval) => {
   let $leads = [];
   let activeFile = {};
   const getState = ()=> {
@@ -66,48 +66,27 @@ const LeadFactory = ($http, $q) => {
     return resp.data;
   };
 
-  const upload = (file, data, onProgress) => {
-    return $q((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => {
-        if (xhr.status < 400) {
-          resolve({status: xhr.status});
-        } else {
-          reject(new Error(xhr.status));
-        }
-      };
-
-      xhr.onerror = (e) => {
-        reject(new Error('Could not upload file', e));
-      };
-
-      xhr.upload.onprogress = (e) => {
-        onProgress(e);
-      };
-
-      xhr.open('PUT', data.signed_request, true);
-      xhr.setRequestHeader('x-amz-acl', 'public-read');
-      xhr.send(file);
-    });
+  const checkForDupes = (numbers) => {
+    return $http({
+      url: `${api}/leads/supress`,
+      method: 'POST',
+      data: {numbers}
+    })
+    .then(({data}) => data.dupes);
   };
 
   const batchSupress = (numbers) => {
+
     const count = numbers.length;
     const numOfCalls = Math.ceil(count / 20000);
+    const dupes = [];
     return $q.all(times(numOfCalls, i => {
-      const nums = numbers.splice(0, 20000);
-      return $http({
-        url: `${api}/leads/supress`,
-        method: 'POST',
-        data: {numbers: nums}
-      })
-      .then(({data}) => data.dupes);
+      return checkForDupes(numbers.splice(0, 20000));
     }))
     .then(counts => sum(counts));
   };
 
   return {
-    upload,
     getLeads,
     getState,
     updateMany,
@@ -120,5 +99,5 @@ const LeadFactory = ($http, $q) => {
   };
 };
 
-LeadFactory.$inject = ['$http', '$q'];
+LeadFactory.$inject = ['$http', '$q', '$interval'];
 export {LeadFactory};

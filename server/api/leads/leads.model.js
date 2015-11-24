@@ -41,8 +41,16 @@ const LeadsSchema = new Schema({
   },
 
   phone: {
-    home: Number,
-    work: Number,
+    home: {
+      unique: true,
+      type: Number,
+      sparse: true
+    },
+    work: {
+      unique: true,
+      type: Number,
+      sparse: true
+    },
   },
 
   email: {
@@ -278,20 +286,11 @@ LeadsSchema.statics.saveDupe = (lead)=> {
 
 LeadsSchema.statics.isThere = (number) => {
   const Leads = mongoose.model('leads');
-  return new Promise((res, rej) => {
-    Leads.findOneAsync({
-      $or: [{'phone.home': number}, {'phone.work': number}]
-    })
-    .then(lead => {
-      if (lead) {
-        res(true);
-      } else {
-        res(false);
-      }
-    })
-    .catch(e => {
-      res(false);
-    });
+  return Leads.findOneAsync({
+    $or: [{'phone.home': number}, {'phone.work': number}]
+  })
+  .then(lead => {
+    return Boolean(lead);
   });
 };
 

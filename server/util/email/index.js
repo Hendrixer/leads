@@ -11,15 +11,29 @@ const transporter = nodemailer.createTransport({
     pass: config.secrets.gmailPass
   }
 });
+let phoneTemplate = fs.readFileSync('./server/util/email/phones.html');
+let leadTemplate = fs.readFileSync('./server/util/email/report.html');
 
 const makeDupeEmail = (stats, toEmail) => {
-  let template = fs.readFileSync('./server/util/email/report.html');
   stats.mailto = stats.mailto || config.secrets.adminEmail;
-  template = _.template(template)(stats);
+  const template = _.template(leadTemplate)(stats);
   const options = {
     from: 'LeadOn',
     to: toEmail || config.secrets.emailTo,
     subject: 'LeadOn upload report 😎',
+    html: template
+  };
+
+  return options;
+};
+
+const makePhoneEmail = (stats, toEmail) => {
+  stats.mailto = stats.mailto || config.secrets.adminEmail;
+  const template = _.template(phoneTemplate)(stats);
+  const options = {
+    from: 'LeadOn',
+    to: toEmail || config.secrets.emailTo,
+    subject: 'LeadOn phone supression report 😎',
     html: template
   };
 
@@ -31,6 +45,10 @@ const sendMail = (type, stats, toEmail) => {
     let ops;
     if (type === 'upload') {
       ops = makeDupeEmail(stats, toEmail);
+    }
+
+    if (type === 'phone') {
+      ops = makePhoneEmail(stats, toEmail);
     }
 
     transporter.sendMail(ops, (err, info) => {

@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "gulp",
+    "worker": "node server/worker/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node_modules/.bin/gulp prod",
-    "heroku-local": "gulp bundle;NODE_ENV=production;heroku local"
+    "heroku-local": "gulp bundle;NODE_ENV=production;heroku local",
+    "dev": "gulp dev"
   },
   "repository": {
     "type": "git",

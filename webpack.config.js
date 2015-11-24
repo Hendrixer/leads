@@ -19,6 +19,30 @@ module.exports = {
   output: {
     filename: 'bundle.js'
   },
+
+  // externals: {
+  //   angular: {
+  //     root: 'angular',
+  //     commonjs: 'angular',
+  //     commonjs2: 'angular'
+  //   },
+  //   'angular-material': {
+  //     commonjs2: 'angular-material',
+  //     commonjs: 'angular-material'
+  //   },
+  //   'angular-aria': {
+  //     commonjs: 'angular-aria',
+  //     commonjs2: 'angular-aria'
+  //   },
+  //   'angular-ui-router': {
+  //     commonjs: 'angular-ui-router',
+  //     commonjs2: 'angular-ui-router'
+  //   },
+  //   'angular-animate': {
+  //     commonjs2: 'angular-animate',
+  //     commonjs: 'angular-animate'
+  //   }
+  // },
   devtool: 'source-map',
   module: {
     loaders: [
@@ -27,8 +51,7 @@ module.exports = {
       { test: /\.styl$/, loader: 'style!css!stylus' },
       { test: /\.css$/, loader: 'style!css' },
       { test: /\.html$/, loader: 'raw' }
-    ],
-    noParse: [pathToNgAnimate, pathToNg, pathToUiRouter, pathToNgMaterial]
+    ]
   },
 
   plugins: [

@@ -37,11 +37,11 @@ const createDocuments = (pairs) => {
   }));
 };
 
-// clean(Brokers, Orders, Resolves)
-// .then(()=> {
-//   logger.log('so clean');
-// })
-// .then(removed => createDocuments(mockPairs))
-// .then(created => {
-//   logger.log(`seeded ${created[0].length} documents`);
-// });
+clean(Brokers, Orders, Resolves)
+.then(()=> {
+  logger.log('so clean');
+})
+.then(removed => createDocuments(mockPairs))
+.then(created => {
+  logger.log(`seeded ${created[0].length} documents`);
+});
