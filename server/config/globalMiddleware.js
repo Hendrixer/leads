@@ -7,6 +7,16 @@ import compress from 'compression';
 import raygun from '../util/raygun';
 import path from 'path';
 import config from './env';
+
+const getLogConfig = (env) => {
+  if (env !== 'production') return {};
+  return {
+    skip(req, res) {
+      return res.statusCode < 400;
+    }
+  };
+};
+
 const  storage = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, 'uploads');
@@ -24,7 +34,7 @@ const setup = (app) => {
     next();
   });
   app.use(express.static(__dirname + '/../../dist'));
-  app.use(morgan('dev'));
+  app.use(morgan('dev', getLogConfig(process.env.NODE_ENV)));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(multer({storage}).array('leads'));
   app.use(bodyParser.json({limit: 7000000}));

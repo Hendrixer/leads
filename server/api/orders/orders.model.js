@@ -103,8 +103,6 @@ const makeQuery = (broker, blacklist) => {
       query[key].$lte = detail.rate.maximum || 20;
     }
   }
-
-  console.log(query['mortgage.first.rate']);
   return query;
 };
 
