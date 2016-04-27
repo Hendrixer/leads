@@ -6,9 +6,8 @@
   "scripts": {
     "start": "gulp",
     "worker": "node server/worker/index.js",
+    "build": "",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node_modules/.bin/gulp prod",
-    "heroku-local": "gulp bundle;NODE_ENV=production;heroku local",
     "dev": "gulp dev"
   },
   "repository": {
@@ -82,6 +81,7 @@
     "babel-loader": "^5.3.2",
     "browser-sync": "^2.8.2",
     "css-loader": "^0.15.6",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.4",
     "gulp": "^3.9.0",
     "gulp-nodemon": "^2.0.3",
@@ -94,6 +94,7 @@
     "stylus-loader": "^1.2.1",
     "url-loader": "^0.5.6",
     "webpack": "^1.11.0",
+    "webpack-html-plugin": "^0.1.1",
     "webpack-stream": "^2.1.0"
   }
 }

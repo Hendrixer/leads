@@ -26,8 +26,7 @@ var paths = {
     entry: './client/app/app.js',
     js: './client/app/**/*.js',
     app: ['./client/app/**/*{.js,.styl,.html}'],
-    output: './dist',
-    toCopy: ['./client/index.html']
+    output: './dist'
   },
   server: './server/**/*.js',
   templates: {
@@ -54,8 +53,10 @@ gulp.task('devServer', function(done) {
 });
 
 gulp.task('server', shell.task([
-  'pm2 stop process.json',
-  'pm2 start process.json'
+  'pm2 stop api',
+  'pm2 stop woker',
+  'pm2 start server/index.js --name="api"',
+  'pm2 start server/worker/index.js --name="worker"'
 ]));
 
 gulp.task('serve', function() {
@@ -65,11 +66,6 @@ gulp.task('serve', function() {
     open: false,
     proxy: 'http://localhost:' + port
   });
-});
-
-gulp.task('copy', function() {
-  return gulp.src(paths.client.toCopy, {base: 'client'})
-    .pipe(gulp.dest(paths.client.output));
 });
 
 gulp.task('bundle', function() {
@@ -119,19 +115,6 @@ gulp.task('generate', function() {
     .pipe(gulp.dest(destPath));
 });
 
-gulp.task('watch-heroku', function() {
-  const paths = [].concat(paths.client.app, path.server);
-  gulp.watch(paths, ['prod', 'heroku-serve']);
-});
-
-gulp.task('heroku-serve', shell.task([
-  'heroku local'
-]));
-
-gulp.task('heroku-local', function(done) {
-  sync('prod', 'heroku-serve', 'watch-heroku', done);
-});
-
 gulp.task('prod', function(done) {
   sync('bundle:prod', 'copy', done);
 });
@@ -142,4 +125,8 @@ gulp.task('default', function(done) {
 
 gulp.task('dev', function(done) {
   sync('bundle', 'copy', 'devServer', 'serve', 'watch', done);
+});
+
+gulp.task('prod', function(done) {
+  sync('bundle', 'copy', 'server', done);
 });

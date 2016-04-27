@@ -5,22 +5,7 @@ import mongoose from 'mongoose';
 import config from './config/env';
 import Future from 'bluebird';
 import {logger} from './util/logger';
-
-// import memwatch from 'memwatch-next';
 import util from 'util';
-
-// import heapdump from 'heapdump';
-
-// memwatch.on('leak', info => {
-//   console.error(info);
-//   heapdump.writeSnapshot((error, filenmae) => {
-//     if (error) {
-//       console.error(err);
-//     } else {
-//       console.log('saved snapshot ' + filenmae);
-//     }
-//   });
-// });
 
 Future.promisifyAll(mongoose.Model);
 Future.promisifyAll(mongoose.Model.prototype);
@@ -34,6 +19,7 @@ if (config.db.seed) {
 const app = express();
 
 appMiddleware(app);
+app.get('/status', (req, res) => res.send({ok: true}))
 app.use('/api', api);
 
 export default app;

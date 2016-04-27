@@ -1,7 +1,4 @@
 require('babel/register');
-if (process.env.NODE_ENV === 'production') {
-  require('newrelic');
-}
 
 var config = require('./config/env');
 var app = require('./app');

@@ -53,9 +53,10 @@ class Background {
     logger.log('Job failed to start');
   }
 
-  addJob(name, config) {
+  addJob(name) {
     return new Future((yes, no) => {
-      const job = this.queue.create(name, config);
+      const job = this.queue.create(name);
+      
       job
       .attempts(1)
       .save(err => {
@@ -66,6 +67,7 @@ class Background {
           yes(job);
         }
       });
+      
       job.on('complete', this.onComplete.bind(this));
       job.on('failed', this.onFailed.bind(this));
       job.on('failed attempt', this.onFailedAttempt.bind(this));

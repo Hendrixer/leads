@@ -24,8 +24,8 @@ module.exports = {
     loaders: [
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url?limit=100000' },
       { test: /\.js$/, loader: 'babel?optional[]=runtime&stage=0', exclude: [/node_modules/] },
-      { test: /\.styl$/, loader: 'style!css!stylus' },
-      { test: /\.css$/, loader: 'style!css' },
+      { test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css!stylus') },
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') },
       { test: /\.html$/, loader: 'raw' }
     ],
 
@@ -33,19 +33,19 @@ module.exports = {
   },
 
   plugins: [
+    new ExtractTextPlugin('styles.css'),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
         warnings: false
       }
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      $pusherKey: JSON.stringify(process.env.PUSHER_APP_KEY),
-      $raygunApiKey: JSON.stringify(process.env.RAYGUN_APIKEY),
-      $pubnubPubKey: JSON.stringify(process.env.PUBNUB_PUBLISH_KEY),
-      $pubnubSubKey: JSON.stringify(process.env.PUBNUB_SUBSCRIBE_KEY),
-      $pubnubPrefix: JSON.stringify(process.env.PUBNUB_PREFIX)
-    })
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }),
+    new HTMLPlugin({
+      inject: true,
+      template: __dirname + '/client/index.html'
+    }),
   ],
 
   stylus: {
