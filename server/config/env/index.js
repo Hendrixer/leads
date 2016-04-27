@@ -1,9 +1,8 @@
-import _ from 'lodash';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 require('dotenv').load();
 
-let config = {
+let mainconfig = {
   envNames: {
     dev: 'development',
     prod: 'production',
@@ -23,9 +22,9 @@ let config = {
   }
 };
 
-config.env = process.env.NODE_ENV;
+mainconfig.env = process.env.NODE_ENV;
 
-const envConfig = require('./' + config.env);
-
-config = _.merge({}, config, envConfig || {});
-export default config;
+export const config = {
+  ...mainconfig,
+  ...require('./' + config.env).default; || {}
+}
