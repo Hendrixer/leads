@@ -39,10 +39,6 @@ var _notes2 = _interopRequireDefault(_notes);
 
 var _auth = require('../util/auth');
 
-var _raygun = require('../util/raygun');
-
-var _raygun2 = _interopRequireDefault(_raygun);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var api = _express2.default.Router();
@@ -54,6 +50,5 @@ api.use('/orders', (0, _auth.isAuth)(), _orders2.default);
 api.use('/resolves', (0, _auth.isAuth)(), _resolves2.default);
 api.use('/headers', (0, _auth.isAuth)(), _headers2.default);
 api.use('/notes', (0, _auth.isAuth)(), _notes2.default);
-api.use(_raygun2.default.expressHandler);
 
 exports.api = api;
