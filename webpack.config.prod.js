@@ -1,5 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HTMLPlugin = require('webpack-html-plugin');
 var node_modules = path.resolve(__dirname, 'node_modules');
 var pathToNg = path.resolve(node_modules, 'angular/angular.min.js');
 var pathToNgMaterial = path.resolve(node_modules, 'angular-material/angular-material.min.js');
@@ -9,6 +11,7 @@ var pathToUiRouter = path.resolve(node_modules, 'angular-ui-router/release/angul
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 module.exports = {
+  entry: './client/app/app.js',
   resolve: {
     alias: {
       'ngMaterial.css': path.resolve(node_modules, 'angular-material/angular-material.min.css'),
@@ -16,7 +19,8 @@ module.exports = {
     }
   },
   output: {
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    path: 'dist'
   },
 
   devtool: 'source-map',
@@ -33,18 +37,19 @@ module.exports = {
   },
 
   plugins: [
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compressor: {
+    //     warnings: false
+    //   }
+    // }),
     new ExtractTextPlugin('styles.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
     new HTMLPlugin({
       inject: true,
-      template: __dirname + '/client/index.html'
+      template: __dirname + '/client/index.html',
+      name: 'index.html'
     }),
   ],
 
