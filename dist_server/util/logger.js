@@ -19,8 +19,6 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _env = require('../config/env');
 
-var _env2 = _interopRequireDefault(_env);
-
 var _raygun = require('./raygun');
 
 var _raygun2 = _interopRequireDefault(_raygun);
@@ -34,7 +32,7 @@ var noop = function noop() {};
 // check if loggin is enabled in the config
 // if it is, then use console.log
 // if not then noop
-var consoleLog = _env2.default.logging ? console.log.bind(console) : noop;
+var consoleLog = _env.config.logging ? console.log.bind(console) : noop;
 
 var logger = {
   log: function log() {
@@ -83,7 +81,7 @@ var logger = {
       return log;
     });
 
-    if (_env2.default.sendErrors && _error) {
+    if (_env.config.sendErrors && _error) {
       _raygun2.default.send(_error);
     }
 

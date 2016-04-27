@@ -20,8 +20,6 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 
 var _env = require('./config/env');
 
-var _env2 = _interopRequireDefault(_env);
-
 var _bluebird = require('bluebird');
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
@@ -37,9 +35,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _bluebird2.default.promisifyAll(_mongoose2.default.Model);
 _bluebird2.default.promisifyAll(_mongoose2.default.Model.prototype);
 _bluebird2.default.promisifyAll(_mongoose2.default.Query.prototype);
-_mongoose2.default.connect(_env2.default.db.url);
+_mongoose2.default.connect(_env.config.db.url);
 
-if (_env2.default.db.seed) {
+if (_env.config.db.seed) {
   require('./config/seed');
 }
 

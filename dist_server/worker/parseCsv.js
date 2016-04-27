@@ -25,8 +25,6 @@ var _email2 = _interopRequireDefault(_email);
 
 var _env = require('../config/env');
 
-var _env2 = _interopRequireDefault(_env);
-
 var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
@@ -64,8 +62,8 @@ var _s3Streams2 = _interopRequireDefault(_s3Streams);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _awsSdk2.default.config.update({
-  accessKeyId: _env2.default.secrets.awsAccessKeyId,
-  secretAccessKey: _env2.default.secrets.awsSecretAccessKey
+  accessKeyId: _env.config.secrets.awsAccessKeyId,
+  secretAccessKey: _env.config.secrets.awsSecretAccessKey
 });
 
 var s3 = new _awsSdk2.default.S3();
@@ -77,7 +75,7 @@ var getFileStreamFromS3 = exports.getFileStreamFromS3 = function getFileStreamFr
   //   Key: filename
   // });
   return s3.getObject({
-    Bucket: _env2.default.secrets.awsS3Bucket,
+    Bucket: _env.config.secrets.awsS3Bucket,
     Key: filename
   }).createReadStream();
 };
@@ -95,7 +93,7 @@ var parseCsvStream = exports.parseCsvStream = function parseCsvStream(filename) 
 
     var uuid = _nodeUuid2.default.v1();
     var throttleSend = _lodash2.default.throttle(function (message) {
-      messenger.sendMessage(_env2.default.secrets.pubnubPrefix + 'leads-uploaded', message);
+      messenger.sendMessage(_env.config.secrets.pubnubPrefix + 'leads-uploaded', message);
     }, 800, { trailing: false });
 
     csvStream.pipe((0, _csvParser2.default)()).pipe(_eventStream2.default.mapSync(function (data) {
@@ -120,7 +118,7 @@ var parseCsvStream = exports.parseCsvStream = function parseCsvStream(filename) 
       meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
       meta.uuid = uuid;
       var update = { saved: meta.saved, final: true };
-      messenger.sendMessage(_env2.default.secrets.pubnubPrefix + 'leads-uploaded', update);
+      messenger.sendMessage(_env.config.secrets.pubnubPrefix + 'leads-uploaded', update);
       resolve(meta);
     });
   });
@@ -141,7 +139,7 @@ var handleJob = exports.handleJob = function handleJob(job) {
         return saveResolveSession(Session, resolves);
       });
     }).then(function (session) {
-      meta.dupeLink = _env2.default.appUrl + '/#/resolves/' + session._id;
+      meta.dupeLink = _env.config.appUrl + '/#/resolves/' + session._id;
       return meta;
     });
   }).then(function (meta) {

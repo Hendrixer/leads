@@ -31,32 +31,26 @@ var _logger = require('../../util/logger');
 
 var _query = require('../query');
 
-var _message = require('../../util/message');
-
 var _awsSdk = require('aws-sdk');
 
 var _awsSdk2 = _interopRequireDefault(_awsSdk);
 
 var _env = require('../../config/env');
 
-var _env2 = _interopRequireDefault(_env);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var publisher = new _message.Publisher();
 
 var toJson = _bluebird2.default.promisify(_xlsxToJson2.default);
 
 var $sign = exports.$sign = function $sign(req, res, next) {
   _awsSdk2.default.config.update({
-    accessKeyId: _env2.default.secrets.awsAccessKeyId,
-    secretAccessKey: _env2.default.secrets.awsSecretAccessKey
+    accessKeyId: _env.config.secrets.awsAccessKeyId,
+    secretAccessKey: _env.config.secrets.awsSecretAccessKey
   });
   var stamp = Date.now();
   var filename = req.query.filename + '-' + stamp;
   var s3 = new _awsSdk2.default.S3();
   var s3Params = {
-    Bucket: _env2.default.secrets.awsS3Bucket,
+    Bucket: _env.config.secrets.awsS3Bucket,
     Key: filename,
     Expires: 60,
     ContentType: req.query.filetype,
@@ -70,7 +64,7 @@ var $sign = exports.$sign = function $sign(req, res, next) {
       var resp = {
         filename: filename,
         signed_request: data,
-        url: 'https://' + _env2.default.secrets.awsS3Bucket + '.s3.amazonaws.com/' + filename
+        url: 'https://' + _env.config.secrets.awsS3Bucket + '.s3.amazonaws.com/' + filename
       };
       res.json(resp);
     }
@@ -134,7 +128,6 @@ var $getOne = exports.$getOne = function $getOne(req, res, next) {};
 
 var $post = exports.$post = function $post(req, res, next) {
   res.send({ ok: true });
-  publisher.queueJob('csv', { files: req.files });
 };
 
 var $putMany = exports.$putMany = function $putMany(req, res, next) {

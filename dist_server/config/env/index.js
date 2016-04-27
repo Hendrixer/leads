@@ -4,17 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _lodash = require('lodash');
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 require('dotenv').load();
 
-var config = {
+var mainconfig = {
   envNames: {
     dev: 'development',
     prod: 'production',
@@ -34,9 +30,6 @@ var config = {
   }
 };
 
-config.env = process.env.NODE_ENV;
+mainconfig.env = process.env.NODE_ENV;
 
-var envConfig = require('./' + config.env);
-
-config = _lodash2.default.merge({}, config, envConfig || {});
-exports.default = config;
+var config = exports.config = _extends({}, mainconfig, require('./' + mainconfig.env).default || {});

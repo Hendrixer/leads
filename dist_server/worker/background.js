@@ -28,8 +28,6 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 
 var _env = require('../config/env');
 
-var _env2 = _interopRequireDefault(_env);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -44,16 +42,16 @@ var Background = function () {
 
     _classCallCheck(this, Background);
 
-    if (_env2.default.env === 'production') {
+    if (_env.config.env === 'production') {
       this.queue = _kue2.default.createQueue({
-        redis: _env2.default.secrets.redisToGo
+        redis: _env.config.secrets.redisToGo
       });
     } else {
       this.queue = _kue2.default.createQueue();
     }
 
     this.timeoutKey;
-    _mongoose2.default.connect(_env2.default.db.url);
+    _mongoose2.default.connect(_env.config.db.url);
 
     this.working = false;
     this.queue.on('job enqueue', function (id, type) {

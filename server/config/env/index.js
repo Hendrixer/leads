@@ -27,4 +27,4 @@ mainconfig.env = process.env.NODE_ENV;
 export const config = {
   ...mainconfig,
   ...require('./' + mainconfig.env).default || {}
-}
+};

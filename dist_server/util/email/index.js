@@ -10,8 +10,6 @@ var _nodemailer2 = _interopRequireDefault(_nodemailer);
 
 var _env = require('../../config/env');
 
-var _env2 = _interopRequireDefault(_env);
-
 var _logger = require('../logger');
 
 var _bluebird = require('bluebird');
@@ -31,19 +29,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var transporter = _nodemailer2.default.createTransport({
   service: 'Gmail',
   auth: {
-    user: _env2.default.secrets.gmailUser,
-    pass: _env2.default.secrets.gmailPass
+    user: _env.config.secrets.gmailUser,
+    pass: _env.config.secrets.gmailPass
   }
 });
 var phoneTemplate = _fs2.default.readFileSync('./server/util/email/phones.html');
 var leadTemplate = _fs2.default.readFileSync('./server/util/email/report.html');
 
 var makeDupeEmail = function makeDupeEmail(stats, toEmail) {
-  stats.mailto = stats.mailto || _env2.default.secrets.adminEmail;
+  stats.mailto = stats.mailto || _env.config.secrets.adminEmail;
   var template = _lodash2.default.template(leadTemplate)(stats);
   var options = {
     from: 'LeadOn',
-    to: toEmail || _env2.default.secrets.emailTo,
+    to: toEmail || _env.config.secrets.emailTo,
     subject: 'LeadOn upload report 😎',
     html: template
   };
@@ -52,11 +50,11 @@ var makeDupeEmail = function makeDupeEmail(stats, toEmail) {
 };
 
 var makePhoneEmail = function makePhoneEmail(stats, toEmail) {
-  stats.mailto = stats.mailto || _env2.default.secrets.adminEmail;
+  stats.mailto = stats.mailto || _env.config.secrets.adminEmail;
   var template = _lodash2.default.template(phoneTemplate)(stats);
   var options = {
     from: 'LeadOn',
-    to: toEmail || _env2.default.secrets.emailTo,
+    to: toEmail || _env.config.secrets.emailTo,
     subject: 'LeadOn phone supression report 😎',
     html: template
   };

@@ -34,8 +34,6 @@ var _path2 = _interopRequireDefault(_path);
 
 var _env = require('./env');
 
-var _env2 = _interopRequireDefault(_env);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var getLogConfig = function getLogConfig(env) {

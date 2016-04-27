@@ -19,8 +19,6 @@ var _composableMiddleware2 = _interopRequireDefault(_composableMiddleware);
 
 var _env = require('../config/env');
 
-var _env2 = _interopRequireDefault(_env);
-
 var _admins = require('../api/admins/admins.model');
 
 var _bcryptjs = require('bcryptjs');
@@ -30,7 +28,7 @@ var _bcryptjs2 = _interopRequireDefault(_bcryptjs);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var validateJwt = exports.validateJwt = (0, _expressJwt2.default)({
-  secret: _env2.default.secrets.jwt
+  secret: _env.config.secrets.jwt
 });
 
 var isAuth = exports.isAuth = function isAuth() {
@@ -55,15 +53,15 @@ var isAuth = exports.isAuth = function isAuth() {
 };
 
 var signToken = exports.signToken = function signToken(id, role) {
-  return _jsonwebtoken2.default.sign({ _id: id }, _env2.default.secrets.jwt, {
+  return _jsonwebtoken2.default.sign({ _id: id }, _env.config.secrets.jwt, {
     expiresInMinutes: 24 * 60 * 15
   });
 };
 
 var createAdmin = exports.createAdmin = function createAdmin() {
   return (0, _composableMiddleware2.default)().use(function (req, res, next) {
-    if (req.body.secret !== _env2.default.secrets.adminSecret) {
-      console.log(req.body, _env2.default.secrets.adminSecret);
+    if (req.body.secret !== _env.config.secrets.adminSecret) {
+      console.log(req.body, _env.config.secrets.adminSecret);
       return res.status(401).end();
     }
 
