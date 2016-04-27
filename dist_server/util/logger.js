@@ -19,10 +19,6 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _env = require('../config/env');
 
-var _raygun = require('./raygun');
-
-var _raygun2 = _interopRequireDefault(_raygun);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // create a noop (no operation) function for when loggin is disabled
@@ -80,10 +76,6 @@ var logger = {
       var log = _chalk2.default.red(arg);
       return log;
     });
-
-    if (_env.config.sendErrors && _error) {
-      _raygun2.default.send(_error);
-    }
 
     console.error.apply(console, logArgs);
     console.error(_error);
