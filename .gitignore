@@ -27,6 +27,7 @@ build/Release
 node_modules
 .env
 client
+server
 build
 .DS_Store
 dump.rdb

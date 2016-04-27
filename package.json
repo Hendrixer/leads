@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "",
+    "build-server": "node_modules/.bin/babel server --out-dir dist_server",
     "worker": "node server/worker/index.js",
     "build": "rm -rf dist && webpack --config webpack.config.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -72,6 +73,7 @@
     "yargs": "^3.24.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.7.7",
     "babel-core": "^6.7.7",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-async-to-generator": "^6.7.4",
