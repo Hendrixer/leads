@@ -128,5 +128,5 @@ gulp.task('dev', function(done) {
 });
 
 gulp.task('prod', function(done) {
-  sync('bundle', 'copy', 'server', done);
+  sync('bundle', 'server', done);
 });
