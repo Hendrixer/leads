@@ -13,7 +13,7 @@ const getFileSize = (bytes, decimals) => {
 };
 
 class ModalController {
-  constructor($mdDialog, $scope, Leads, $http, PubNub, $rootScope, Brokers, $state, $mdToast, Headers, Csv, Admins) {
+  constructor($mdDialog, $scope, Leads, $http, $rootScope, Brokers, $state, $mdToast, Headers, Csv, Admins) {
     this.modal = $mdDialog;
     this.safeToUpload = false;
     this.Admins = Admins;
@@ -29,7 +29,6 @@ class ModalController {
     this.uploadSize = 0;
     this.$http = $http;
     this.$scope = $scope;
-    this.PubNub = PubNub;
     this.global = $rootScope;
     this.searchText;
     this.broker;
@@ -163,12 +162,6 @@ class ModalController {
       return this.Admins.getMe();
     })
     .then(user => {
-      this.PubNub.sendTo(`${$pubnubPrefix}demjobs`, {
-        name: 'csv',
-        url: data.url,
-        filename: data.filename,
-        emailTo: user.settings.email || user.email
-      });
       this.Leads.setActiveFile();
     });
   }
@@ -178,5 +171,5 @@ class ModalController {
   }
 }
 
-ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', 'PubNub', '$rootScope', 'Brokers', '$state', '$mdToast', 'Headers', 'Csv', 'Admins'];
+ModalController.$inject = ['$mdDialog', '$scope', 'Leads', '$http', '$rootScope', 'Brokers', '$state', '$mdToast', 'Headers', 'Csv', 'Admins'];
 export default ModalController;

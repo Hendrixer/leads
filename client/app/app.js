@@ -17,9 +17,6 @@ import preorder from './components/app/preorder/preorder';
 import settings from './components/app/settings/settings';
 import headers from './components/app/headers/headers';
 import animate from 'angular-animate';
-import 'raygun4js';
-
-Raygun.init($raygunApiKey).attach();
 
 angular.module('app', [
   /* 3rd party */
@@ -71,17 +68,6 @@ angular.module('app', [
   });
 }])
 .config(['$mdThemingProvider', '$httpProvider', '$provide', ($mdThemingProvider, $httpProvider, $provide) => {
-  $provide.decorator('$exceptionHandler', ['$delegate', '$log', ($delegate, $log) => {
-    return (exception, cause) => {
-      if (process.env.NODE_ENV === 'production') {
-        $log.debug('Sending error to Raygun');
-        Raygun.send(exception);
-      }
-
-      $delegate(exception, cause);
-    };
-  }]);
-
   $httpProvider.interceptors.push(['$q', '$injector', ($q, $injector)=> {
     return {
       request(config) {

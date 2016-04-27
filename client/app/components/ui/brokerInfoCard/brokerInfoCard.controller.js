@@ -10,14 +10,13 @@ import flatten from 'lodash/array/flatten';
 import isNum from 'lodash/lang/isFinite';
 
 class BrokerInfoCardController {
-  constructor(Leads, Csv, Headers, $mdToast, $state, Notes, $scope, Admins, PubNub) {
+  constructor(Leads, Csv, Headers, $mdToast, $state, Notes, $scope, Admins) {
     this.$scope = $scope;
     this.name = this.name || 'create';
     this.Leads = Leads;
     this.Csv = Csv;
     this.Notes = Notes;
     this.Admins = Admins;
-    this.PubNub = PubNub;
     this.newNote = {broker: this.broker._id};
     this.Headers = Headers;
     this.states = states;
@@ -125,12 +124,6 @@ class BrokerInfoCardController {
       })
       .then(user => {
         this.fileLoading = false;
-        this.PubNub.sendTo(`${$pubnubPrefix}demjobs`, {
-          name: 'phone',
-          url: data.url,
-          filename: data.filename,
-          emailTo: user.settings.email || user.email
-        });
         this.showMessage();
       });
     });
@@ -147,6 +140,6 @@ class BrokerInfoCardController {
   }
 }
 
-BrokerInfoCardController.$inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state', 'Notes', '$scope', 'Admins', 'PubNub'];
+BrokerInfoCardController.$inject = ['Leads', 'Csv', 'Headers', '$mdToast', '$state', 'Notes', '$scope', 'Admins'];
 
 export default BrokerInfoCardController;

@@ -3,7 +3,6 @@
 import chalk from 'chalk';
 import _ from  'lodash';
 import config from '../config/env';
-import raygun from './raygun';
 
 // create a noop (no operation) function for when loggin is disabled
 
@@ -59,10 +58,6 @@ const logger = {
       const log = chalk.red(arg);
       return log;
     });
-
-    if (config.sendErrors && error) {
-      raygun.send(error);
-    }
 
     console.error.apply(console, logArgs);
     console.error(error);

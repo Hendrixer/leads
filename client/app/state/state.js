@@ -8,7 +8,6 @@ import {AdminFactory} from './adminFactory';
 import {CsvFactory} from './csvFactory';
 import {HeaderFactory} from './headerFactory';
 import {NotesFactory} from './notesFactory';
-import PubnubFactory from './pubnub';
 
 const state = angular.module('state', [])
 .factory('Leads', LeadFactory)
@@ -17,7 +16,6 @@ const state = angular.module('state', [])
 .factory('Resolves', ResolveFactory)
 .factory('Auth', AuthFactory)
 .factory('Admins', AdminFactory)
-.factory('PubNub', PubnubFactory)
 .factory('Csv', CsvFactory)
 .factory('Headers', HeaderFactory)
 .factory('Notes', NotesFactory)
