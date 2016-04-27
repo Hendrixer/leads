@@ -1,12 +1,15 @@
 'use strict';
 
-var _require = require('./config/env');
+var _app = require('./app');
 
-var config = _require.config;
+var _app2 = _interopRequireDefault(_app);
 
-var app = require('./app').default;
-var logger = require('./util/logger').logger;
+var _env = require('./config/env');
 
-app.listen(config.port, function () {
-  logger.log('listening on port ', config.port);
+var _logger = require('./util/logger');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_app2.default.listen(_env.config.port, function () {
+  _logger.logger.log('listening on port ', _env.config.port);
 });
