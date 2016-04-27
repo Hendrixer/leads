@@ -12,3 +12,7 @@ app.get('/new-lead', (req, res) => {
   background.addJob(req.query.type);
   res.send(200);
 });
+
+app.listen(8081, function() {
+  console.log('worker on port 8081');
+});
