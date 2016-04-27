@@ -6,10 +6,9 @@ import path from 'path';
 import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
-import {Publisher} from '../../util/message';
 import aws from 'aws-sdk';
 import config from '../../config/env';
-const publisher = new Publisher();
+
 
 const toJson = future.promisify(spreadToJSon);
 
@@ -119,7 +118,6 @@ export const $getOne = (req, res, next)=> {
 
 export const $post = (req, res, next)=> {
   res.send({ok: true});
-  publisher.queueJob('csv', {files: req.files});
 };
 
 export const $putMany = (req, res, next) => {
