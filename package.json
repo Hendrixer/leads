@@ -6,7 +6,7 @@
   "scripts": {
     "build-front": "node_modules/.bin/webpack --config webpack.config.prod.js --display-error-details --progress --display-modules",
     "build-back": "node_modules/.bin/babel server --out-dir dist-server",
-    "postinstall": "npm run buil",
+    "postinstall": "npm run build",
     "build": "npm run build-front && npm run build-back",
     "start": "node dist-server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
