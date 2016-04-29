@@ -10,6 +10,7 @@
     "build": "npm run build-front && npm run build-back",
     "start": "node dist-server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "git add . && git ci -am'deploy' && git push origin master && git push dokku",
     "dev": "gulp dev"
   },
   "repository": {
