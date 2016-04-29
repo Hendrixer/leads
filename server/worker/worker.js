@@ -1,5 +1,4 @@
 import Background from './background';
-import {Reciever} from '../util/message';
 import {logger} from '../util/logger';
 import express from 'express';
 const background = new Background();
