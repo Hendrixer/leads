@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HTMLPlugin = requrie('webpack-html-plugin');
+var HTMLPlugin = require('webpack-html-plugin');
 var node_modules = path.resolve(__dirname, 'node_modules');
 var pathToNg = path.resolve(node_modules, 'angular/angular.min.js');
 var pathToNgMaterial = path.resolve(node_modules, 'angular-material/angular-material.min.js');
