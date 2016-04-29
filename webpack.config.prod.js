@@ -1,5 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HTMLPlugin = requrie('webpack-html-plugin');
 var node_modules = path.resolve(__dirname, 'node_modules');
 var pathToNg = path.resolve(node_modules, 'angular/angular.min.js');
 var pathToNgMaterial = path.resolve(node_modules, 'angular-material/angular-material.min.js');
@@ -34,11 +36,11 @@ module.exports = {
 
   plugins: [
     new ExtractTextPlugin('styles.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compressor: {
+    //     warnings: false
+    //   }
+    // }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
