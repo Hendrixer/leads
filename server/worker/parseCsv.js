@@ -21,7 +21,7 @@ aws.config.update({
 });
 
 const s3 = new aws.S3();
-const messenger = new Reciever();
+
 
 export const getFileStreamFromS3 = (filename) => {
   // return s3Stream.ReadStream(s3, {
@@ -46,9 +46,6 @@ export const parseCsvStream = (filename) => {
     };
 
     const uuid = uuidMaker.v1();
-    const throttleSend = _.throttle(message => {
-      messenger.sendMessage(`${config.secrets.pubnubPrefix}leads-uploaded`, message);
-    }, 800, {trailing: false});
 
     csvStream
     .pipe(csvParser())
@@ -58,7 +55,6 @@ export const parseCsvStream = (filename) => {
       Leads.createAsync(data)
       .then(lead => {
         meta.saved++;
-        throttleSend({saved: meta.saved});
         done(null, lead);
       })
       .catch(err => {
@@ -77,7 +73,6 @@ export const parseCsvStream = (filename) => {
       meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
       meta.uuid = uuid;
       let update = {saved: meta.saved, final: true};
-      messenger.sendMessage(`${config.secrets.pubnubPrefix}leads-uploaded`, update);
       resolve(meta);
     });
   });
