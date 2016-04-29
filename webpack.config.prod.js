@@ -11,13 +11,15 @@ var pathToUiRouter = path.resolve(node_modules, 'angular-ui-router/release/angul
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 module.exports = {
+  entry: ['babel-polyfill', './client/app/app.js'],
   resolve: {
     alias: {
-      'ngMaterial.css': path.resolve(node_modules, 'angular-material/angular-material.min.css'),
-      ngTableCss: path.resolve(node_modules, 'angular-material-data-table/dist/md-data-table.min.css')
+      'ngMaterial.css': path.resolve(node_modules, 'angular-material/angular-material.css'),
+      ngTableCss: path.resolve(node_modules, 'angular-material-data-table/dist/md-data-table.css')
     }
   },
   output: {
+    path: 'dist',
     filename: 'bundle.js'
   },
 
@@ -29,18 +31,11 @@ module.exports = {
       { test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css!stylus') },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') },
       { test: /\.html$/, loader: 'raw' }
-    ],
-
-    noParse: []
+    ]
   },
 
   plugins: [
     new ExtractTextPlugin('styles.css'),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compressor: {
-    //     warnings: false
-    //   }
-    // }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
