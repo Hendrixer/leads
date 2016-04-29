@@ -11,7 +11,6 @@ import fs from 'fs';
 import path from 'path';
 import es from 'event-stream';
 import uuidMaker from 'node-uuid';
-import {Reciever} from '../util/message';
 import aws from 'aws-sdk';
 import s3Stream from 's3-streams';
 
@@ -24,10 +23,6 @@ const s3 = new aws.S3();
 
 
 export const getFileStreamFromS3 = (filename) => {
-  // return s3Stream.ReadStream(s3, {
-  //   Bucket: config.secrets.awsS3Bucket,
-  //   Key: filename
-  // });
   return s3.getObject({
     Bucket: config.secrets.awsS3Bucket,
     Key: filename
