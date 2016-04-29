@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import config from '../../config/env';
+import { config }  from '../../config/env';
 import {logger} from '../logger';
 import Bluebird from 'bluebird';
 import fs from 'fs';

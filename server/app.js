@@ -2,7 +2,7 @@ import express from 'express';
 import appMiddleware from './config/globalMiddleware';
 import {api} from './api';
 import mongoose from 'mongoose';
-import config from './config/env';
+import { config }  from './config/env';
 import Future from 'bluebird';
 import {logger} from './util/logger';
 import util from 'util';

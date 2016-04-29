@@ -4,7 +4,7 @@ import {logger} from '../util/logger';
 import Future from 'bluebird';
 import {handleJob, scrubPhones} from './parseCsv';
 import mongoose from 'mongoose';
-import config from '../config/env';
+import { config }  from '../config/env';
 
 Future.promisifyAll(mongoose.Model);
 Future.promisifyAll(mongoose.Model.prototype);

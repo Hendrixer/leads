@@ -5,7 +5,7 @@ import multer from 'multer';
 import util from 'util';
 import compress from 'compression';
 import path from 'path';
-import config from './env';
+import { config }  from './env';
 
 const getLogConfig = (env) => {
   if (env !== 'production') return {};

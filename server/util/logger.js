@@ -2,7 +2,7 @@
 // to String.prototype
 import chalk from 'chalk';
 import _ from  'lodash';
-import config from '../config/env';
+import { config }  from '../config/env';
 
 // create a noop (no operation) function for when loggin is disabled
 

@@ -7,7 +7,7 @@ import future from 'bluebird';
 import {logger} from '../../util/logger';
 import {query} from '../query';
 import aws from 'aws-sdk';
-import config from '../../config/env';
+import { config }  from '../../config/env';
 
 
 const toJson = future.promisify(spreadToJSon);

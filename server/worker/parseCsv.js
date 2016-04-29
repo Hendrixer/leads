@@ -4,7 +4,7 @@ import {Resolves, ResolvesSession} from '../api/resolves/resolves.model';
 import csvParser from 'csv-parser';
 import CombineStream from 'combined-stream';
 import sendMail from '../util/email';
-import config from '../config/env';
+import { config }  from '../config/env';
 import _ from 'lodash';
 import Future from 'bluebird';
 import fs from 'fs';

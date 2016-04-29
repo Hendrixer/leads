@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
-import config from '../config/env';
+import { config }  from '../config/env';
 import {Admins} from '../api/admins/admins.model';
 import bcrypt from 'bcryptjs';
 
