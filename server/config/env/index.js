@@ -8,7 +8,8 @@ const mainconfig = {
     prod: 'production',
     test: 'testing'
   },
-
+  
+  fireRef: process.env.FIRE_REF,
   secrets: {
     adminSecret: process.env.ADMIN_SECRET,
     jwt: process.env.JWT,

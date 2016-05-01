@@ -29,6 +29,7 @@
   "homepage": "https://github.com/Hendrixer/leads#readme",
   "dependencies": {
     "JSONStream": "^1.0.4",
+    "agenda": "^0.8.0",
     "angular": "^1.4.4",
     "angular-animate": "^1.4.7",
     "angular-aria": "^1.4.4",
@@ -52,6 +53,7 @@
     "eventemitter3": "^1.1.1",
     "express": "^4.13.3",
     "express-jwt": "^3.0.1",
+    "firebase": "^2.4.2",
     "fs-extra": "^0.24.0",
     "gulp-shell": "^0.4.3",
     "jeet": "^6.1.2",

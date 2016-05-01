@@ -1,4 +1,3 @@
-import {Leads} from '../api/leads/leads.model';
 import {logger} from '../util/logger';
 import {Resolves, ResolvesSession} from '../api/resolves/resolves.model';
 import csvParser from 'csv-parser';
@@ -20,7 +19,6 @@ aws.config.update({
 });
 
 const s3 = new aws.S3();
-
 
 export const getFileStreamFromS3 = (filename) => {
   return s3.getObject({
@@ -80,8 +78,8 @@ const dupeErr = (err) => {
   );
 };
 
-export const handleJob = (job) => {
-  return parseCsvStream(job.data.filename)
+export const handleJob = (filename) => {
+  return parseCsvStream(filename)
   .then(meta => {
     if (!meta.dupes) {
       return meta;
@@ -113,6 +111,7 @@ export const saveResolveSession = (Session, resolves) => {
   });
 };
 
+
 export const saveDupe = (dupe, uuid) => {
   if (dupe.email) {
     dupe.email = dupe.email.toLowerCase();
@@ -136,6 +135,8 @@ export const saveDupe = (dupe, uuid) => {
     });
   });
 };
+
+
 
 export const scrubPhones = (job) => {
   console.log('scrub');
