@@ -192,7 +192,6 @@ const getDupeKey = (lead) => {
 };
 
 LeadsSchema.statics.format = (lead) => {
-
   let type = 'mortgage';
 
   const newLead = {

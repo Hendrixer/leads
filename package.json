@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "build-front": "node_modules/.bin/webpack --config webpack.config.prod.js --display-error-details --progress --display-modules",
+    "build-front-watch": "npm run build-front -- --watch",
     "build-back": "node_modules/.bin/babel server --out-dir dist-server",
+    "build-back-watch": "npm run build-back -- --watch",
     "postinstall": "npm run build",
     "build": "npm run build-front && npm run build-back",
     "start": "node dist-server/index.js",
+    "dev": "npm run build-front-watch & npm run build-back-watch & npm run api & npm run worker",
+    "api": "nodemon dist-server/index.js --watch 'dist-server'",
+    "worker": "nodemon dist-server/worker/index.js --watch 'dist-server'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "git add . && git ci -am'deploy' && git push origin master && git push dokku",
-    "dev": "gulp dev"
+    "deploy": "git add . && git ci -am'deploy' && git push origin master && git push dokku"
   },
   "repository": {
     "type": "git",

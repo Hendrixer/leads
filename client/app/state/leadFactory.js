@@ -18,6 +18,11 @@ const LeadFactory = ($http, $q, $interval) => {
     return activeFile;
   };
 
+  async function startJob(filename) {
+    const resp = await $http.get(`${api}/jobs?filename=${filename}`);
+    return resp.data;
+  };
+  
   async function getLeads(params={}) {
     const resp = await $http({
       method: 'GET',
@@ -95,7 +100,8 @@ const LeadFactory = ($http, $q, $interval) => {
     remove,
     setActiveFile,
     getActiveFile,
-    batchSupress
+    batchSupress,
+    startJob
   };
 };
 

@@ -1,10 +1,11 @@
 import { handleJob } from '../parseCsv';
 
-const parseLeads = (job, done) => {
+const processLeads = (job, done) => {
+  console.log(job.attrs.data.filename);
   handleJob(job.attrs.data.filename)
   .then(done);
 };
 
 export default function(agenda) {
-  agenda.define('parse leads', job => console.log(job));
+  agenda.define('parse leads', processLeads);
 }

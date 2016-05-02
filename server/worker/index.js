@@ -9,6 +9,7 @@ const jobStream = new Firebase(config.fireRef);
 Future.promisifyAll(mongoose.Model);
 Future.promisifyAll(mongoose.Model.prototype);
 Future.promisifyAll(mongoose.Query.prototype);
+mongoose.connect(config.db.url);
 
 const agenda = new Agenda({db: {address: config.db.url, collection: 'jobs'}});
 
@@ -17,7 +18,7 @@ require('./jobs').default(agenda);
 agenda.on('ready', agenda.start.bind(agenda));
 
 jobStream.limitToLast(1).on('child_added', snap => {
-  const {filename} = snap.value();
+  const {filename} = snap.val();
   agenda.now('parse leads', {filename: filename});
   jobStream.child(snap.key()).remove();
 });

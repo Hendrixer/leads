@@ -1,3 +1,4 @@
+import { Leads } from '../api/leads/leads.model';
 import {logger} from '../util/logger';
 import {Resolves, ResolvesSession} from '../api/resolves/resolves.model';
 import csvParser from 'csv-parser';
@@ -21,6 +22,7 @@ aws.config.update({
 const s3 = new aws.S3();
 
 export const getFileStreamFromS3 = (filename) => {
+  console.log('downloading...');
   return s3.getObject({
     Bucket: config.secrets.awsS3Bucket,
     Key: filename
@@ -39,12 +41,12 @@ export const parseCsvStream = (filename) => {
     };
 
     const uuid = uuidMaker.v1();
-
     csvStream
     .pipe(csvParser())
     .pipe(es.mapSync(data => Leads.format(data)))
     .pipe(es.map((data, done) => {
       meta.tried++;
+      console.log(meta.tried);
       Leads.createAsync(data)
       .then(lead => {
         meta.saved++;
@@ -63,6 +65,7 @@ export const parseCsvStream = (filename) => {
       });
     }))
     .on('end', ()=> {
+      console.log('done');
       meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
       meta.uuid = uuid;
       let update = {saved: meta.saved, final: true};

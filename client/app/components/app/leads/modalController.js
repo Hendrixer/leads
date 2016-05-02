@@ -157,6 +157,7 @@ class ModalController {
     this.startingUpload = true;
     this.progressType = 'determinate';
     this.Csv.upload(file, data, this.onProgress.bind(this))
+    .then(() => this.Leads.startJob(data.filename))
     .then(() => {
       this.hide();
       return this.Admins.getMe();
