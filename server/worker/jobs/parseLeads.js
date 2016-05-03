@@ -9,7 +9,7 @@ const processLeads = (job, done) => {
   .catch(done);
 };
 
-const scrubPhone = (job, done) => {
+const processPhones = (job, done) => {
   scrubPhone(job.attrs.data.filename)
   .then(done)
   .catch(done);
@@ -17,5 +17,5 @@ const scrubPhone = (job, done) => {
 
 export default function(agenda) {
   agenda.define('parse leads', processLeads);
-  agenda.define('scrub phone', scrubPhone)
+  agenda.define('scrub phone', processPhones)
 }
