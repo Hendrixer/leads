@@ -1,11 +1,21 @@
-import { handleJob } from '../parseCsv';
+import {
+  handleJob,
+  scrubPhone
+} from '../parseCsv';
 
 const processLeads = (job, done) => {
-  console.log(job.attrs.data.filename);
   handleJob(job.attrs.data.filename)
-  .then(done);
+  .then(done)
+  .catch(done);
+};
+
+const scrubPhone = (job, done) => {
+  scrubPhone(job.attrs.data.filename)
+  .then(done)
+  .catch(done);
 };
 
 export default function(agenda) {
   agenda.define('parse leads', processLeads);
+  agenda.define('scrub phone', scrubPhone)
 }

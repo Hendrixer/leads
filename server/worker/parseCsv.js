@@ -141,10 +141,9 @@ export const saveDupe = (dupe, uuid) => {
 
 
 
-export const scrubPhones = (job) => {
-  console.log('scrub');
+export const scrubPhones = (filename) => {
   return new Promise((res, rej) => {
-    const csvStream = getFileStreamFromS3(job.data.filename);
+    const csvStream = getFileStreamFromS3(filename);
     const startTime = Date.now();
     const meta = {
       dupes: 0,
@@ -166,12 +165,11 @@ export const scrubPhones = (job) => {
     }))
     .on('end', ()=> {
       meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
-      console.log(meta);
       res(meta);
     })
     .on('error', () => {
       rej(e);
-    });
+    })
   })
   .then(meta => {
     sendMail('phone', meta, job.data.email);
