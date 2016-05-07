@@ -160,11 +160,8 @@ class ModalController {
     .then(() => this.Leads.startJob(data.filename, 'parse leads'))
     .then(() => {
       this.hide();
-      return this.Admins.getMe();
-    })
-    .then(user => {
       this.Leads.setActiveFile();
-    });
+    })
   }
 
   dropping($files) {

@@ -47,8 +47,6 @@ const CsvFactory = ['$q', '$http', ($q, $http) => {
       parseConfig.complete = (result) => {
         resolve({result, file});
       };
-
-      console.log('before parse ', file);
       Papa.parse(file, parseConfig);
     });
   };

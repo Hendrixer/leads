@@ -21,7 +21,7 @@ api.use('/resolves', isAuth(), resolves);
 api.use('/headers', isAuth(), headers);
 api.use('/notes', isAuth(), notes);
 api.get('/jobs', isAuth(), (req, res) => {
-  jobStream.push({filename: req.query.filename, jobname: req.query.jobname});
+  jobStream.push({filename: req.query.filename, jobname: req.query.jobname, email: req.user.email});
   res.send({ok: true});
 });
 

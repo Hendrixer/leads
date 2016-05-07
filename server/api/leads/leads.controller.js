@@ -53,7 +53,6 @@ export const $supress = (req, res, next) => {
     }
   }))
   .then(checks => {
-    console.log(checks);
     const count = _.size(_.compact(checks));
     res.json({dupes: count});
   })

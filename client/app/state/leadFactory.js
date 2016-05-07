@@ -18,8 +18,8 @@ const LeadFactory = ($http, $q, $interval) => {
     return activeFile;
   };
 
-  async function startJob(filename) {
-    const resp = await $http.get(`${api}/jobs?filename=${filename}`);
+  async function startJob(filename, jobname) {
+    const resp = await $http.get(`${api}/jobs?filename=${filename}&jobname=${jobname}`);
     return resp.data;
   };
   

@@ -25,7 +25,7 @@ export const $getOne = (req, res, next)=> {
 };
 
 export const $post = (req, res, next)=> {
-  res.json({token: signToken(req.admin._id)});
+  res.json({token: signToken({_id: req.admin._id, email: req.admin.email})});
 };
 
 export const $put = (req, res, next)=> {

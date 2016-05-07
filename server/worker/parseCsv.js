@@ -46,7 +46,6 @@ export const parseCsvStream = (filename) => {
     .pipe(es.mapSync(data => Leads.format(data)))
     .pipe(es.map((data, done) => {
       meta.tried++;
-      console.log(meta.tried);
       Leads.createAsync(data)
       .then(lead => {
         meta.saved++;
@@ -65,7 +64,6 @@ export const parseCsvStream = (filename) => {
       });
     }))
     .on('end', ()=> {
-      console.log('done');
       meta.duration = (Date.now() - meta.startTime) / 1000 + ' seconds';
       meta.uuid = uuid;
       let update = {saved: meta.saved, final: true};
@@ -81,7 +79,7 @@ const dupeErr = (err) => {
   );
 };
 
-export const handleJob = (filename) => {
+export const handleJob = (filename, email) => {
   return parseCsvStream(filename)
   .then(meta => {
     if (!meta.dupes) {
@@ -101,7 +99,7 @@ export const handleJob = (filename) => {
     });
   })
   .then(meta => {
-    return sendMail('upload', meta, job.data.email);
+    return sendMail('upload', meta, email);
   });
 };
 
@@ -141,7 +139,7 @@ export const saveDupe = (dupe, uuid) => {
 
 
 
-export const scrubPhones = (filename) => {
+export const scrubPhones = (filename, email) => {
   return new Promise((res, rej) => {
     const csvStream = getFileStreamFromS3(filename);
     const startTime = Date.now();
@@ -172,6 +170,6 @@ export const scrubPhones = (filename) => {
     })
   })
   .then(meta => {
-    sendMail('phone', meta, job.data.email);
+    sendMail('phone', meta, email);
   });
 };

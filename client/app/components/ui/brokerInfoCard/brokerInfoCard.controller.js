@@ -121,9 +121,6 @@ class BrokerInfoCardController {
       return this.Csv.upload(file, data, this.onProgress.bind(this))
       .then(() => this.Leads.startJob(data.filename, 'scrub phone'))
       .then(() => {
-        return this.Admins.getMe();
-      })
-      .then(user => {
         this.fileLoading = false;
         this.showMessage();
       });

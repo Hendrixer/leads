@@ -18,8 +18,8 @@ require('./jobs').default(agenda);
 agenda.on('ready', agenda.start.bind(agenda));
 
 jobStream.limitToLast(1).on('child_added', snap => {
-  const {filename, jobname} = snap.val();
-  agenda.now(jobname, {filename});
+  const {filename, jobname, email} = snap.val();
+  agenda.now(jobname, {filename, email});
   jobStream.child(snap.key()).remove();
 });
 

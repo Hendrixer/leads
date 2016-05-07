@@ -34,9 +34,9 @@ export const isAuth = ()=> {
     });
 };
 
-export const signToken = (id, role)=> {
-  return jwt.sign({ _id: id}, config.secrets.jwt, {
-    expiresInMinutes: 24 * 60 * 15
+export const signToken = (user)=> {
+  return jwt.sign(user, config.secrets.jwt, {
+    expiresIn: (24 * 60 * 15) * 60
   });
 };
 
@@ -44,7 +44,6 @@ export const createAdmin = ()=> {
   return compose()
     .use((req, res, next)=> {
       if (req.body.secret !== config.secrets.adminSecret) {
-        console.log(req.body, config.secrets.adminSecret);
         return res.status(401).end();
       }
 
